@@ -1,0 +1,1 @@
+import '@sheerun/mutationobserver-shim'

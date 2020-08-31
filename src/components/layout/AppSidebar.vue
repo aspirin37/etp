@@ -1,11 +1,11 @@
 <template>
-  <!-- expand-on-hover -->
   <v-navigation-drawer
     class="app-sidebar"
     expand-on-hover
     :mini-variant.sync="mini"
     :mini-variant-width="80"
     :width="300"
+    permanent
     clipped
     dark
     app
@@ -15,7 +15,6 @@
       <app-sidebar-user :mini="mini" />
       <app-sidebar-navigation :mini="mini" />
     </div>
-    <!-- <v-checkbox v-model="mini" /> -->
   </v-navigation-drawer>
 </template>
 

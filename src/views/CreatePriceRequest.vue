@@ -9,38 +9,16 @@
       v-model="tab"
       class="tabs-primary"
     >
-      <v-tab :ripple="false">
-        <v-avatar size="20">
-          1
-        </v-avatar>
-        <span>Общие сведения</span>
-      </v-tab>
       <v-tab
+        v-for="(it, i) in tabs"
+        :key="i"
+        :disabled="it.disabled"
         :ripple="false"
-        :disabled="nameNotValid"
       >
         <v-avatar size="20">
-          2
+          {{ i + 1 }}
         </v-avatar>
-        <span>Позиции</span>
-      </v-tab>
-      <v-tab
-        :ripple="false"
-        :disabled="nameNotValid"
-      >
-        <v-avatar size="20">
-          3
-        </v-avatar>
-        <span>Условия заказчика</span>
-      </v-tab>
-      <v-tab
-        :ripple="false"
-        :disabled="nameNotValid"
-      >
-        <v-avatar size="20">
-          4
-        </v-avatar>
-        <span>Доп. условия</span>
+        <span>{{ it.name }}</span>
       </v-tab>
     </v-tabs>
     <v-tabs-items
@@ -279,11 +257,9 @@
 </template>
 
 <script>
-import PriceRequestPositionTable from '@/components/PriceRequestPositionTable';
-import datePicker from '@/components/common/DatePicker';
+import PriceRequestPositionTable from '@/components/PriceRequestPositionTable.vue';
+import datePicker from '@/components/common/DatePicker.vue';
 import NoticeModal from '@/components/modals/NoticeModal.vue';
-
-import axios from '@/utilites/api/AxiosInstance';
 
 export default {
   name: 'CreatePriceRequest',
@@ -323,6 +299,21 @@ export default {
     violations: {},
   }),
   computed: {
+    tabs() {
+      return [{
+        name: 'Общие сведения',
+        disabled: false,
+      }, {
+        name: 'Позиции',
+        disabled: this.nameNotValid,
+      }, {
+        name: 'Условия заказчика',
+        disabled: this.nameNotValid,
+      }, {
+        name: 'Доп. условия',
+        disabled: this.nameNotValid,
+      }];
+    },
     nameNotValid() {
       return this.priceRequest.name.length < 10 || this.priceRequest.name.length > 300;
     },
@@ -350,6 +341,7 @@ export default {
     },
   },
   watch: {
+    // eslint-disable-next-line
     'priceRequest.responseDate': function (val) {
       if (this.priceRequest.delivery.date && this.$moment(val).diff(this.priceRequest.delivery.date, 'days') > 0) {
         this.priceRequest.delivery.date = this.deliveryMinDate;
@@ -357,10 +349,10 @@ export default {
     },
     async tab() {
       if (this.requestId) {
-        await axios.put(`quote-requests/${this.requestId}`, this.priceRequestParams);
+        await this.$http.put(`quote-requests/${this.requestId}`, this.priceRequestParams);
       }
 
-      const { data: { id } } = await axios.post('quote-requests', {
+      const { data: { id } } = await this.$http.post('quote-requests', {
         name: this.priceRequest.name,
         type: this.priceRequest.type,
       });
@@ -373,7 +365,7 @@ export default {
     },
     async approveRequest() {
       try {
-        await axios.put(`quote-requests/${this.requestId}/send`, this.priceRequestParams);
+        await this.$http.put(`quote-requests/${this.requestId}/send`, this.priceRequestParams);
         this.successModal = true;
       } catch (e) {
         this.violations = e.response.data.violations;

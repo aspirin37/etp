@@ -13,6 +13,72 @@
 
     &--mini-variant {
       transition: 0.3s all 0.3s ease !important;
+
+      & + main {
+        transition: 0.3s all 0.3s ease !important;
+      }
     }
   }
+
+  .v-main__wrap {
+    display: flex;
+  }
 }
+
+.theme--light.v-application {
+  background: #EEF2F5;
+}
+
+.v-application--wrap {
+  transition: filter 0.1s;
+}
+
+.v-overlay--active{
+  .v-overlay__scrim {
+    background: #242F38 !important;
+    opacity: 0.9 !important;
+  }
+
+  & + .v-application--wrap {
+    filter: blur(3px);
+    transition: filter 0.6s;
+  }
+}
+
+.v-dialog {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow-y: visible !important;
+}
+
+.v-btn {
+  text-transform: none !important;
+}
+
+.v-application .theme--light.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
+  background-color: #E4EAEE;
+}
+
+.v-text-field--outlined .v-input__slot {
+  fieldset {
+    border-color: #DAE4EC;
+  }
+}
+
+.v-text-field--outlined.v-input--is-focused fieldset,
+.v-text-field--outlined.v-input--has-state fieldset {
+  border-width: 1px !important;
+}
+
+.v-input.required label::after {
+  content: " *";
+  color: red;
+}
+
+.text-field--light {
+  .theme--light.v-icon {
+    color:#AABDCD;
+  }
+}
+
+

@@ -1,25 +1,56 @@
-<template lang="pug">
-  .app-sidebar-user
-    v-avatar.app-sidebar-user__avatar(:class="{'app-sidebar-user__avatar--mini': mini}", color='teal', size='40')
-      | В
-    transition(name='fade')
-      .app-sidebar-user__wrapper(v-if='!mini')
-        v-expansion-panels(flat='', accordion='')
-          v-expansion-panel
-            v-expansion-panel-header
-              .d-flex.flex-column
-                .app-sidebar-user__name
-                  | Иван Иванов
-                .app-sidebar-user__organization
-                  | МГУ им. Ломоносова
-            v-expansion-panel-content
-              router-link.app-sidebar__link.app-sidebar__link--sub(to='/organization')
-                | Организация
-              router-link.app-sidebar__link.app-sidebar__link--sub(to='/finance')
-                | Финансы
-              span.app-sidebar__link.app-sidebar__link--sub(@click.prevent='')
-                | Выход
-    v-divider.mt-auto
+<template>
+  <div class="app-sidebar-user">
+    <v-avatar
+      class="app-sidebar-user__avatar"
+      :class="{'app-sidebar-user__avatar--mini': mini}"
+      color="teal"
+      size="40"
+    >
+      В
+    </v-avatar>
+    <transition name="fade">
+      <div
+        v-if="!mini"
+        class="app-sidebar-user__wrapper"
+      >
+        <v-expansion-panels
+          accordion
+          flat
+        >
+          <v-expansion-panel>
+            <v-expansion-panel-header>
+              <div class="d-flex flex-column">
+                <div class="app-sidebar-user__name">
+                  Иван Иванов
+                </div>
+                <div class="app-sidebar-user__organization">
+                  МГУ им. Ломоносова
+                </div>
+              </div>
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <router-link
+                class="app-sidebar__link app-sidebar__link--sub"
+                to="/organization"
+              >
+                Организация
+              </router-link>
+              <router-link
+                class="app-sidebar__link app-sidebar__link--sub"
+                to="/finance"
+              >
+                Финансы
+              </router-link><span
+                class="app-sidebar__link app-sidebar__link--sub"
+                @click.prevent
+              >Выход</span>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </div>
+    </transition>
+    <v-divider class="mt-auto" />
+  </div>
 </template>
 
 <script>

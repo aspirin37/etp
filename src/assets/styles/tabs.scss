@@ -1,0 +1,82 @@
+.tabs {
+  &__headerItem {
+    background-color: #F6F8FA;
+    border-radius: 4px 4px 0px 0px;
+    color: $darkGray !important;
+    display: inline-block;
+    font: 500 16px/55px "Roboto";
+    padding: 0 30px;
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:not(:last-child) {
+      margin-right: 2px;
+    }
+
+    &--active {
+      background-color: $white;
+    }
+  }
+
+  &__headerItemOther {
+    color: $gray;
+    font-weight: 300;
+    margin-left: 8px;
+  }
+
+  &__content {
+    background-color: $white;
+    border-radius: 0 4px 4px 4px;
+  }
+}
+
+.theme--light.v-tabs.tabs-primary {
+  flex-grow: 0;
+
+  .v-tabs-slider-wrapper {
+    display: none;
+  }
+
+  .v-tabs-bar {
+    background: transparent;
+    height: auto;
+  }
+
+  .v-tab {
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    align-items: center;
+    min-height: 55px;
+    text-transform: none;
+    background-color: #F6F8FA;
+    border-radius: 4px 4px 0px 0px;
+    color: #2E2E2E !important;
+    font-size: 16px;
+    line-height: 19px;
+    font-weight: 500;
+    padding: 0 30px;
+    white-space: nowrap;
+    letter-spacing: normal;
+
+    &:not(:last-child) {
+      margin-right: 2px;
+    }
+
+    &--active {
+      background-color: $white;
+    }
+
+    &:before {
+      display: none;
+    }
+
+    .v-avatar {
+      margin-right: 10px;
+      background: $lightGray;
+      color: $gray;
+      font-size: 12px;
+      line-height: 14px;
+    }
+  }
+}

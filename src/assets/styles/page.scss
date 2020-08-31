@@ -1,0 +1,12 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding: 31px 30px 30px;
+
+  &__title {
+    color: $darkGray;
+    font: 500 24px/28px "Roboto";
+    margin-bottom: 31px;
+  }
+}
