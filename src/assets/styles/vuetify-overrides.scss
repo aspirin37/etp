@@ -1,0 +1,18 @@
+.v-application {
+  .v-navigation-drawer {
+    background-color: #242f38 !important;
+
+    &__content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &--custom-mini-variant {
+      transition: all 0.3s ease !important;
+    }
+
+    &--mini-variant {
+      transition: 0.3s all 0.3s ease !important;
+    }
+  }
+}
