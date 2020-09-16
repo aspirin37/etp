@@ -42,9 +42,12 @@
     padding: 30px;
     padding-top: 35px;
     padding-bottom: 0;
-    max-height: 60vh;
     overflow-y: auto;
     @include scrollbar;
+  }
+
+  &:not(&--full-height) &__content {
+    max-height: 60vh;
   }
 
   &--overflowed &__content {

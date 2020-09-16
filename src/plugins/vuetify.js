@@ -1,8 +1,32 @@
 import Vue from 'vue';
-import Vuetify from 'vuetify/lib';
+import Vuetify, { VSnackbar, VBtn, VIcon } from 'vuetify/lib';
+import VuetifyToast from 'vuetify-toast-snackbar-ng';
 import ru from 'vuetify/es5/locale/ru';
 
-Vue.use(Vuetify);
+Vue.use(Vuetify, {
+  components: {
+    VSnackbar,
+    VBtn,
+    VIcon,
+  },
+});
+
+Vue.use(VuetifyToast, {
+  color: '',
+  timeout: 5000,
+  showClose: true,
+  closeText: 'Закрыть',
+  shorts: {
+    success: {
+      icon: 'check_circle',
+      iconColor: 'success',
+    },
+    danger: {
+      icon: 'error_outline',
+      iconColor: 'red',
+    },
+  },
+});
 
 export default new Vuetify({
   theme: {

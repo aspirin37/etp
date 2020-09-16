@@ -1,18 +1,19 @@
 <template>
   <div class="dropdown">
-    <Button
-      class="dropdown__button"
+    <v-btn
+      color="accent"
+      depressed
       v-bind="{ ...$attrs, ...$props }"
       v-on="$listeners"
     >
       <slot />
-    </Button>
+    </v-btn>
     <div
       class="dropdown__pointer"
       :class="classList"
       @click.prevent="showContent = !showContent"
     >
-      <SvgIcon
+      <svg-icon
         class="dropdown__pointerIcon"
         name="collapseIcon"
       />
@@ -28,14 +29,14 @@
 </template>
 
 <script>
-import Button from '@/components/common/Button.vue';
+// import Button from '@/components/common/Button.vue';
 import SvgIcon from '@/components/common/SvgIcon.vue';
 import DropdownItem from './DropdownItem.vue';
 
 export default ({
   name: 'Dropdown',
   components: {
-    Button,
+    // Button,
     SvgIcon,
   },
   props: {
@@ -92,9 +93,8 @@ export { DropdownItem };
   display: flex;
   position: relative;
 
-  &__button {
+  .v-btn {
     border-radius: 4px 0 0 4px;
-    padding: 0 20px;
   }
 
   &__pointer {

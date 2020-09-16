@@ -53,7 +53,9 @@ export default {
 
   &__container {
     flex: 1;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
 
     &::-webkit-scrollbar {
       width: 5px;

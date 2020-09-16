@@ -13,7 +13,9 @@
     "vue": "^2.6.11",
     "vue-moment": "^4.1.0",
     "vue-router": "^3.2.0",
+    "vuelidate": "^0.7.5",
     "vuetify": "^2.2.11",
+    "vuetify-toast-snackbar-ng": "^0.7.3",
     "vuex": "^3.4.0"
   },
   "devDependencies": {
@@ -50,7 +52,9 @@
     },
     "rules": {
       "vue/require-default-prop": "off",
-      "no-underscore-dangle": "off"
+      "vue/valid-v-slot": "off",
+      "no-underscore-dangle": "off",
+      "no-plusplus": "off"
     }
   },
   "browserslist": [

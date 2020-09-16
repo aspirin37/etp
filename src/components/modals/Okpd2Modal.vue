@@ -20,8 +20,8 @@
             v-model="search"
             label="Поиск категории, по коду или имени"
             prepend-inner-icon="search"
-            hide-details="hide-details"
-            filled="filled"
+            hide-details
+            filled
           />
         </div>
         <div class="modal-primary__content">
@@ -29,21 +29,28 @@
             :active.sync="active"
             :items="items"
             :load-children="loadChild"
-            return-object="return-object"
-            activatable="activatable"
-          />
+            selection-type="independent"
+            item-disabled="locked"
+            return-object
+            activatable
+            open-all
+          >
+            <template v-slot:prepend="{ item }">
+              <span class="grey--text">{{ item.code }}</span>
+            </template>
+          </v-treeview>
         </div>
         <div class="modal-primary__actions">
           <v-btn
             class="ml-auto"
-            depressed="depressed"
+            depressed
             @click="onClose"
           >
             Отмена
           </v-btn>
           <v-btn
             class="ml-2"
-            depressed="depressed"
+            depressed
             color="primary"
             type="button"
             :disabled="!active.length"
@@ -87,7 +94,7 @@ export default {
   },
   async created() {
     const response = await getParents();
-    this.items = response.map((item) => ({ ...item, children: [] }));
+    this.items = response.map((item) => ({ ...item, locked: true, children: [] }));
   },
   methods: {
     async loadChild(item) {

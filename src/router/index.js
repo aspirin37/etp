@@ -9,6 +9,11 @@ const routes = [
     name: 'CreatePriceRequest',
     component: () => import('@/views/CreatePriceRequest.vue'),
   },
+  {
+    path: '/user-positions',
+    name: 'UserPositions',
+    component: () => import('@/views/UserPositions.vue'),
+  },
 ];
 
 const router = new VueRouter({

@@ -16,7 +16,21 @@
         :ripple="false"
       >
         <v-avatar size="20">
-          {{ i + 1 }}
+          <template v-if="it.validationStatus === 'not-validated'">
+            {{ i + 1 }}
+          </template>
+          <v-icon
+            v-else-if="it.validationStatus === 'valid'"
+            color="success"
+          >
+            check_circle
+          </v-icon>
+          <v-icon
+            v-else-if="it.validationStatus === 'invalid'"
+            color="red"
+          >
+            error_outline
+          </v-icon>
         </v-avatar>
         <span>{{ it.name }}</span>
       </v-tab>
@@ -88,14 +102,14 @@
             <v-text-field
               v-model="priceRequest.delivery.address"
               class="required"
-              :error-messages="violations['delivery[address]']"
+              :error-messages="deliveryAddressErrors"
               label="Адрес поставки"
               outlined="outlined"
             />
             <v-text-field
               v-model="priceRequest.delivery.conditions"
               class="required"
-              :error-messages="violations['delivery[conditions]']"
+              :error-messages="deliveryConditionsErrors"
               label="Условия оплаты и поставки"
               outlined="outlined"
             />
@@ -106,7 +120,7 @@
               >
                 <date-picker
                   v-model="priceRequest.delivery.date"
-                  :error-messages="violations['delivery[date]']"
+                  :error-messages="deliveryDateErrors"
                   :min="deliveryMinDate"
                   label="Дата поставки"
                   required="required"
@@ -174,7 +188,7 @@
               >
                 <date-picker
                   v-model="priceRequest.responseDate"
-                  :error-messages="violations.responseDate"
+                  :error-messages="responseDateErrors"
                   label="Дата ответа на запрос"
                   :min="responseMinDate"
                   :max="responseMaxDate"
@@ -221,52 +235,19 @@
         Отправить ЦЗ поставщикам
       </v-btn>
     </div>
-    <notice-modal
-      v-model="successModal"
-      icon="checkCircle"
-    >
-      <template v-slot:title>
-        Ценовой запрос сохранен
-      </template>
-      <template v-slot:footer>
-        <v-btn
-          depressed="depressed"
-          @click="successModal = false"
-        >
-          Закрыть
-        </v-btn>
-      </template>
-    </notice-modal>
-    <notice-modal
-      v-model="errorModal"
-      icon="alertTriangle"
-    >
-      <template v-slot:title>
-        При добавлении позиции произошла ошибка
-      </template>
-      <template v-slot:footer>
-        <v-btn
-          depressed="depressed"
-          @click="errorModal = false"
-        >
-          Закрыть
-        </v-btn>
-      </template>
-    </notice-modal>
   </div>
 </template>
 
 <script>
+import { required } from 'vuelidate/lib/validators';
 import PriceRequestPositionTable from '@/components/PriceRequestPositionTable.vue';
 import datePicker from '@/components/common/DatePicker.vue';
-import NoticeModal from '@/components/modals/NoticeModal.vue';
 
 export default {
   name: 'CreatePriceRequest',
   components: {
     PositionTable: PriceRequestPositionTable,
     datePicker,
-    NoticeModal,
   },
   data: () => ({
     tab: 0,
@@ -297,21 +278,62 @@ export default {
     successModal: false,
     errorModal: false,
     violations: {},
+    formSubmitted: false,
   }),
+  validations() {
+    return {
+      priceRequest: {
+        delivery: {
+          address: {
+            required,
+          },
+          conditions: {
+            required,
+          },
+          date: {
+            required,
+          },
+        },
+        responseDate: {
+          required,
+        },
+      },
+    };
+  },
   computed: {
-    tabs() {
+    tabs(vm) {
       return [{
         name: 'Общие сведения',
         disabled: false,
+        get validationStatus() {
+          return vm.formSubmitted ? 'valid' : 'not-validated';
+        },
       }, {
         name: 'Позиции',
         disabled: this.nameNotValid,
+        get validationStatus() {
+          return vm.formSubmitted ? 'valid' : 'not-validated';
+        },
       }, {
         name: 'Условия заказчика',
         disabled: this.nameNotValid,
+        get validationStatus() {
+          if (!vm.formSubmitted) {
+            return 'not-validated';
+          }
+
+          return vm.$v.priceRequest.delivery.$invalid ? 'invalid' : 'valid';
+        },
       }, {
         name: 'Доп. условия',
         disabled: this.nameNotValid,
+        get validationStatus() {
+          if (!vm.formSubmitted) {
+            return 'not-validated';
+          }
+
+          return vm.$v.priceRequest.responseDate.$invalid ? 'invalid' : 'valid';
+        },
       }];
     },
     nameNotValid() {
@@ -329,14 +351,62 @@ export default {
       }
       return this.$moment().add(2, 'days').format('YYYY-MM-DD');
     },
+    deliveryAddressErrors() {
+      const errors = [];
+      if (!this.formSubmitted) {
+        return errors;
+      }
+      if (!this.$v.priceRequest.delivery.address.required) {
+        errors.push('Обязательное поле');
+      }
+      return errors;
+    },
+    deliveryConditionsErrors() {
+      const errors = [];
+      if (!this.formSubmitted) {
+        return errors;
+      }
+      if (!this.$v.priceRequest.delivery.conditions.required) {
+        errors.push('Обязательное поле');
+      }
+      return errors;
+    },
+    deliveryDateErrors() {
+      const errors = [];
+      if (!this.formSubmitted) {
+        return errors;
+      }
+      if (!this.$v.priceRequest.delivery.date.required) {
+        errors.push('Обязательное поле');
+      }
+      return errors;
+    },
+    responseDateErrors() {
+      const errors = [];
+      if (!this.formSubmitted) {
+        return errors;
+      }
+      if (!this.$v.priceRequest.responseDate.required) {
+        errors.push('Обязательное поле');
+      }
+      return errors;
+    },
     priceRequestParams() {
       return ({
         ...this.priceRequest,
-        lines: this.priceRequest.lines.map((it) => ({
-          ...it,
-          okei: it.okei.id,
-          okpd2: it.okpd2.id,
-        })),
+        lines: this.priceRequest.lines.map((it) => {
+          const item = JSON.parse(JSON.stringify(it));
+          delete item.editing;
+          delete item.tenant;
+
+          return {
+            ...item,
+            okei: item.okei.id,
+            okpd2: item.okpd2.id,
+            id: typeof item.id === 'number' ? item.id : null,
+            quantity: item.quantity || null,
+          };
+        }),
       });
     },
   },
@@ -347,29 +417,50 @@ export default {
         this.priceRequest.delivery.date = this.deliveryMinDate;
       }
     },
-    async tab() {
-      if (this.requestId) {
-        await this.$http.put(`quote-requests/${this.requestId}`, this.priceRequestParams);
-      }
-
-      const { data: { id } } = await this.$http.post('quote-requests', {
-        name: this.priceRequest.name,
-        type: this.priceRequest.type,
-      });
-      this.requestId = id;
+    tab() {
+      this.saveRequest();
     },
   },
   methods: {
     onPositionsChange(val) {
       this.$set(this.priceRequest, 'lines', val);
     },
+    async createRequest() {
+      const { data: { id } } = await this.$http.post('quote-requests', {
+        name: this.priceRequest.name,
+        type: this.priceRequest.type,
+      });
+      this.requestId = id;
+
+      return Promise.resolve();
+    },
+    async saveRequest() {
+      if (!this.requestId) {
+        await this.createRequest();
+      }
+
+      await this.$http.put(`quote-requests/${this.requestId}`, this.priceRequestParams);
+    },
     async approveRequest() {
+      if (!this.requestId) {
+        await this.createRequest();
+      }
+
       try {
         await this.$http.put(`quote-requests/${this.requestId}/send`, this.priceRequestParams);
-        this.successModal = true;
+        this.$toast.success('Ценовой запрос успешно добавлен');
       } catch (e) {
-        this.violations = e.response.data.violations;
-        this.errorModal = true;
+        this.$toast.danger(e.response.data.message);
+      } finally {
+        this.validateTabs();
+      }
+    },
+    validateTabs() {
+      this.formSubmitted = true;
+
+      const invalidTabIndex = this.tabs.findIndex((it) => it.validationStatus === 'invalid');
+      if (invalidTabIndex !== -1) {
+        this.tab = invalidTabIndex;
       }
     },
   },

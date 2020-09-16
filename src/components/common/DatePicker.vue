@@ -38,7 +38,7 @@ export default {
     min: String,
     max: String,
     required: Boolean,
-    errorMessages: String,
+    errorMessages: Array,
   },
   data: () => ({
     visible: false,

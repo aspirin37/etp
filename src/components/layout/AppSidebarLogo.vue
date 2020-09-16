@@ -21,8 +21,13 @@
 </template>
 
 <script>
+import SvgIcon from '@/components/common/SvgIcon.vue';
+
 export default {
   name: 'AppSidebarLogo',
+  components: {
+    SvgIcon,
+  },
   props: {
     mini: {
       type: Boolean,

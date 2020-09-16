@@ -81,8 +81,13 @@
 </template>
 
 <script>
+import SvgIcon from '@/components/common/SvgIcon.vue';
+
 export default {
   name: 'AppSidebarNavigation',
+  components: {
+    SvgIcon,
+  },
   props: {
     mini: {
       type: Boolean,

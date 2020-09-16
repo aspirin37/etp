@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueMoment from 'vue-moment';
-import SvgIcon from '@/components/common/SvgIcon.vue';
+import Vuelidate from 'vuelidate';
+
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -10,8 +11,7 @@ import http from './api/axios-config';
 import '@/assets/styles/index.scss';
 
 Vue.use(VueMoment);
-
-Vue.component('svg-icon', SvgIcon);
+Vue.use(Vuelidate);
 
 Vue.config.productionTip = false;
 Vue.prototype.$http = http;
