@@ -18,11 +18,11 @@ Vue.use(VuetifyToast, {
   closeText: 'Закрыть',
   shorts: {
     success: {
-      icon: 'check_circle',
+      icon: 'mdi-check-circle',
       iconColor: 'success',
     },
     danger: {
-      icon: 'error_outline',
+      icon: 'mdi-alert-circle-outline',
       iconColor: 'red',
     },
   },
@@ -46,8 +46,5 @@ export default new Vuetify({
   lang: {
     locales: { ru },
     current: 'ru',
-  },
-  icons: {
-    iconfont: 'md',
   },
 });

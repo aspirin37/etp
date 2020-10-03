@@ -7,8 +7,8 @@
       <div class="modal-primary__header">
         <span>ОКПД2</span>
         <v-btn
-          icon="icon"
-          dark="dark"
+          icon
+          dark
           @click="onClose"
         >
           <v-icon>close</v-icon>

@@ -1,5 +1,5 @@
 <template>
-  <div class="position-table position-table--full-height">
+  <div class="main-table pt-3">
     <manual-user-position-modal
       v-if="positionModal"
       v-model="positionModal"
@@ -8,7 +8,7 @@
     />
     <div
       v-if="editable"
-      class="position-table__wrapper mb-3"
+      class="main-table__wrapper mb-3"
     >
       <div class="row">
         <div class="col-auto pr-1">
@@ -51,7 +51,7 @@
     >
       <template v-slot:[`header.actions`]="{}">
         <v-icon size="20">
-          settings
+          mdi-cog
         </v-icon>
       </template>
       <template v-slot:[`item.okei`]="{ item }">
@@ -66,7 +66,7 @@
           class="mr-2"
           @click="showUpdateModal(item)"
         >
-          create
+          mdi-pencil
         </v-icon>
         <v-menu
           offset-y
@@ -77,16 +77,16 @@
               size="20"
               v-on="on"
             >
-              more_horiz
+              mdi-dots-horizontal
             </v-icon>
           </template>
           <v-list>
             <v-list-item @click="clonePosition(item.id)">
               <v-icon
-                size="16"
+                size="20"
                 class="mr-2"
               >
-                content_copy
+                mdi-content-copy
               </v-icon>
               Копировать
             </v-list-item>
@@ -95,7 +95,7 @@
                 size="20"
                 class="mr-2"
               >
-                delete
+                mdi-delete
               </v-icon>
               Удалить
             </v-list-item>

@@ -23,13 +23,13 @@
             v-else-if="it.validationStatus === 'valid'"
             color="success"
           >
-            check_circle
+            mdi-check-circle
           </v-icon>
           <v-icon
             v-else-if="it.validationStatus === 'invalid'"
             color="red"
           >
-            error_outline
+            mdi-alert-circle-outline
           </v-icon>
         </v-avatar>
         <span>{{ it.name }}</span>
@@ -48,7 +48,6 @@
             <v-text-field
               v-model="priceRequest.name"
               class="required"
-              :error-messages="violations.name"
               label="Наименование ЦЗ"
               outlined="outlined"
             />
@@ -249,6 +248,9 @@ export default {
     PositionTable: PriceRequestPositionTable,
     datePicker,
   },
+  props: {
+    id: String,
+  },
   data: () => ({
     tab: 0,
     requestId: null,
@@ -277,7 +279,6 @@ export default {
     },
     successModal: false,
     errorModal: false,
-    violations: {},
     formSubmitted: false,
   }),
   validations() {
@@ -421,7 +422,17 @@ export default {
       this.saveRequest();
     },
   },
+  created() {
+    if (this.id) {
+      this.getRequest();
+    }
+  },
   methods: {
+    async getRequest() {
+      this.requestId = this.id;
+      const { data } = await this.$http.get(`quote-requests/${this.requestId}`);
+      this.priceRequest = { ...this.priceRequest, ...data };
+    },
     onPositionsChange(val) {
       this.$set(this.priceRequest, 'lines', val);
     },

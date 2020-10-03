@@ -10,11 +10,11 @@
       <div class="modal-primary__header">
         <span>Мои позиции</span>
         <v-btn
-          icon="icon"
-          dark="dark"
+          icon
+          dark
           @click="close"
         >
-          <v-icon>close</v-icon>
+          <v-icon>mdi-close</v-icon>
         </v-btn>
       </div>
       <div class="modal-primary__wrapper">

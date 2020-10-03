@@ -11,7 +11,7 @@
         :label="label"
         :class="{'required': required}"
         :error-messages="errorMessages"
-        append-icon="date_range"
+        append-icon="mdi-calendar-range"
         outlined="outlined"
         v-bind="attrs"
         v-on="on"

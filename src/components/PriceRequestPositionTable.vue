@@ -1,5 +1,5 @@
 <template>
-  <div class="position-table pt-3">
+  <div class="main-table main-table--full-height">
     <manual-wizard-position-modal
       v-model="manualModalVisible"
       :position-edited="positionEdited"
@@ -10,7 +10,7 @@
       :items.sync="items"
       @submit="addPositions"
     />
-    <div class="position-table__wrapper mb-3">
+    <div class="main-table__wrapper mb-3">
       <div class="row">
         <div class="col-auto pr-1">
           <dropdown
@@ -53,13 +53,13 @@
             size="16"
             class="ml-auto"
           >
-            create
+            mdi-pencil
           </v-icon>
         </div>
       </template>
       <template v-slot:[`header.actions`]="{}">
         <v-icon size="20">
-          settings
+          mdi-cog
         </v-icon>
       </template>
       <template v-slot:[`item.okei`]="{ item }">
@@ -129,17 +129,15 @@
         <v-icon
           size="20"
           class="mr-2"
-          color="primary"
           @click="showUpdateModal(item)"
         >
-          create
+          mdi-pencil
         </v-icon>
         <v-icon
           size="20"
-          color="primary"
           @click="removePosition(item.id)"
         >
-          delete_outlined
+          mdi-delete
         </v-icon>
       </template>
     </v-data-table>

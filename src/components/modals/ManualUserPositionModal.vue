@@ -15,8 +15,8 @@
       <div class="modal-primary__header">
         <span>Новая позиция</span>
         <v-btn
-          icon="icon"
-          dark="dark"
+          icon
+          dark
           @click="visible = false"
         >
           <v-icon>close</v-icon>
@@ -36,7 +36,7 @@
             class="required"
             :value="okpd2WithCode"
             :error-messages="okpd2Errors"
-            append-icon="reorder"
+            append-icon="mdi-reorder"
             label="ОКПД2"
             required
             outlined

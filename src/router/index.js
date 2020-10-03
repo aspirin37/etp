@@ -5,14 +5,27 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/create-price-request',
+    path: '/create-price-request/:id?',
     name: 'CreatePriceRequest',
     component: () => import('@/views/CreatePriceRequest.vue'),
+    props: true,
+  },
+  {
+    path: '/price-request/:id?',
+    name: 'PriceRequest',
+    component: () => import('@/views/PriceRequest.vue'),
+    props: true,
   },
   {
     path: '/user-positions',
     name: 'UserPositions',
     component: () => import('@/views/UserPositions.vue'),
+  },
+  {
+    path: '/price-requests/:type',
+    name: 'PriceRequests',
+    component: () => import('@/views/PriceRequests.vue'),
+    props: true,
   },
 ];
 

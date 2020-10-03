@@ -106,16 +106,16 @@ export default {
       icon: 'price-request-list',
       children: [{
         label: 'Черновики',
-        link: '/price-request/draft',
+        link: '/price-requests/drafts',
       }, {
         label: 'Исходящие ЦЗ',
-        link: '/price-request/outbox',
+        link: '/price-requests/outbox',
       }, {
         label: 'Входящие ЦЗ',
-        link: '/price-request/inbox',
+        link: '/price-requests/inbox',
       }, {
         label: 'Актуальные ЦЗ',
-        link: '/price-request/actual',
+        link: '/price-requests/actual',
       }],
     }, {
       label: 'Заказы',
