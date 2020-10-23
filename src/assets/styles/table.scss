@@ -4,7 +4,6 @@
   th,
   td {
     border: 0 !important;
-    background-color: $white !important;
     min-width: 100%;
 
     .cursor-pointer {
@@ -90,7 +89,7 @@
   &--full-height {
     padding-top: 0;
     .v-data-table__wrapper {
-      max-height: calc(100vh - 400px);
+      max-height: calc(100vh - 430px);
     }
   }
 

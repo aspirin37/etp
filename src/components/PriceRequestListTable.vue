@@ -7,6 +7,7 @@
       :footer-props="{
         itemsPerPageOptions: [20],
       }"
+      :server-items-length="total"
       show-select
       disable-sort
       fixed-header
@@ -17,9 +18,6 @@
           mdi-cog
         </v-icon>
       </template>
-      <template v-slot:[`item.created`]="{ item }">
-        {{ item.created | moment('DD.MM.YYYY, hh:mm') }}
-      </template>
       <template v-slot:[`item.name`]="{ item }">
         <router-link
           :to="{
@@ -29,12 +27,6 @@
         >
           {{ item.name }}
         </router-link>
-      </template>
-      <template v-slot:[`item.responseDate`]="{ item }">
-        {{ item.responseDate | moment('DD.MM.YYYY, hh:mm') }}
-      </template>
-      <template v-slot:[`item.delivery.date`]="{ item }">
-        {{ item.delivery.date | moment('DD.MM.YYYY, hh:mm') }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon
@@ -99,6 +91,7 @@ export default ({
         align: 'center',
       }],
       items: [],
+      total: 0,
       options: {
         page: 1,
         itemsPerPage: 20,
@@ -118,17 +111,29 @@ export default ({
   },
   methods: {
     async getItems() {
-      const { data } = await this.$http.get('quote-requests', this.options);
-      this.items = data;
+      const { data, headers } = await this.$http.get('quote-requests', {
+        params: { page: this.options.page },
+      });
+      this.items = data.map((it) => ({
+        ...it,
+        created: it.created ? this.$moment(it.created).format('DD.MM.YYYY, hh:mm') : '',
+        responseDate: it.responseDate ? this.$moment(it.responseDate).format('DD.MM.YYYY, hh:mm') : '',
+        delivery: {
+          ...it.delivery,
+          date: it.delivery.date ? this.$moment(it.delivery.date).format('DD.MM.YYYY, hh:mm') : '',
+        },
+      }));
+
+      this.total = +headers['x-pagination-total-count'];
     },
-    async cloneItem() {
-      // try {
-      //   await this.$http.post(`/positions/${id}/clone`);
-      //   this.getPositions();
-      //   this.$toast.success('Позиция успешно скопирована');
-      // } catch (e) {
-      //   this.$toast.danger(e.response.data.message);
-      // }
+    async cloneItem(id) {
+      try {
+        await this.$http.patch(`quote-requests/${id}/clone`);
+        this.getItems();
+        this.$toast.success('Позиция успешно скопирована');
+      } catch (e) {
+        this.$toast.danger(e.response.data.message);
+      }
     },
     async removeItem(id) {
       try {

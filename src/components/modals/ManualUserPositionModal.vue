@@ -19,7 +19,7 @@
           dark
           @click="visible = false"
         >
-          <v-icon>close</v-icon>
+          <v-icon>mdi-close</v-icon>
         </v-btn>
       </div>
       <div class="modal-primary__wrapper">
@@ -50,8 +50,8 @@
             outlined
           />
           <v-textarea
-            v-model.trim="position.description"
-            label="Комментарий"
+            v-model.trim="position.specifications"
+            label="Характеристики"
             hide-details="hide-details"
             outlined="outlined"
           />
@@ -105,7 +105,7 @@ export default {
     position: {
       id: '',
       name: '',
-      description: '',
+      specifications: '',
       okpd2: {
         id: '',
         name: '',
@@ -113,7 +113,7 @@ export default {
       },
       okei: {
         id: '',
-        fullName: '',
+        name: '',
       },
     },
     formSubmitted: false,
@@ -135,7 +135,7 @@ export default {
           },
         },
         okei: {
-          fullName: {
+          name: {
             required,
           },
         },
@@ -189,7 +189,7 @@ export default {
       if (!this.formSubmitted) {
         return errors;
       }
-      if (!this.$v.position.okei.fullName.required) {
+      if (!this.$v.position.okei.name.required) {
         errors.push('Обязательное поле');
       }
       return errors;

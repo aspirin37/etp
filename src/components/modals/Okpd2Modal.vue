@@ -11,7 +11,7 @@
           dark
           @click="onClose"
         >
-          <v-icon>close</v-icon>
+          <v-icon>mdi-close</v-icon>
         </v-btn>
       </div>
       <div class="modal-primary__wrapper">
@@ -19,7 +19,7 @@
           <v-text-field
             v-model="search"
             label="Поиск категории, по коду или имени"
-            prepend-inner-icon="search"
+            prepend-inner-icon="mdi-search"
             hide-details
             filled
           />
@@ -65,7 +65,6 @@
 </template>
 
 <script>
-import { getParents, getChild } from '@/utilities/dictionaries/okpd2';
 
 export default {
   name: 'Okpd2Modal',
@@ -93,14 +92,23 @@ export default {
     },
   },
   async created() {
-    const response = await getParents();
-    this.items = response.map((item) => ({ ...item, locked: true, children: [] }));
+    const { data } = await this.$http.get('okpd2');
+    this.items = data.map((item) => ({
+      ...item,
+      id: item.code,
+      locked: true,
+      children: [],
+    }));
   },
   methods: {
     async loadChild(item) {
-      const response = await getChild(item.code);
-      const mappedResponse = response.map((it) => ({ ...it, children: [] }));
-      item.children.push(...mappedResponse);
+      const { data } = await this.$http.get('okpd2', {
+        params: {
+          parentCode: item.code,
+        },
+      });
+
+      item.children.push(...data.map((it) => ({ ...it, id: it.code, children: [] })));
     },
     onClose() {
       this.visible = false;

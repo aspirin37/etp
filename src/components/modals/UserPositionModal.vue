@@ -73,23 +73,20 @@ export default {
       },
       set(value) {
         this.$emit('input', value);
+        this.selected = [];
       },
     },
   },
-  watch: {
-    visible() {
-      this.reset();
-    },
-  },
   methods: {
-    reset() {
-      this.selected = this.items.filter((it) => it.position);
-    },
     close() {
       this.visible = false;
     },
     async onSubmit() {
-      this.$emit('submit', this.selected);
+      this.$emit('submit', this.selected.map((it) => ({
+        ...it,
+        comment: '',
+        quantity: null,
+      })));
       this.close();
     },
   },

@@ -3,8 +3,9 @@
     v-model="okei"
     :items="okeiList"
     label="Единицы измерения"
-    item-text="fullName"
-    item-value="id"
+    :class="{'required': required}"
+    item-text="name"
+    item-value="code"
     :error-messages="errorMessages"
     :hide-details="hideDetails"
     :outlined="outlined"
@@ -23,6 +24,7 @@ export default {
     value: Object,
     dense: Boolean,
     outlined: Boolean,
+    required: Boolean,
     hideDetails: Boolean,
     errorMessages: Array,
   },
@@ -40,11 +42,7 @@ export default {
     },
   },
   async created() {
-    const okeiList = await getOkei();
-    this.okeiList = okeiList.map((item) => ({
-      id: item.id,
-      fullName: item.name.national,
-    }));
+    this.okeiList = await getOkei();
   },
 };
 </script>

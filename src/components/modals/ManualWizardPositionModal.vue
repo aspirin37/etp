@@ -65,12 +65,14 @@
             >
               <okei-autocomplete
                 v-model="position.okei"
+                :error-messages="okeiErrors"
+                required
                 outlined
               />
             </v-col>
           </v-row>
           <v-textarea
-            v-model.trim="position.description"
+            v-model.trim="position.comment"
             label="Комментарий"
             hide-details="hide-details"
             outlined="outlined"
@@ -123,9 +125,8 @@ export default {
     okeiList: [],
     name: '',
     position: {
-      id: '',
       name: '',
-      description: '',
+      comment: '',
       okpd2: {
         id: '',
         name: '',
@@ -133,7 +134,7 @@ export default {
       },
       okei: {
         id: '',
-        fullName: '',
+        name: '',
       },
       quantity: null,
     },
@@ -148,6 +149,11 @@ export default {
           maxLength: maxLength(this.nameMaxLength),
         },
         okpd2: {
+          name: {
+            required,
+          },
+        },
+        okei: {
           name: {
             required,
           },
@@ -198,6 +204,18 @@ export default {
 
       return errors;
     },
+    okeiErrors() {
+      const errors = [];
+      if (!this.$v.position.okei.name.$dirty) {
+        return errors;
+      }
+
+      if (!this.$v.position.okei.name.required) {
+        errors.push('Обязательное поле');
+      }
+
+      return errors;
+    },
   },
   watch: {
     positionEdited(value) {
@@ -211,9 +229,8 @@ export default {
       setTimeout(() => {
         this.$v.$reset();
         this.position = {
-          id: '',
           name: '',
-          description: '',
+          comment: '',
           okpd2: {
             id: '',
             name: '',
@@ -221,7 +238,7 @@ export default {
           },
           okei: {
             id: '',
-            fullName: '',
+            name: '',
           },
           quantity: null,
         };

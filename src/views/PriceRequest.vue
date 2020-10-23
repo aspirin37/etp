@@ -226,7 +226,7 @@ export default {
           value: vm.priceRequest.name,
         }, {
           label: 'Наименование заказчика',
-          value: vm.priceRequest.customer,
+          value: vm.priceRequest.customer.name,
         }, {
           label: 'ИНН',
           value: '4342301116367',
@@ -241,7 +241,7 @@ export default {
           value: vm.priceRequest.delivery.address,
         }, {
           label: 'Условия оплаты и поставки',
-          value: vm.priceRequest.delivery.conditions,
+          value: vm.priceRequest.delivery.terms,
         }, {
           label: 'Дата поставки',
           value: vm.priceRequest.delivery.date ? vm.$moment(vm.priceRequest.delivery.date).format('YYYY-MM-DD') : '',

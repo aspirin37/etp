@@ -7,7 +7,7 @@
     />
     <user-position-modal
       v-model="userPositionModalVisible"
-      :items.sync="items"
+      :items="items"
       @submit="addPositions"
     />
     <div class="main-table__wrapper mb-3">
@@ -35,6 +35,12 @@
     <v-data-table
       :headers="headers"
       :items="items"
+      :options.sync="options"
+      :item-class="validatePosition"
+      :footer-props="{
+        itemsPerPageOptions: [20],
+      }"
+      :server-items-length="total"
       show-select
       disable-sort
       fixed-header
@@ -68,8 +74,9 @@
           save-text="Сохранить"
           cancel-text="Отмена"
           large
+          @save="updatePosition(item)"
         >
-          {{ item.okei && item.okei.fullName }}
+          {{ item.okei && item.okei.name }}
           <template v-slot:input>
             <okei-autocomplete
               v-model="item.okei"
@@ -84,6 +91,7 @@
           save-text="Сохранить"
           cancel-text="Отмена"
           large
+          @save="updatePosition(item)"
         >
           {{ item.quantity }}
           <template v-slot:input>
@@ -99,26 +107,23 @@
       <template v-slot:[`item.okpd2`]="{ item }">
         <div
           class="cursor-pointer"
-          @click="okpd2ModalVisible = true"
+          @click="showOkpd2Modal(item)"
         >
           {{ item.okpd2 && item.okpd2.name }}
         </div>
-        <okpd2-modal
-          v-model="okpd2ModalVisible"
-          @submit="item.okpd2 = $event"
-        />
       </template>
-      <template v-slot:[`item.description`]="{ item }">
+      <template v-slot:[`item.comment`]="{ item }">
         <v-edit-dialog
-          :return-value.sync="item.description"
+          :return-value.sync="item.comment"
           save-text="Сохранить"
           cancel-text="Отмена"
           large
+          @save="updatePosition(item)"
         >
-          {{ item.description }}
+          {{ item.comment }}
           <template v-slot:input>
             <v-text-field
-              v-model="item.description"
+              v-model="item.comment"
               label="Комментарий"
               hide-details
             />
@@ -141,6 +146,10 @@
         </v-icon>
       </template>
     </v-data-table>
+    <okpd2-modal
+      v-model="okpd2ModalVisible"
+      @submit="positionEdited.okpd2 = $event; updatePosition(positionEdited)"
+    />
   </div>
 </template>
 
@@ -162,6 +171,11 @@ export default ({
     UserPositionModal,
     Okpd2Modal,
   },
+  props: {
+    positions: Array,
+    errors: Array,
+    requestId: String,
+  },
   data() {
     return {
       headers: [{
@@ -181,7 +195,7 @@ export default ({
         text: 'ОКПД2',
         editable: true,
       }, {
-        value: 'description',
+        value: 'comment',
         text: 'Комментарий',
         editable: true,
       }, {
@@ -191,6 +205,11 @@ export default ({
         align: 'center',
       }],
       items: [],
+      total: 0,
+      options: {
+        page: 1,
+        itemsPerPage: 20,
+      },
       userPositionModalVisible: false,
       manualModalVisible: false,
       okpd2ModalVisible: false,
@@ -198,61 +217,95 @@ export default ({
     };
   },
   watch: {
-    items: {
-      deep: true,
-      handler(val) {
-        this.$emit('input', val);
+    options: {
+      handler() {
+        this.getPositions();
       },
+      deep: true,
+    },
+    items: {
+      handler(val) {
+        console.log('!!');
+        this.$emit('update:positions', val);
+        this.$emit('update:errors', val.filter((it) => it.quantity <= 0 && this.errors.includes(it.id)).map((it) => it.id));
+      },
+      deep: true,
     },
   },
+  created() {
+    this.getPositions();
+  },
   methods: {
-    onManualSubmit(data) {
+    showOkpd2Modal(position) {
+      this.okpd2ModalVisible = true;
+      this.positionEdited = position;
+    },
+    async onManualSubmit(data) {
       if (this.positionEdited) {
-        this.updatePosition(data);
-        return;
+        await this.updatePosition(data);
+      } else {
+        await this.createPosition(data);
       }
 
-      this.createPosition(data);
+      this.getPositions();
     },
-    addPositions(data) {
-      const items = data.map((it) => ({
-        ...it,
-        position: it.id,
-        comment: it.description,
-        editing: false,
-      }));
+    async getPositions() {
+      const { data, headers } = await this.$http.get(`quote-requests/${this.requestId}/items`, {
+        params: { page: this.options.page },
+      });
+      this.items = data;
+      this.total = +headers['x-pagination-total-count'];
 
-      this.items = this.items.filter((it) => !it.position).concat(items);
+      return Promise.resolve();
     },
-    createPosition(data) {
+    async addPositions(positions) {
+      const promises = positions.map((it) => this.createPosition(it));
+
+      await Promise.all(promises);
+      this.getPositions();
+    },
+    async createPosition(position) {
       const item = {
-        ...data,
-        id: this.items.length,
-        comment: data.description,
-        position: null,
-        editing: false,
+        ...position,
+        okei: position.okei.code,
+        okpd2: position.okpd2.code,
+        specifications: '',
+        quantity: position.quantity || null,
+        positionId: position.id || null,
       };
 
-      this.items.push(item);
+      await this.$http.post(`quote-requests/${this.requestId}/items`, item);
+
       this.manualModalVisible = false;
       this.positionEdited = undefined;
+      return Promise.resolve();
     },
     showUpdateModal(item) {
       this.positionEdited = JSON.parse(JSON.stringify(item));
       this.manualModalVisible = true;
     },
-    updatePosition(data) {
-      const itemEdited = {
-        ...data,
-        comment: data.description,
+    async updatePosition(position) {
+      const item = {
+        ...position,
+        okei: position.okei.code,
+        okpd2: position.okpd2.code,
+        specifications: '',
+        quantity: position.quantity || null,
+        positionId: position.id || null,
       };
 
-      this.items = this.items.map((it) => (it.id === itemEdited.id ? itemEdited : it));
+      await this.$http.put(`quote-requests/${this.requestId}/items/${item.positionId || this.positionEdited.id}`, item);
+
       this.manualModalVisible = false;
       this.positionEdited = undefined;
+      return Promise.resolve();
     },
-    removePosition(id) {
-      this.items = this.items.filter((it) => it.id !== id);
+    async removePosition(id) {
+      await this.$http.delete(`quote-requests/${this.requestId}/items/${id}`);
+      this.getPositions();
+    },
+    validatePosition({ id }) {
+      return this.errors.find((it) => it === id) ? 'red lighten-5' : '';
     },
   },
 });

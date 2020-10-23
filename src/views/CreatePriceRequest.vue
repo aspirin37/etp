@@ -58,7 +58,7 @@
               disabled="disabled"
             />
             <v-text-field
-              v-model="priceRequest.customer"
+              v-model="priceRequest.customer.name"
               label="Заказчик"
               outlined="outlined"
               disabled="disabled"
@@ -89,7 +89,12 @@
           class="pa-0"
           flat="flat"
         >
-          <position-table @input="onPositionsChange" />
+          <position-table
+            v-if="requestId"
+            :request-id="requestId"
+            :positions.sync="priceRequestPositions"
+            :errors.sync="priceRequestPositionErrors"
+          />
         </v-card>
       </v-tab-item>
       <v-tab-item>
@@ -106,9 +111,9 @@
               outlined="outlined"
             />
             <v-text-field
-              v-model="priceRequest.delivery.conditions"
+              v-model="priceRequest.delivery.terms"
               class="required"
-              :error-messages="deliveryConditionsErrors"
+              :error-messages="deliveryTermsErrors"
               label="Условия оплаты и поставки"
               outlined="outlined"
             />
@@ -122,7 +127,7 @@
                   :error-messages="deliveryDateErrors"
                   :min="deliveryMinDate"
                   label="Дата поставки"
-                  required="required"
+                  required
                 />
               </v-col>
             </v-row>
@@ -191,6 +196,7 @@
                   label="Дата ответа на запрос"
                   :min="responseMinDate"
                   :max="responseMaxDate"
+                  required
                 />
               </v-col>
             </v-row>
@@ -254,9 +260,12 @@ export default {
   data: () => ({
     tab: 0,
     requestId: null,
-    priceRequest: {
+    priceRequest: null,
+    priceRequestPositions: [],
+    priceRequestPositionErrors: [],
+    default: {
       name: '',
-      type: 'STANDARD',
+      type: 'standard',
       customer: 'Вася',
       inn: '7731347089',
       kpp: '773101001',
@@ -264,7 +273,7 @@ export default {
       comment: '',
       delivery: {
         address: '',
-        conditions: '',
+        terms: '',
         date: null,
       },
       requirements: {
@@ -275,7 +284,6 @@ export default {
         nationalProject: false,
         privateRequest: false,
       },
-      lines: [],
     },
     successModal: false,
     errorModal: false,
@@ -288,7 +296,7 @@ export default {
           address: {
             required,
           },
-          conditions: {
+          terms: {
             required,
           },
           date: {
@@ -313,7 +321,20 @@ export default {
         name: 'Позиции',
         disabled: this.nameNotValid,
         get validationStatus() {
-          return vm.formSubmitted ? 'valid' : 'not-validated';
+          if (!vm.formSubmitted) {
+            return 'not-validated';
+          }
+
+          if (!vm.priceRequestPositions.length) {
+            return 'invalid';
+          }
+
+          if (vm.priceRequestPositionErrors.length) {
+            // const regExp = /\[([^)]+)\]/;
+            return 'invalid';
+          }
+
+          return 'valid';
         },
       }, {
         name: 'Условия заказчика',
@@ -362,12 +383,12 @@ export default {
       }
       return errors;
     },
-    deliveryConditionsErrors() {
+    deliveryTermsErrors() {
       const errors = [];
       if (!this.formSubmitted) {
         return errors;
       }
-      if (!this.$v.priceRequest.delivery.conditions.required) {
+      if (!this.$v.priceRequest.delivery.terms.required) {
         errors.push('Обязательное поле');
       }
       return errors;
@@ -392,24 +413,6 @@ export default {
       }
       return errors;
     },
-    priceRequestParams() {
-      return ({
-        ...this.priceRequest,
-        lines: this.priceRequest.lines.map((it) => {
-          const item = JSON.parse(JSON.stringify(it));
-          delete item.editing;
-          delete item.tenant;
-
-          return {
-            ...item,
-            okei: item.okei.id,
-            okpd2: item.okpd2.id,
-            id: typeof item.id === 'number' ? item.id : null,
-            quantity: item.quantity || null,
-          };
-        }),
-      });
-    },
   },
   watch: {
     // eslint-disable-next-line
@@ -421,20 +424,26 @@ export default {
     tab() {
       this.saveRequest();
     },
+    id() {
+      if (!this.id) {
+        this.reset();
+      }
+    },
   },
   created() {
+    this.reset();
     if (this.id) {
       this.getRequest();
     }
   },
   methods: {
+    reset() {
+      this.priceRequest = JSON.parse(JSON.stringify(this.default));
+    },
     async getRequest() {
       this.requestId = this.id;
       const { data } = await this.$http.get(`quote-requests/${this.requestId}`);
       this.priceRequest = { ...this.priceRequest, ...data };
-    },
-    onPositionsChange(val) {
-      this.$set(this.priceRequest, 'lines', val);
     },
     async createRequest() {
       const { data: { id } } = await this.$http.post('quote-requests', {
@@ -450,7 +459,8 @@ export default {
         await this.createRequest();
       }
 
-      await this.$http.put(`quote-requests/${this.requestId}`, this.priceRequestParams);
+      await this.$http.put(`quote-requests/${this.requestId}`, this.priceRequest);
+      return Promise.resolve();
     },
     async approveRequest() {
       if (!this.requestId) {
@@ -458,16 +468,35 @@ export default {
       }
 
       try {
-        await this.$http.put(`quote-requests/${this.requestId}/send`, this.priceRequestParams);
+        await this.saveRequest();
+        await this.$http.patch(`quote-requests/${this.requestId}/publish`);
         this.$toast.success('Ценовой запрос успешно добавлен');
+        this.$router.push('price-requests/drafts');
       } catch (e) {
-        this.$toast.danger(e.response.data.message);
-      } finally {
-        this.validateTabs();
+        this.validateTabs(e);
       }
     },
-    validateTabs() {
+    validateTabs(e) {
       this.formSubmitted = true;
+
+      const emptyPositionsError = e.response.data.errors.find((it) => it.path === 'items');
+
+      if (emptyPositionsError) {
+        this.$toast.danger(emptyPositionsError.details);
+        this.tab = 1;
+        return;
+      }
+
+      const regExp = /\[([^)]+)\]/;
+      const positionErrors = e.response.data.errors
+        .filter((it) => it.path.includes('items'))
+        .map((it) => regExp.exec(it.path)[1]);
+
+      if (positionErrors.length) {
+        this.$toast.danger('Для указанных позиций не заполнено количество');
+        this.priceRequestPositionErrors = positionErrors;
+        this.tab = 1;
+      }
 
       const invalidTabIndex = this.tabs.findIndex((it) => it.validationStatus === 'invalid');
       if (invalidTabIndex !== -1) {

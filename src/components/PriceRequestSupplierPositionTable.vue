@@ -20,7 +20,7 @@
         </v-icon>
       </template>
       <template v-slot:[`item.okei`]="{ item }">
-        {{ item.okei && item.okei.fullName }}
+        {{ item.okei && item.okei.name }}
       </template>
       <template v-slot:[`item.quantity`]="{ item }">
         <v-edit-dialog

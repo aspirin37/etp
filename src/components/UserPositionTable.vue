@@ -55,7 +55,7 @@
         </v-icon>
       </template>
       <template v-slot:[`item.okei`]="{ item }">
-        {{ item.okei && item.okei.fullName }}
+        {{ item.okei && item.okei.name }}
       </template>
       <template v-slot:[`item.okpd2`]="{ item }">
         {{ item.okpd2 && item.okpd2.name }}
@@ -154,8 +154,8 @@ export default {
         text: 'ОКПД2',
         editable: true,
       }, {
-        value: 'description',
-        text: 'Комментарий',
+        value: 'specifications',
+        text: 'Характеристики',
         editable: true,
       }];
 
@@ -196,8 +196,8 @@ export default {
     onSubmit(data) {
       const params = {
         ...data,
-        okpd2: data.okpd2.id,
-        okei: data.okei.id,
+        okpd2: data.okpd2.code,
+        okei: data.okei.code,
       };
 
       if (this.positionEdited) {
