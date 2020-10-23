@@ -1,0 +1,32 @@
+stages:
+  - build
+  - deploy
+
+.build: &build
+  image: node:latest
+  stage: build
+  before_script:
+    - npm install
+  artifacts:
+    paths:
+      - dist
+
+Create build:
+  <<: *build
+  script:
+    - npm run build
+  when: manual
+
+Deploy to Production:
+  image: alpine
+  stage: deploy
+  before_script:
+    - apk update && apk upgrade
+    - apk add openssh-client rsync bash
+    - eval $(ssh-agent -s)
+    - bash -c 'ssh-add <(echo "$SSH_PRIVATE_KEY")'
+    - mkdir -p ~/.ssh
+    - echo -e 'Host *\n\tStrictHostKeyChecking no\n\n' > ~/.ssh/config
+  script:
+    - rsync -ar ./dist/ $SSH_USER@$SSH_HOST:$SSH_PATH
+  when: manual
