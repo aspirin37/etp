@@ -109,7 +109,7 @@
           class="cursor-pointer"
           @click="showOkpd2Modal(item)"
         >
-          {{ item.okpd2 && item.okpd2.name }}
+          {{ item.okpd2 && item.okpd2.code }}
         </div>
       </template>
       <template v-slot:[`item.comment`]="{ item }">
@@ -225,7 +225,6 @@ export default ({
     },
     items: {
       handler(val) {
-        console.log('!!');
         this.$emit('update:positions', val);
         this.$emit('update:errors', val.filter((it) => it.quantity <= 0 && this.errors.includes(it.id)).map((it) => it.id));
       },

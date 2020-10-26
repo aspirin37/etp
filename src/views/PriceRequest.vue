@@ -2,7 +2,10 @@
   <div class="page wizard">
     <div class="page__header">
       <h1 class="page__title">
-        Ценовой запрос {{ id }}
+        Ценовой запрос
+        <template v-if="priceRequest">
+          {{ priceRequest.name }}
+        </template>
       </h1>
     </div>
     <v-tabs
@@ -26,10 +29,7 @@
           class="pa-0 pt-8"
           flat="flat"
         >
-          <position-table
-            v-if="priceRequest"
-            :items="priceRequest.lines"
-          />
+          <position-table :id="requestId" />
         </v-card>
       </v-tab-item>
       <v-tab-item>
@@ -200,6 +200,7 @@ export default {
     tabs: ['Позиции', 'Общая информация', 'Условия поставщика'],
     requestId: null,
     priceRequest: null,
+    priceRequestPositions: [],
     successModal: false,
     errorModal: false,
     formSubmitted: false,

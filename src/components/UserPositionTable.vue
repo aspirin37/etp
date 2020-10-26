@@ -58,7 +58,7 @@
         {{ item.okei && item.okei.name }}
       </template>
       <template v-slot:[`item.okpd2`]="{ item }">
-        {{ item.okpd2 && item.okpd2.name }}
+        {{ item.okpd2 && item.okpd2.code }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon
@@ -231,7 +231,7 @@ export default {
     },
     async clonePosition(id) {
       try {
-        await this.$http.post(`/positions/${id}/clone`);
+        await this.$http.patch(`/positions/${id}/clone`);
         this.getPositions();
         this.$toast.success('Позиция успешно скопирована');
       } catch (e) {
@@ -240,7 +240,7 @@ export default {
     },
     async removePosition(id) {
       try {
-        await this.$http.delete(`positions/${id}`);
+        await this.$http.patch(`positions/${id}/archive`);
         this.getPositions();
         this.$toast.success('Позиция успешно удалена');
       } catch (e) {
