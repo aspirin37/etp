@@ -6,7 +6,7 @@
       </h1>
     </div>
     <v-tabs
-      v-model="tabComputed"
+      v-model="tab"
       class="tabs-primary"
     >
       <v-tab
@@ -18,10 +18,10 @@
       </v-tab>
     </v-tabs>
     <v-card
-      class="pa-0 pt-3"
+      class="pa-0"
       flat="flat"
     >
-      <price-request-list-table />
+      <price-request-list-table :type="tabs[tab].value" />
     </v-card>
   </div>
 </template>
@@ -41,7 +41,6 @@ export default {
     },
   },
   data: () => ({
-    tab: 0,
     tabs: [{
       text: 'Черновики',
       value: 'drafts',
@@ -57,7 +56,7 @@ export default {
     }],
   }),
   computed: {
-    tabComputed: {
+    tab: {
       get() {
         return this.tabs.findIndex((it) => it.value === this.type);
       },

@@ -185,6 +185,7 @@
 <script>
 import PriceRequestSupplierPositionTable from '@/components/PriceRequestSupplierPositionTable.vue';
 import datePicker from '@/components/common/DatePicker.vue';
+import { priceRequestTypes } from '@/utilities/enums';
 
 export default {
   name: 'PriceRequest',
@@ -221,7 +222,7 @@ export default {
         name: 'Общие сведения',
         fields: [{
           label: 'Тип ЦЗ',
-          value: vm.priceRequest.type,
+          value: priceRequestTypes[vm.priceRequest.type],
         }, {
           label: 'Наименование ЦЗ',
           value: vm.priceRequest.name,

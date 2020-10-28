@@ -8,6 +8,7 @@
         itemsPerPageOptions: [20],
       }"
       :server-items-length="total"
+      :loading="loading"
       show-select
       disable-sort
       fixed-header
@@ -21,24 +22,17 @@
       <template v-slot:[`item.name`]="{ item }">
         <router-link
           :to="{
-            name: 'PriceRequest',
+            name: type === 'drafts' ? 'CreatePriceRequest' : 'PriceRequest',
             params: {id: item.id}
           }"
         >
           {{ item.name }}
         </router-link>
       </template>
+      <template v-slot:[`item.type`]="{ item }">
+        {{ priceRequestTypes[item.type] }}
+      </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon
-          size="20"
-          class="mr-2"
-          @click="$router.push({
-            name: 'CreatePriceRequest',
-            params: {id: item.id}
-          })"
-        >
-          mdi-send
-        </v-icon>
         <v-icon
           size="16"
           class="mr-2"
@@ -58,9 +52,13 @@
 </template>
 
 <script>
+import { priceRequestTypes } from '@/utilities/enums';
 
 export default ({
   name: 'PriceRequestListTable',
+  props: {
+    type: String,
+  },
   data() {
     return {
       headers: [{
@@ -96,6 +94,8 @@ export default ({
         page: 1,
         itemsPerPage: 20,
       },
+      loading: false,
+      priceRequestTypes,
     };
   },
   watch: {
@@ -105,12 +105,16 @@ export default ({
       },
       deep: true,
     },
+    type() {
+      this.getItems();
+    },
   },
   created() {
     this.getItems();
   },
   methods: {
     async getItems() {
+      this.loading = true;
       const { data, headers } = await this.$http.get('quote-requests', {
         params: { page: this.options.page },
       });
@@ -125,6 +129,7 @@ export default ({
       }));
 
       this.total = +headers['x-pagination-total-count'];
+      this.loading = false;
     },
     async cloneItem(id) {
       try {

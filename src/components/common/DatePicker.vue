@@ -22,6 +22,7 @@
       v-model="date"
       :min="min"
       :max="max"
+      :first-day-of-week="1"
       no-title="no-title"
       color="primary"
       @input="visible = false"

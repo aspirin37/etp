@@ -1,6 +1,11 @@
 .v-data-table {
   table-layout: fixed;
   box-sizing: border-box;
+
+  tr:hover {
+    background-color: transparent !important;
+  }
+
   th,
   td {
     border: 0 !important;
@@ -22,7 +27,7 @@
       inset 1px 0 $borderColor !important;
     color: $gray !important;
     font: normal 13px/15px "Roboto" !important;
-    padding: 16px 15px !important;
+    // padding: 16px 15px !important;
     vertical-align: middle !important;
     white-space: nowrap !important;
 

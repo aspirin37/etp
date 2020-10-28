@@ -152,7 +152,7 @@ export default {
       },
     },
     okpd2WithCode() {
-      if (this.position.okpd2.code) {
+      if (this.position.okpd2 && this.position.okpd2.code) {
         return `${this.position.okpd2.code} -- ${this.position.okpd2.name}`;
       }
       return '';
