@@ -21,7 +21,10 @@
       class="pa-0"
       flat="flat"
     >
-      <price-request-list-table :type="tabs[tab].value" />
+      <price-request-list-table
+        :type="tabs[tab].value"
+        :url="tabs[tab].url"
+      />
     </v-card>
   </div>
 </template>
@@ -44,15 +47,19 @@ export default {
     tabs: [{
       text: 'Черновики',
       value: 'drafts',
+      url: 'quote-requests?status=draft',
     }, {
       text: 'Исходящие ЦЗ',
       value: 'outbox',
+      url: 'quote-requests?status=!draft',
     }, {
       text: 'Входящие ЦЗ',
       value: 'inbox',
+      url: 'quotes',
     }, {
       text: 'Актуальные ЦЗ',
       value: 'actual',
+      url: 'quote-requests/actual',
     }],
   }),
   computed: {

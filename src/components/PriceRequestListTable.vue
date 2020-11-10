@@ -58,6 +58,7 @@ export default ({
   name: 'PriceRequestListTable',
   props: {
     type: String,
+    url: String,
   },
   data() {
     return {
@@ -106,6 +107,12 @@ export default ({
       deep: true,
     },
     type() {
+      this.items = [];
+
+      if (this.options.page !== 1) {
+        this.options.page = 1;
+        return;
+      }
       this.getItems();
     },
   },
@@ -115,7 +122,7 @@ export default ({
   methods: {
     async getItems() {
       this.loading = true;
-      const { data, headers } = await this.$http.get('quote-requests', {
+      const { data, headers } = await this.$http.get(this.url, {
         params: { page: this.options.page },
       });
       this.items = data.map((it) => ({

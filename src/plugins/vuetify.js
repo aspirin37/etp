@@ -40,6 +40,7 @@ export default new Vuetify({
         grey: '#99A0A8',
         'light-grey': '#EEF2F5',
         teal: '#3194A4',
+        dark: '#242f38',
       },
     },
   },

@@ -118,7 +118,7 @@
                 cols="8"
               >
                 <date-picker
-                  label="Дата ответа на запрос"
+                  label="Дата поставки"
                   :min="responseMinDate"
                   :max="responseMaxDate"
                   required
@@ -170,6 +170,7 @@
         Далее
       </v-btn>
       <v-btn
+        v-if="!isUserRequest"
         class="ml-auto"
         type="submit"
         depressed="depressed"
@@ -186,6 +187,7 @@
 import PriceRequestSupplierPositionTable from '@/components/PriceRequestSupplierPositionTable.vue';
 import datePicker from '@/components/common/DatePicker.vue';
 import { priceRequestTypes } from '@/utilities/enums';
+import { mapState } from 'vuex';
 
 export default {
   name: 'PriceRequest',
@@ -198,7 +200,6 @@ export default {
   },
   data: () => ({
     tab: 0,
-    tabs: ['Позиции', 'Общая информация', 'Условия поставщика'],
     requestId: null,
     priceRequest: null,
     priceRequestPositions: [],
@@ -207,6 +208,19 @@ export default {
     formSubmitted: false,
   }),
   computed: {
+    ...mapState(['user']),
+    isUserRequest() {
+      return this.priceRequest && this.user.tenant_id === this.priceRequest.customer.id;
+    },
+    tabs() {
+      const tabs = ['Позиции', 'Общая информация'];
+
+      if (!this.isUserRequest) {
+        tabs.push('Условия поставщика');
+      }
+
+      return tabs;
+    },
     responseMinDate() {
       return this.$moment().add(1, 'days').format('YYYY-MM-DD');
     },

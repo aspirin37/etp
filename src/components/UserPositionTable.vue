@@ -58,7 +58,7 @@
         {{ item.okei && item.okei.name }}
       </template>
       <template v-slot:[`item.okpd2`]="{ item }">
-        {{ item.okpd2 && item.okpd2.name }}
+        {{ item.okpd2 && item.okpd2.code }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon

@@ -1,15 +1,25 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import axiosInstance from '../api/axios-config';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    user: JSON.parse(localStorage.getItem('user')),
   },
   mutations: {
-  },
-  actions: {
-  },
-  modules: {
+    setUser: (state, payload) => {
+      state.user = payload;
+      localStorage.setItem('user', JSON.stringify(payload));
+    },
+    signOut: (state) => {
+      state.user = null;
+
+      localStorage.removeItem('authorization');
+      localStorage.removeItem('jwt');
+
+      delete axiosInstance.defaults.headers.jwtacc;
+    },
   },
 });

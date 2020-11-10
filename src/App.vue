@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import AuthPanel from '@/components/layout/AuthPanel.vue';
+import AuthPanel from '@/components/layout/AuthPanelTemp.vue';
 import AppSidebar from '@/components/layout/AppSidebar.vue';
 
 export default {
