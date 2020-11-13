@@ -388,14 +388,22 @@ export default {
     },
     async confirmQuote() {
       this.loading = true;
-      await this.$http.put(`quotes/${this.quoteId}`, {
-        delivery: {
-          date: this.quoteRequest.delivery.date,
-          price: this.$ci.parse(this.quoteRequest.delivery.price),
-          vat: this.quoteRequest.delivery.vat,
-        },
-        comment: this.quoteRequest.comment,
-      });
+      try {
+        await this.$http.put(`quotes/${this.quoteId}`, {
+          delivery: {
+            date: this.quoteRequest.delivery.date,
+            price: this.$ci.parse(this.quoteRequest.delivery.price),
+            vat: this.quoteRequest.delivery.vat,
+          },
+          comment: this.quoteRequest.comment,
+        });
+
+        await this.$http.patch(`quotes/${this.quoteId}/confirm`);
+        this.$toast.success('Ценовое предложение отправлено!');
+        this.$router.push('/price-requests/inbox');
+      } catch (e) {
+        this.$toast.error('Ошибка при отправлении ценового предложения');
+      }
 
       this.loading = false;
     },

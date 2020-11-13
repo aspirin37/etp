@@ -470,7 +470,7 @@ export default {
       try {
         await this.saveRequest();
         await this.$http.patch(`quote-requests/${this.requestId}/publish`);
-        this.$toast.success('Ценовой запрос успешно добавлен');
+        this.$toast.success('Ценовой запрос успешно создан');
         this.$router.push('/price-requests/outbox');
       } catch (e) {
         this.validateTabs(e);

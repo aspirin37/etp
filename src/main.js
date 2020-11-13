@@ -16,10 +16,10 @@ Vue.use(Vuelidate);
 
 const currencyOptions = {
   globalOptions: {
-    currency: 'RUB',
+    currency: null,
     locale: 'ru',
     allowNegative: false,
-    valueAsInteger: true,
+    distractionFree: false,
   },
 };
 

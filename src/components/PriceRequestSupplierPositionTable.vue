@@ -14,10 +14,6 @@
         {{ item.okpd2 && item.okpd2.code }}
       </template>
       <template v-slot:[`item.price`]="{ item }">
-        <!-- <money
-          v-model="price"
-          v-bind="money"
-        /> -->
         <v-text-field
           v-model="item.price"
           v-currency
@@ -31,6 +27,8 @@
         <v-select
           v-model="item.vat"
           :items="[20, 10, 0]"
+          item-text="text"
+          item-value="value"
           hide-details
           outlined
           dense
@@ -54,13 +52,9 @@
 </template>
 
 <script>
-// import { Money } from 'v-money';
 
 export default ({
   name: 'PriceRequestSupplierPositionTable',
-  // components: {
-  //   Money,
-  // },
   props: {
     id: String,
     quoteId: [String, Object],
@@ -83,14 +77,19 @@ export default ({
         text: 'Нет',
         value: false,
       }],
-      // money: {
-      //   // decimal: ',',
-      //   // thousands: '.',
-      //   // prefix: '',
-      //   suffix: ' ₽',
-      //   // precision: 2,
-      //   // masked: false /* doesn't work with directive */
-      // },
+      vatOptions: [{
+        text: '20',
+        value: 20,
+      }, {
+        text: '10',
+        value: 10,
+      }, {
+        text: '0',
+        value: 0,
+      }, {
+        text: 'Без НДС',
+        value: null,
+      }],
     };
   },
   computed: {
