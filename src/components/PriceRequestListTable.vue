@@ -32,6 +32,9 @@
       <template v-slot:[`item.type`]="{ item }">
         {{ priceRequestTypes[item.type] }}
       </template>
+      <template v-slot:[`item.status`]="{ item }">
+        {{ priceRequestStatuses[item.status] }}
+      </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon
           size="16"
@@ -52,7 +55,10 @@
 </template>
 
 <script>
-import { priceRequestTypes } from '@/utilities/enums';
+import {
+  priceRequestTypes,
+  priceRequestStatuses,
+} from '@/utilities/enums';
 
 export default ({
   name: 'PriceRequestListTable',
@@ -62,33 +68,39 @@ export default ({
   },
   data() {
     return {
-      headers: [{
-        value: 'created',
-        text: 'Дата создания',
-        width: '140px',
-      }, {
-        value: 'name',
-        text: 'Наименование ЦЗ',
-      }, {
-        value: 'type',
-        text: 'Тип ЦЗ',
-      }, {
-        value: 'responseDate',
-        text: 'Дата предоставления ответа на ЦЗ',
-        width: '140px',
-      }, {
-        value: 'delivery.address',
-        text: 'Адрес поставки',
-      }, {
-        value: 'delivery.date',
-        text: 'Предполагаемая дата выполнения работ',
-        width: '140px',
-      }, {
-        value: 'actions',
-        text: 'Действия',
-        width: '150px',
-        align: 'center',
-      }],
+      headers: [
+        // {
+        //   value: 'created',
+        //   text: 'Дата создания',
+        //   width: '140px',
+        // },
+        {
+          value: 'name',
+          text: 'Наименование ЦЗ',
+        }, {
+          value: 'type',
+          text: 'Тип ЦЗ',
+        }, {
+          value: 'responseDate',
+          text: 'Дата предоставления ответа на ЦЗ',
+          width: '140px',
+        }, {
+          value: 'delivery.address',
+          text: 'Адрес поставки',
+        }, {
+          value: 'delivery.date',
+          text: 'Предполагаемая дата выполнения работ',
+          width: '140px',
+        }, {
+          value: 'status',
+          text: 'Статус',
+        }, {
+          value: 'actions',
+          text: 'Действия',
+          width: '150px',
+          align: 'center',
+        },
+      ],
       items: [],
       total: 0,
       options: {
@@ -97,6 +109,7 @@ export default ({
       },
       loading: false,
       priceRequestTypes,
+      priceRequestStatuses,
     };
   },
   watch: {
@@ -122,9 +135,15 @@ export default ({
   methods: {
     async getItems() {
       this.loading = true;
-      const { data, headers } = await this.$http.get(this.url, {
+      // eslint-disable-next-line
+      let { data, headers } = await this.$http.get(this.url, {
         params: { page: this.options.page },
       });
+
+      if (this.type === 'inbox') {
+        data = data.map((it) => ({ ...it.quoteRequest, id: it.id }));
+      }
+
       this.items = data.map((it) => ({
         ...it,
         created: it.created ? this.$moment(it.created).format('DD.MM.YYYY, hh:mm') : '',

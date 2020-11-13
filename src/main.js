@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueMoment from 'vue-moment';
 import Vuelidate from 'vuelidate';
+import VueCurrencyInput from 'vue-currency-input';
 
 import App from './App.vue';
 import router from './router';
@@ -12,6 +13,17 @@ import '@/assets/styles/index.scss';
 
 Vue.use(VueMoment);
 Vue.use(Vuelidate);
+
+const currencyOptions = {
+  globalOptions: {
+    currency: 'RUB',
+    locale: 'ru',
+    allowNegative: false,
+    valueAsInteger: true,
+  },
+};
+
+Vue.use(VueCurrencyInput, currencyOptions);
 
 Vue.config.productionTip = false;
 Vue.prototype.$http = http;
