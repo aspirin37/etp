@@ -271,6 +271,7 @@ export default ({
         specifications: '',
         quantity: position.quantity || null,
         positionId: position.id || null,
+        etpCode: '19237834.11.120',
       };
 
       await this.$http.post(`quote-requests/${this.requestId}/items`, item);
