@@ -14,6 +14,17 @@ import '@/assets/styles/index.scss';
 Vue.use(VueMoment);
 Vue.use(Vuelidate);
 
+Vue.filter('toCurrency', (value) => {
+  if (typeof value !== 'number') {
+    return value;
+  }
+  const formatter = new Intl.NumberFormat('ru-RU', {
+    style: 'currency',
+    currency: 'RUB',
+  });
+  return formatter.format(value);
+});
+
 const currencyOptions = {
   globalOptions: {
     currency: null,

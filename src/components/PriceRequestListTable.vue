@@ -21,10 +21,7 @@
       </template>
       <template v-slot:[`item.name`]="{ item }">
         <router-link
-          :to="{
-            name: type === 'drafts' ? 'CreatePriceRequest' : 'PriceRequest',
-            params: {id: item.id}
-          }"
+          :to="getPriceRequestRoute(item)"
         >
           {{ item.name }}
         </router-link>
@@ -174,6 +171,17 @@ export default ({
       } catch (e) {
         this.$toast.danger(e.response.data.message);
       }
+    },
+    getPriceRequestRoute(priceRequest) {
+      return {
+        name: this.type === 'drafts' ? 'CreatePriceRequest' : 'PriceRequest',
+        params: {
+          id: priceRequest.id,
+        },
+        query: {
+          analysis: priceRequest.status === 'review' ? true : undefined,
+        },
+      };
     },
   },
 });

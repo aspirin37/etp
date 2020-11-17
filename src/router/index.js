@@ -5,6 +5,11 @@ Vue.use(VueRouter);
 
 const routes = [
   {
+    path: '/auth',
+    name: 'Auth',
+    component: () => import('@/views/Auth.vue'),
+  },
+  {
     path: '/create-price-request/:id?',
     name: 'CreatePriceRequest',
     component: () => import('@/views/CreatePriceRequest.vue'),

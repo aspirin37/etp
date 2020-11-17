@@ -2,6 +2,8 @@
   <v-dialog
     v-model="visible"
     max-width="500px"
+    no-click-animation
+    persistent
   >
     <v-form
       class="modal-primary"
@@ -9,13 +11,13 @@
     >
       <div class="modal-primary__header">
         <span>Авторизация</span>
-        <v-btn
+        <!-- <v-btn
           icon
           dark
           @click="visible = false"
         >
           <v-icon>mdi-close</v-icon>
-        </v-btn>
+        </v-btn> -->
       </div>
       <div class="modal-primary__wrapper">
         <div class="modal-primary__content">
@@ -36,13 +38,13 @@
           />
         </div>
         <div class="modal-primary__actions pt-0">
-          <v-btn
+          <!-- <v-btn
             class="ml-auto"
             depressed="depressed"
             @click="visible = false"
           >
             Отмена
-          </v-btn>
+          </v-btn> -->
           <v-btn
             class="ml-2"
             depressed="depressed"
@@ -94,13 +96,13 @@ export default {
       return JSON.parse(jsonPayload);
     },
     signIn() {
-      this.$http.post('auth/login', this.credentials).then((response) => {
+      this.$http.post('auth/login', this.credentials).then(async (response) => {
         const jwt = response.data.token;
         const userData = this.parseJwt(jwt);
 
         this.$http.defaults.headers.authorization = `Bearer ${jwt}`;
         localStorage.setItem('jwt', jwt);
-        this.$store.commit('setUser', userData);
+        await this.$store.commit('setUser', userData);
 
         this.visible = false;
         this.$router.push('/price-requests/outbox');

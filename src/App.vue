@@ -1,7 +1,7 @@
 <template>
   <v-app id="app">
-    <auth-panel />
-    <app-sidebar />
+    <!-- <auth-panel /> -->
+    <app-sidebar v-if="$route.name !== 'Auth'" />
 
     <v-main>
       <router-view />
@@ -10,13 +10,13 @@
 </template>
 
 <script>
-import AuthPanel from '@/components/layout/AuthPanelTemp.vue';
+// import AuthPanel from '@/components/layout/AuthPanelTemp.vue';
 import AppSidebar from '@/components/layout/AppSidebar.vue';
 
 export default {
   name: 'App',
   components: {
-    AuthPanel,
+    // AuthPanel,
     AppSidebar,
   },
 };

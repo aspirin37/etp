@@ -1,6 +1,7 @@
 <template>
   <v-navigation-drawer
     class="app-sidebar"
+    :class="{'once-opened': onceOpened}"
     expand-on-hover
     :mini-variant.sync="mini"
     :mini-variant-width="80"
@@ -32,7 +33,15 @@ export default {
   },
   data: () => ({
     mini: true,
+    onceOpened: false,
   }),
+  watch: {
+    mini(val) {
+      if (!val) {
+        this.onceOpened = true;
+      }
+    },
+  },
 };
 </script>
 

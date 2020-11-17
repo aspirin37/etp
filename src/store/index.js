@@ -12,6 +12,7 @@ export default new Vuex.Store({
     setUser: (state, payload) => {
       state.user = payload;
       localStorage.setItem('user', JSON.stringify(payload));
+      return Promise.resolve();
     },
     signOut: (state) => {
       state.user = null;
@@ -20,6 +21,7 @@ export default new Vuex.Store({
       localStorage.removeItem('jwt');
 
       delete axiosInstance.defaults.headers.jwtacc;
+      return Promise.resolve();
     },
   },
 });

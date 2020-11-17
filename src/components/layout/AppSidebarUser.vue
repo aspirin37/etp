@@ -6,7 +6,7 @@
       color="teal"
       size="40"
     >
-      В
+      {{ user.user_name.slice(0, 1) }}
     </v-avatar>
     <transition name="fade">
       <div
@@ -21,10 +21,10 @@
             <v-expansion-panel-header>
               <div class="d-flex flex-column">
                 <div class="app-sidebar-user__name">
-                  Иван Иванов
+                  {{ user.user_name }}
                 </div>
                 <div class="app-sidebar-user__organization">
-                  МГУ им. Ломоносова
+                  {{ user.tenant_name }}
                 </div>
               </div>
             </v-expansion-panel-header>
@@ -42,8 +42,10 @@
                 Финансы
               </router-link><span
                 class="app-sidebar__link app-sidebar__link--sub"
-                @click.prevent
-              >Выход</span>
+                @click.prevent="signOut"
+              >
+                Выход
+              </span>
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
@@ -54,12 +56,23 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'AppSidebarUser',
   props: {
     mini: {
       type: Boolean,
       default: false,
+    },
+  },
+  computed: {
+    ...mapState(['user']),
+  },
+  methods: {
+    async signOut() {
+      this.$router.push('/auth');
+      await this.$store.commit('signOut');
     },
   },
 };

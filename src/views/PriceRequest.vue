@@ -24,6 +24,17 @@
       v-model="tab"
       class="wizard__content"
     >
+      <v-tab-item v-if="isAnalysis">
+        <v-card
+          class="pa-0 pt-8"
+          flat="flat"
+        >
+          <analysis
+            :id="requestId"
+            @winner-selected="selectWinner"
+          />
+        </v-card>
+      </v-tab-item>
       <v-tab-item>
         <v-card
           class="pa-0 pt-8"
@@ -207,7 +218,7 @@
           v-if="isQuote"
           class="ml-auto"
           type="submit"
-          depressed="depressed"
+          depressed
           color="accent"
           @click.prevent="confirmQuote"
         >
@@ -217,7 +228,7 @@
           v-else
           class="ml-auto"
           type="submit"
-          depressed="depressed"
+          depressed
           color="accent"
           :loading="loading"
           @click="prepareQuote"
@@ -225,12 +236,24 @@
           Составить ценовое предложение
         </v-btn>
       </template>
+      <v-btn
+        v-if="isAnalysis"
+        class="ml-auto"
+        depressed
+        color="accent"
+        :loading="loading"
+        :disabled="!winner"
+        @click="createOrder"
+      >
+        Создать заказ
+      </v-btn>
     </div>
   </div>
 </template>
 
 <script>
-import PriceRequestSupplierPositionTable from '@/components/PriceRequestSupplierPositionTable.vue';
+import PriceRequestSupplierPositionTable from '@/components/price-request/PriceRequestSupplierPositionTable.vue';
+import PriceRequestAnalysis from '@/components/price-request/PriceRequestAnalysis.vue';
 import datePicker from '@/components/common/DatePicker.vue';
 import { priceRequestTypes } from '@/utilities/enums';
 import { mapState } from 'vuex';
@@ -239,6 +262,7 @@ export default {
   name: 'PriceRequest',
   components: {
     PositionTable: PriceRequestSupplierPositionTable,
+    analysis: PriceRequestAnalysis,
     datePicker,
   },
   props: {
@@ -256,17 +280,25 @@ export default {
     formSubmitted: false,
     isQuote: false,
     loading: false,
+    winner: null,
   }),
   computed: {
     ...mapState(['user']),
     isUserRequest() {
       return this.priceRequest && this.user.tenant_id === this.priceRequest.customer.id;
     },
+    isAnalysis() {
+      return this.$route.query.analysis;
+    },
     tabs() {
-      const tabs = ['Позиции', 'Общая информация'];
+      const tabs = ['Анализ предложения', 'Позиции', 'Общая информация'];
 
       if (this.isQuote) {
         tabs.push('Условия поставщика');
+      }
+
+      if (!this.isAnalysis) {
+        tabs.shift();
       }
 
       return tabs;
@@ -345,6 +377,8 @@ export default {
   },
   created() {
     this.getRequest();
+    this.$http.get('purchase-orders');
+    this.$http.get('purchase-orders/f471d46f-b179-4efa-a2b9-59b58f4516e7');
   },
   methods: {
     async getRequest() {
@@ -406,6 +440,12 @@ export default {
       }
 
       this.loading = false;
+    },
+    selectWinner(supplierId) {
+      this.winner = supplierId;
+    },
+    createOrder() {
+      this.$http.patch(`quote-requests/${this.requestId}/create-order`);
     },
   },
 };
