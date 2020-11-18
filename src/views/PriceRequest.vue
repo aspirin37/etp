@@ -377,8 +377,8 @@ export default {
   },
   created() {
     this.getRequest();
-    this.$http.get('purchase-orders');
-    this.$http.get('purchase-orders/f471d46f-b179-4efa-a2b9-59b58f4516e7');
+    // this.$http.get('purchase-orders');
+    // this.$http.get('purchase-orders/f471d46f-b179-4efa-a2b9-59b58f4516e7');
   },
   methods: {
     async getRequest() {
@@ -444,8 +444,11 @@ export default {
     selectWinner(supplierId) {
       this.winner = supplierId;
     },
-    createOrder() {
-      this.$http.patch(`quote-requests/${this.requestId}/create-order`);
+    async createOrder() {
+      const { headers } = await this.$http.patch(`quote-requests/${this.requestId}/create-order`);
+      const orderId = headers.location.slice(-36);
+
+      this.$router.push(`/purchase-order/${orderId}`);
     },
   },
 };

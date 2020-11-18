@@ -32,6 +32,12 @@ const routes = [
     component: () => import('@/views/PriceRequests.vue'),
     props: true,
   },
+  {
+    path: '/purchase-order/:id',
+    name: 'PurchaseOrder',
+    component: () => import('@/views/PurchaseOrder.vue'),
+    props: true,
+  },
 ];
 
 const router = new VueRouter({
