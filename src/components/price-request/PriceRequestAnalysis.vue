@@ -46,7 +46,7 @@
               'font-weight-bold': supplier.supplier.id === winner,
             }"
           >
-            {{ it.prices[supplier.id] }}
+            {{ toCurrency(it.prices[supplier.id]) }}
           </td>
         </tr>
         <tr>
@@ -189,13 +189,13 @@ export default ({
             positions.push({
               ...position,
               prices: {
-                [supplier.id]: this.toCurrency(position.price),
+                [supplier.id]: position.price,
               },
             });
             return;
           }
           // eslint-disable-next-line
-          positions.find((it) => it.id === position.id).prices[supplier.id] = this.toCurrency(position.price);
+          positions.find((it) => it.id === position.id).prices[supplier.id] = position.price;
         });
       });
 
