@@ -58,15 +58,27 @@
           </v-row>
         </v-card>
       </v-tab-item>
+      <v-tab-item>
+        <v-card
+          class="pa-0 pt-8"
+          flat="flat"
+        >
+          <positions-table :id="id" />
+        </v-card>
+      </v-tab-item>
     </v-tabs-items>
   </div>
 </template>
 
 <script>
+import PurchaseOrderPositionsTable from '@/components/PurchaseOrderPositionsTable.vue';
 import { orderStatuses } from '@/utilities/enums';
 
 export default {
   name: 'PurchaseOrder',
+  components: {
+    positionsTable: PurchaseOrderPositionsTable,
+  },
   props: {
     id: String,
   },
