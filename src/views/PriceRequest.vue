@@ -291,7 +291,7 @@ export default {
       return this.$route.query.analysis;
     },
     tabs() {
-      const tabs = ['Анализ предложения', 'Позиции', 'Общая информация'];
+      const tabs = ['Анализ предложений', 'Позиции', 'Общая информация'];
 
       if (this.isQuote) {
         tabs.push('Условия поставщика');

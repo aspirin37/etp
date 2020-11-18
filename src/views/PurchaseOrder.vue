@@ -108,16 +108,16 @@ export default {
         name: 'Стоимость',
         fields: [{
           label: 'Сумма заказа без НДС',
-          value: this.order.total.sum,
+          value: this.toCurrency(this.order.total.sum),
         }, {
           label: 'Сумма заказа с НДС',
-          value: this.order.total.withVat,
+          value: this.toCurrency(this.order.total.withVat),
         }, {
           label: 'Общая стоимость заказа с доставкой',
-          value: this.order.total.withDelivery,
+          value: this.toCurrency(this.order.total.withDelivery),
         }, {
           label: 'Общая стоимость заказа с доставкой и НДС',
-          value: this.order.total.withDeliveryVat,
+          value: this.toCurrency(this.order.total.withDeliveryVat),
         }],
       }, {
         name: 'Дополнительная информация',
@@ -129,7 +129,7 @@ export default {
           value: this.order.delivery.address,
         }, {
           label: 'Стоимость доставки',
-          value: this.order.delivery.price,
+          value: this.toCurrency(this.order.delivery.price),
         }, {
           label: 'НДС',
           value: this.order.delivery.vat,
@@ -147,6 +147,13 @@ export default {
     async getOrder() {
       const { data } = await this.$http.get(`purchase-orders/${this.id}`);
       this.order = data;
+    },
+    toCurrency(value) {
+      if (typeof value !== 'number') {
+        return value;
+      }
+
+      return value.toLocaleString('ru-RU', { minimumFractionDigits: 2 });
     },
     // f2e5de40-1cab-43c9-af8e-c24814a99439
   },

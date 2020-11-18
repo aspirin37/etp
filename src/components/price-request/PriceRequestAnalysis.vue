@@ -40,7 +40,7 @@
           <td
             v-for="supplier in suppliers"
             :key="supplier.id"
-            class="text-right"
+            class="text-center"
             :class="{
               'lowest-price': getLowestPrice(it.prices, supplier.id),
               'font-weight-bold': supplier.supplier.id === winner,
@@ -64,10 +64,10 @@
           <td
             v-for="it in suppliers"
             :key="it.id"
-            class="text-right"
+            class="text-center"
             :class="{'font-weight-bold': it.supplier.id === winner}"
           >
-            {{ it.totalVat }}
+            {{ toCurrency(it.totalVat) }}
           </td>
         </tr>
         <tr>
@@ -77,10 +77,44 @@
           <td
             v-for="it in suppliers"
             :key="it.id"
-            class="text-right"
+            class="text-center"
             :class="{'font-weight-bold': it.supplier.id === winner}"
           >
-            {{ it.totalSum }}
+            {{ toCurrency(it.totalSum) }}
+          </td>
+        </tr>
+        <tr>
+          <td
+            class="font-weight-bold"
+            :colspan="headers.length"
+          >
+            Доставка
+          </td>
+        </tr>
+        <tr>
+          <td :colspan="2">
+            Дата доставки
+          </td>
+          <td
+            v-for="it in suppliers"
+            :key="it.id"
+            class="text-center"
+            :class="{'font-weight-bold': it.supplier.id === winner}"
+          >
+            {{ it.delivery.date | moment('DD.MM.YYYY') }}
+          </td>
+        </tr>
+        <tr>
+          <td :colspan="2">
+            Стоимость доставки
+          </td>
+          <td
+            v-for="it in suppliers"
+            :key="it.id"
+            class="text-center"
+            :class="{'font-weight-bold': it.supplier.id === winner}"
+          >
+            {{ toCurrency(it.delivery.price) }}
           </td>
         </tr>
         <tr>
@@ -155,13 +189,13 @@ export default ({
             positions.push({
               ...position,
               prices: {
-                [supplier.id]: position.price,
+                [supplier.id]: this.toCurrency(position.price),
               },
             });
             return;
           }
-
-          positions.find((it) => it.id === position.id).prices[supplier.id] = position.price;
+          // eslint-disable-next-line
+          positions.find((it) => it.id === position.id).prices[supplier.id] = this.toCurrency(position.price);
         });
       });
 
@@ -180,6 +214,13 @@ export default ({
       this.winner = supplierId;
       await this.$http.patch(`quote-requests/${this.id}/winner`, { quoteId });
       this.$emit('winner-selected', this.winner);
+    },
+    toCurrency(value) {
+      if (typeof value !== 'number') {
+        return value;
+      }
+
+      return value.toLocaleString('ru-RU', { minimumFractionDigits: 2 });
     },
   },
 });
