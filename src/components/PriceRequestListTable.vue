@@ -41,6 +41,7 @@
           mdi-content-copy
         </v-icon>
         <v-icon
+          v-if="type === 'drafts'"
           size="20"
           @click="removeItem(item.id)"
         >
@@ -57,6 +58,8 @@ import {
   priceRequestStatuses,
 } from '@/utilities/enums';
 
+import { mapState } from 'vuex';
+
 export default ({
   name: 'PriceRequestListTable',
   props: {
@@ -65,18 +68,30 @@ export default ({
   },
   data() {
     return {
-      headers: [
-        // {
-        //   value: 'created',
-        //   text: 'Дата создания',
-        //   width: '140px',
-        // },
+      items: [],
+      total: 0,
+      options: {
+        page: 1,
+        itemsPerPage: 20,
+      },
+      loading: false,
+      priceRequestTypes,
+      priceRequestStatuses,
+    };
+  },
+  computed: {
+    ...mapState(['user']),
+    headers() {
+      const headers = [
         {
           value: 'name',
           text: 'Наименование ЦЗ',
         }, {
           value: 'type',
           text: 'Тип ЦЗ',
+        }, {
+          value: 'customer.name',
+          text: 'Заказчик',
         }, {
           value: 'responseDate',
           text: 'Дата предоставления ответа на ЦЗ',
@@ -91,23 +106,20 @@ export default ({
         }, {
           value: 'status',
           text: 'Статус',
-        }, {
+        },
+      ];
+
+      if (this.type !== 'inbox' && this.type !== 'actual') {
+        headers.push({
           value: 'actions',
           text: 'Действия',
           width: '150px',
           align: 'center',
-        },
-      ],
-      items: [],
-      total: 0,
-      options: {
-        page: 1,
-        itemsPerPage: 20,
-      },
-      loading: false,
-      priceRequestTypes,
-      priceRequestStatuses,
-    };
+        });
+      }
+
+      return headers;
+    },
   },
   watch: {
     options: {
@@ -158,7 +170,7 @@ export default ({
       try {
         await this.$http.patch(`quote-requests/${id}/clone`);
         this.getItems();
-        this.$toast.success('Позиция успешно скопирована');
+        this.$toast.success('Ценовой запрос успешно скопирован');
       } catch (e) {
         this.$toast.danger(e.response.data.message);
       }
@@ -179,7 +191,8 @@ export default ({
           id: priceRequest.id,
         },
         query: {
-          analysis: priceRequest.status === 'review' ? true : undefined,
+          analysis: priceRequest.status === 'review' && priceRequest.customer.id === this.user.tenant_id ? true : undefined,
+          isQuote: this.type === 'inbox' ? true : undefined,
         },
       };
     },

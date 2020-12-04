@@ -2,7 +2,7 @@
   <div class="page wizard">
     <div class="page__header">
       <h1 class="page__title">
-        Ценовой запрос
+        {{ isQuote ? 'Ценовое предложение' : 'Ценовой запрос' }}
         <template v-if="priceRequest">
           {{ priceRequest.name }}
         </template>
@@ -44,7 +44,9 @@
             :id="requestId"
             :is-quote="isQuote"
             :quote-id="quoteId"
-            :quote-positions="quotePositions"
+            :editable="editable"
+            :quote-positions.sync="quotePositions"
+            :errors.sync="quotePositionErrors"
           />
         </v-card>
       </v-tab-item>
@@ -53,7 +55,7 @@
           class="pa-8 pt-2"
           flat="flat"
         >
-          <v-row v-if="priceRequest">
+          <v-row v-if="terms">
             <v-col>
               <div
                 v-for="(term, i) in terms.slice(0, 2)"
@@ -117,6 +119,8 @@
                     v-model="quoteRequest.delivery.date"
                     label="Дата поставки"
                     :min="responseMinDate"
+                    :error-messages="deliveryDateErrors"
+                    :disabled="!editable"
                     required
                   />
                 </v-col>
@@ -124,8 +128,8 @@
               <v-text-field
                 v-model="quoteRequest.delivery.price"
                 v-currency
+                :disabled="!editable"
                 label="Стоимость доставки без НДС"
-                class="required"
                 outlined
               />
               <v-row>
@@ -136,14 +140,15 @@
                   <v-select
                     v-model="quoteRequest.delivery.vat"
                     :items="[20, 10, 0]"
+                    :disabled="!editable"
                     label="Ставка НДС, %"
-                    class="required"
                     outlined
                   />
                 </v-col>
               </v-row>
               <v-textarea
                 v-model="quoteRequest.comment"
+                :disabled="!editable"
                 label="Комментарий"
                 outlined
               />
@@ -220,6 +225,7 @@
           type="submit"
           depressed
           color="accent"
+          :loading="loading"
           @click.prevent="confirmQuote"
         >
           Отправить ценовое предложение
@@ -257,6 +263,7 @@ import PriceRequestAnalysis from '@/components/price-request/PriceRequestAnalysi
 import datePicker from '@/components/common/DatePicker.vue';
 import { priceRequestTypes } from '@/utilities/enums';
 import { mapState } from 'vuex';
+import { required } from 'vuelidate/lib/validators';
 
 export default {
   name: 'PriceRequest',
@@ -275,6 +282,7 @@ export default {
     priceRequest: null,
     quoteRequest: null,
     quotePositions: [],
+    quotePositionErrors: [],
     successModal: false,
     errorModal: false,
     formSubmitted: false,
@@ -282,6 +290,17 @@ export default {
     loading: false,
     winner: null,
   }),
+  validations() {
+    return {
+      quoteRequest: {
+        delivery: {
+          date: {
+            required,
+          },
+        },
+      },
+    };
+  },
   computed: {
     ...mapState(['user']),
     isUserRequest() {
@@ -306,12 +325,21 @@ export default {
     responseMinDate() {
       return this.$moment().add(1, 'days').format('YYYY-MM-DD');
     },
-    // responseMaxDate() {
-    //   return this.priceRequest && this.priceRequest.delivery.date ?
-    // this.$moment(this.priceRequest.delivery.date).subtract(1, 'days').format('YYYY-MM-DD') : '';
-    // },
+    deliveryDateErrors() {
+      const errors = [];
+      if (!this.formSubmitted) {
+        return errors;
+      }
+      if (!this.$v.quoteRequest.delivery.date.required) {
+        errors.push('Обязательное поле');
+      }
+      return errors;
+    },
+    editable() {
+      return this.priceRequest && this.priceRequest.status === 'pending';
+    },
     terms(vm) {
-      if (!this.priceRequest) {
+      if (!this.priceRequest && !this.quoteRequest) {
         return null;
       }
 
@@ -319,7 +347,7 @@ export default {
         name: 'Общие сведения',
         fields: [{
           label: 'Тип ЦЗ',
-          value: priceRequestTypes[vm.priceRequest.type],
+          value: priceRequestTypes[vm.priceRequest.type] || priceRequestTypes[vm.priceRequest.type],
         }, {
           label: 'Наименование ЦЗ',
           value: vm.priceRequest.name,
@@ -376,9 +404,22 @@ export default {
     },
   },
   created() {
+    if (this.$route.query.isQuote) {
+      this.quoteId = this.id;
+      this.loading = true;
+      Promise.all([
+        this.getQuoteRequest(),
+        this.getQuoteItems(),
+      ]).finally(() => {
+        this.loading = false;
+      });
+
+      this.isQuote = true;
+      this.tab = 0;
+      return;
+    }
+
     this.getRequest();
-    // this.$http.get('purchase-orders');
-    // this.$http.get('purchase-orders/f471d46f-b179-4efa-a2b9-59b58f4516e7');
   },
   methods: {
     async getRequest() {
@@ -411,6 +452,7 @@ export default {
     async getQuoteRequest() {
       const { data } = await this.$http.get(`quotes/${this.quoteId}`);
       this.quoteRequest = data;
+      this.priceRequest = data.quoteRequest;
       return Promise.resolve();
     },
     async getQuoteItems() {
@@ -422,11 +464,16 @@ export default {
     },
     async confirmQuote() {
       this.loading = true;
+
+      const price = typeof this.quoteRequest.delivery.price === 'string'
+        ? this.$ci.parse(this.quoteRequest.delivery.price)
+        : this.quoteRequest.delivery.price;
+
       try {
         await this.$http.put(`quotes/${this.quoteId}`, {
           delivery: {
-            date: this.quoteRequest.delivery.date,
-            price: this.$ci.parse(this.quoteRequest.delivery.price),
+            date: this.$moment(this.quoteRequest.delivery.date).format('YYYY-MM-DD'),
+            price,
             vat: this.quoteRequest.delivery.vat,
           },
           comment: this.quoteRequest.comment,
@@ -436,10 +483,10 @@ export default {
         this.$toast.success('Ценовое предложение отправлено!');
         this.$router.push('/price-requests/inbox');
       } catch (e) {
-        this.$toast.error('Ошибка при отправлении ценового предложения');
+        this.validateTabs(e);
+      } finally {
+        this.loading = false;
       }
-
-      this.loading = false;
     },
     selectWinner(supplierId) {
       this.winner = supplierId;
@@ -449,6 +496,38 @@ export default {
       const orderId = headers.location.slice(-36);
 
       this.$router.push(`/purchase-order/${orderId}`);
+    },
+    validateTabs(e) {
+      this.formSubmitted = true;
+
+      const noPositionSelectedError = e.response.data.errors.find(({ path }) => !path);
+      if (noPositionSelectedError) {
+        this.$toast.error(noPositionSelectedError.details);
+        this.tab = 0;
+        return;
+      }
+
+      const regExp = /\[([^)]+)\]/;
+      const positionErrors = e.response.data.errors
+        .filter((it) => it.path.includes('items'))
+        .map((it) => regExp.exec(it.path)[1]);
+
+      if (positionErrors.length) {
+        this.$toast.error('Пожалуйста, укажите цену и НДС для всех выбранных позиций');
+        this.quotePositionErrors = positionErrors;
+        this.tab = 0;
+        return;
+      }
+
+      if (this.$v.quoteRequest.delivery.$invalid) {
+        this.$toast.error('Пожалуйста, заполните указанные поля');
+        this.tab = 2;
+      }
+
+      // const invalidTabIndex = this.tabs.findIndex((it) => it.validationStatus === 'invalid');
+      // if (invalidTabIndex !== -1) {
+      //   this.tab = invalidTabIndex;
+      // }
     },
   },
 };

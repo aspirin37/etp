@@ -17,8 +17,8 @@ export default new Vuex.Store({
     signOut: (state) => {
       state.user = null;
 
-      localStorage.removeItem('authorization');
       localStorage.removeItem('jwt');
+      localStorage.removeItem('user');
 
       delete axiosInstance.defaults.headers.jwtacc;
       return Promise.resolve();

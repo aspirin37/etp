@@ -3,6 +3,7 @@
     <v-data-table
       :headers="headers"
       :items="positionsComputed"
+      :item-class="validatePosition"
       disable-sort
       fixed-header
       class="elevation-0"
@@ -15,6 +16,7 @@
       </template>
       <template v-slot:[`item.price`]="{ item }">
         <v-text-field
+          v-if="editable"
           v-model="item.price"
           v-currency
           hide-details
@@ -22,9 +24,13 @@
           dense
           @change="updatePosition(item)"
         />
+        <template v-else>
+          {{ item.price }}
+        </template>
       </template>
       <template v-slot:[`item.vat`]="{ item }">
         <v-select
+          v-if="editable"
           v-model="item.vat"
           :items="[20, 10, 0]"
           item-text="text"
@@ -34,9 +40,13 @@
           dense
           @change="updatePosition(item)"
         />
+        <template v-else>
+          {{ item.vat }}
+        </template>
       </template>
       <template v-slot:[`item.deliverable`]="{ item }">
         <v-select
+          v-if="editable"
           v-model="item.deliverable"
           :items="deliverableOptions"
           item-text="text"
@@ -46,6 +56,9 @@
           dense
           @change="updatePosition(item)"
         />
+        <template v-else>
+          {{ item.deliverable ? 'Да' : 'Нет' }}
+        </template>
       </template>
     </v-data-table>
   </div>
@@ -58,11 +71,16 @@ export default ({
   props: {
     id: String,
     quoteId: [String, Object],
+    editable: Boolean,
     isQuote: {
       type: Boolean,
       default: false,
     },
     quotePositions: {
+      type: Array,
+      default: () => [],
+    },
+    errors: {
       type: Array,
       default: () => [],
     },
@@ -132,7 +150,25 @@ export default ({
       return this.isQuote ? this.quotePositions : this.positions;
     },
   },
+  watch: {
+    options: {
+      handler() {
+        this.getPositions();
+      },
+      deep: true,
+    },
+    quotePositions: {
+      handler(val) {
+        this.$emit('update:positions', val);
+        this.$emit('update:errors', val.filter((it) => it.quantity <= 0 && this.errors.includes(it.id)).map((it) => it.id));
+      },
+      deep: true,
+    },
+  },
   created() {
+    if (this.isQuote) {
+      return;
+    }
     this.getPositions();
   },
   methods: {
@@ -146,6 +182,9 @@ export default ({
         vat: position.vat,
         deliverable: position.deliverable,
       });
+    },
+    validatePosition({ id }) {
+      return this.errors.find((it) => it === id) ? 'red lighten-5' : '';
     },
   },
 });

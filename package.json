@@ -55,7 +55,8 @@
       "vue/require-default-prop": "off",
       "vue/valid-v-slot": "off",
       "no-underscore-dangle": "off",
-      "no-plusplus": "off"
+      "no-plusplus": "off",
+      "import/no-cycle": "off"
     }
   },
   "browserslist": [

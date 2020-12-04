@@ -15,6 +15,7 @@ Vue.use(VuetifyToast, {
   color: '',
   timeout: 5000,
   showClose: true,
+  y: 'top',
   closeText: 'Закрыть',
   shorts: {
     success: {

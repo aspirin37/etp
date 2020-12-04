@@ -49,35 +49,35 @@
               v-model="priceRequest.name"
               class="required"
               label="Наименование ЦЗ"
-              outlined="outlined"
+              outlined
             />
             <v-text-field
               value="Стандартный ЦЗ"
               label="Тип ценового запроса"
-              outlined="outlined"
-              disabled="disabled"
+              outlined
+              disabled
             />
             <v-text-field
-              v-model="priceRequest.customer.name"
+              :value="priceRequest.customer.name || user.tenant_name"
               label="Заказчик"
-              outlined="outlined"
-              disabled="disabled"
+              outlined
+              disabled
             />
             <v-row>
               <v-col class="py-0">
                 <v-text-field
-                  v-model="priceRequest.inn"
+                  :value="priceRequest.inn || user.tenant_inn"
                   label="ИНН"
-                  outlined="outlined"
-                  disabled="disabled"
+                  outlined
+                  disabled
                 />
               </v-col>
               <v-col class="py-0">
                 <v-text-field
-                  v-model="priceRequest.kpp"
+                  :value="priceRequest.kpp || user.tenant_kpp"
                   label="КПП"
-                  outlined="outlined"
-                  disabled="disabled"
+                  outlined
+                  disabled
                 />
               </v-col>
             </v-row>
@@ -247,6 +247,7 @@
 import { required } from 'vuelidate/lib/validators';
 import PriceRequestPositionTable from '@/components/PriceRequestPositionTable.vue';
 import datePicker from '@/components/common/DatePicker.vue';
+import { mapState } from 'vuex';
 
 export default {
   name: 'CreatePriceRequest',
@@ -310,6 +311,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(['user']),
     tabs(vm) {
       return [{
         name: 'Общие сведения',
@@ -444,6 +446,14 @@ export default {
       this.requestId = this.id;
       const { data } = await this.$http.get(`quote-requests/${this.requestId}`);
       this.priceRequest = { ...this.priceRequest, ...data };
+
+      if (this.priceRequest.delivery.date) {
+        this.priceRequest.delivery.date = this.$moment(this.priceRequest.delivery.date).format('YYYY-MM-DD');
+      }
+
+      if (this.priceRequest.responseDate) {
+        this.priceRequest.responseDate = this.$moment(this.priceRequest.responseDate).format('YYYY-MM-DD');
+      }
     },
     async createRequest() {
       const { data: { id } } = await this.$http.post('quote-requests', {

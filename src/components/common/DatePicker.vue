@@ -11,6 +11,7 @@
         :label="label"
         :class="{'required': required}"
         :error-messages="errorMessages"
+        :disabled="disabled"
         append-icon="mdi-calendar-range"
         outlined="outlined"
         v-bind="attrs"
@@ -40,6 +41,7 @@ export default {
     max: String,
     required: Boolean,
     errorMessages: Array,
+    disabled: Boolean,
   },
   data: () => ({
     visible: false,

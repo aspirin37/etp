@@ -39,9 +39,11 @@ Vue.use(VueCurrencyInput, currencyOptions);
 Vue.config.productionTip = false;
 Vue.prototype.$http = http;
 
-new Vue({
+const app = new Vue({
   router,
   store,
   vuetify,
   render: (h) => h(App),
 }).$mount('#app');
+
+export default app;

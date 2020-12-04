@@ -38,11 +38,24 @@ const routes = [
     component: () => import('@/views/PurchaseOrder.vue'),
     props: true,
   },
+  {
+    path: '*',
+    redirect: '/price-requests/outbox',
+  },
 ];
 
 const router = new VueRouter({
   mode: 'history',
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if ((!localStorage.jwt || !localStorage.user) && to.name !== 'Auth') {
+    next('/auth');
+    return;
+  }
+
+  next();
 });
 
 export default router;
