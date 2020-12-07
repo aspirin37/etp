@@ -37,7 +37,7 @@
             @input="errors = []"
           />
         </div>
-        <div class="modal-primary__actions pt-0">
+        <div class="modal-primary__actions pt-0 justify-space-between">
           <!-- <v-btn
             class="ml-auto"
             depressed="depressed"
@@ -47,11 +47,18 @@
           </v-btn> -->
           <v-btn
             class="ml-2"
-            depressed="depressed"
+            depressed
             color="primary"
             type="submit"
           >
             Войти
+          </v-btn>
+          <v-btn
+            class="ml-2"
+            depressed
+            @click="$router.push('/registration')"
+          >
+            Регистрация
           </v-btn>
         </div>
       </div>
@@ -60,6 +67,9 @@
 </template>
 
 <script>
+import APIauthLogin from 'api/authLogin';
+import { loginAndRedirect } from 'api/helpers';
+
 export default {
   name: 'AuthModal',
   props: {
@@ -88,24 +98,10 @@ export default {
     },
   },
   methods: {
-    parseJwt(token) {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map((c) => `%${(`00${c.charCodeAt(0).toString(16)}`).slice(-2)}`).join(''));
-
-      return JSON.parse(jsonPayload);
-    },
     signIn() {
-      this.$http.post('auth/login', this.credentials).then(async (response) => {
-        const jwt = response.data.token;
-        const userData = this.parseJwt(jwt);
-
-        this.$http.defaults.headers.authorization = `Bearer ${jwt}`;
-        localStorage.setItem('jwt', jwt);
-        await this.$store.commit('setUser', userData);
-
+      APIauthLogin(this.credentials).then(async (response) => {
+        await loginAndRedirect(response);
         this.visible = false;
-        this.$router.push('/price-requests/outbox');
       }).catch((e) => {
         this.errors = e.response.data.errors;
       });

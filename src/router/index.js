@@ -10,6 +10,11 @@ const routes = [
     component: () => import('@/views/Auth.vue'),
   },
   {
+    path: '/registration',
+    name: 'Registration',
+    component: () => import('@/views/Registration.vue'),
+  },
+  {
     path: '/create-price-request/:id?',
     name: 'CreatePriceRequest',
     component: () => import('@/views/CreatePriceRequest.vue'),
@@ -50,7 +55,7 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if ((!localStorage.jwt || !localStorage.user) && to.name !== 'Auth') {
+  if ((!localStorage.jwt || !localStorage.user) && to.name !== 'Auth' && to.name !== 'Registration') {
     next('/auth');
     return;
   }
