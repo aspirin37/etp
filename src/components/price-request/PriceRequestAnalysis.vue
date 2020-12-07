@@ -58,7 +58,7 @@
           </td>
         </tr>
         <tr>
-          <td :colspan="2">
+          <td :colspan="3">
             Итого без НДС
           </td>
           <td
@@ -71,7 +71,7 @@
           </td>
         </tr>
         <tr>
-          <td :colspan="2">
+          <td :colspan="3">
             Итого с НДС
           </td>
           <td
@@ -92,7 +92,7 @@
           </td>
         </tr>
         <tr>
-          <td :colspan="2">
+          <td :colspan="3">
             Дата доставки
           </td>
           <td
@@ -105,7 +105,7 @@
           </td>
         </tr>
         <tr>
-          <td :colspan="2">
+          <td :colspan="3">
             Стоимость доставки
           </td>
           <td
@@ -153,6 +153,9 @@ export default ({
       }, {
         value: 'quantity',
         text: 'Количество',
+      }, {
+        value: 'okeiName',
+        text: 'ЕИ',
       }],
       headers: [],
       positions: [],
@@ -188,6 +191,7 @@ export default ({
             map.set(position.id, true);
             positions.push({
               ...position,
+              okeiName: position.okei.name,
               prices: {
                 [supplier.id]: position.price,
               },
