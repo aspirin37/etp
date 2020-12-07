@@ -122,10 +122,10 @@ export default {
       icon: 'orders-list',
       children: [{
         label: 'Исходящие заказы',
-        link: '/orders/outbox',
+        link: '/purchase-orders/outbox',
       }, {
         label: 'Входящие заказы',
-        link: '/orders/inbox',
+        link: '/purchase-orders/inbox',
       }],
     }, {
       label: 'Мои позиции',

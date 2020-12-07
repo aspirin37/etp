@@ -16,12 +16,6 @@ const routes = [
     props: true,
   },
   {
-    path: '/price-request/:id?',
-    name: 'PriceRequest',
-    component: () => import('@/views/PriceRequest.vue'),
-    props: true,
-  },
-  {
     path: '/user-positions',
     name: 'UserPositions',
     component: () => import('@/views/UserPositions.vue'),
@@ -30,6 +24,18 @@ const routes = [
     path: '/price-requests/:type',
     name: 'PriceRequests',
     component: () => import('@/views/PriceRequests.vue'),
+    props: true,
+  },
+  {
+    path: '/price-request/:id?',
+    name: 'PriceRequest',
+    component: () => import('@/views/PriceRequest.vue'),
+    props: true,
+  },
+  {
+    path: '/purchase-orders/:type',
+    name: 'PurchaseOrders',
+    component: () => import('@/views/PurchaseOrders.vue'),
     props: true,
   },
   {
