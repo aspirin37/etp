@@ -74,13 +74,13 @@
           >
             ← Войти
           </v-btn>
-          <v-btn
+          <!-- <v-btn
             class="ml-2"
             depressed
             @click="test"
           >
             тест
-          </v-btn>
+          </v-btn> -->
           <v-btn
             class="ml-2"
             depressed
@@ -136,17 +136,17 @@ export default {
         }
       });
     },
-    test() {
-      this.form = {
-        name: 'test',
-        inn: '1234567890',
-        kpp: '420930130',
-        firstName: 'test',
-        lastName: 'test',
-        email: 'test@test.test',
-        password: 'тест',
-      };
-    },
+    // test() {
+    //   this.form = {
+    //     name: 'test',
+    //     inn: '1234567890',
+    //     kpp: '420930130',
+    //     firstName: 'test',
+    //     lastName: 'test',
+    //     email: 'test@test.test',
+    //     password: 'тест',
+    //   };
+    // },
   },
 };
 </script>
