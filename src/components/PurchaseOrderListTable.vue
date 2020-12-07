@@ -1,5 +1,5 @@
 <template>
-  <div class="main-table price-request-table">
+  <div class="main-table order-list-table">
     <v-data-table
       :headers="headers"
       :items="items"
@@ -141,7 +141,8 @@ export default ({
 </script>
 
 <style lang="scss">
-.price-request-table .v-data-table__wrapper {
-  max-height: calc(100vh - 360px);
+.order-list-table .v-data-table__wrapper {
+  max-height: calc(100vh - 260px);
+  white-space: nowrap;
 }
 </style>
