@@ -2,12 +2,13 @@ import Vue from 'vue';
 import VueMoment from 'vue-moment';
 import Vuelidate from 'vuelidate';
 import VueCurrencyInput from 'vue-currency-input';
+import Http from 'api';
+import { get } from 'lodash-es';
 
 import App from './App.vue';
 import router from './router';
 import store from './store';
 import vuetify from './plugins/vuetify';
-import http from 'api';
 
 import '@/assets/styles/index.scss';
 
@@ -37,7 +38,8 @@ const currencyOptions = {
 Vue.use(VueCurrencyInput, currencyOptions);
 
 Vue.config.productionTip = false;
-Vue.prototype.$http = http;
+Vue.prototype.$http = Http;
+Vue.prototype.$get = get;
 
 const app = new Vue({
   router,

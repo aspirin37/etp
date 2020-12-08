@@ -3,6 +3,9 @@ import API from 'api'
 import Router from '../router'
 import Store from '../store';
 
+export function redirectToAuth () {
+  Router.push('/auth');
+}
 export async function loginAndRedirect (response) {
   const jwt = response.data.token;
   const userData = parseJwt(jwt);
@@ -23,5 +26,6 @@ export function parseJwt (token) {
 
 export default {
   loginAndRedirect,
-  parseJwt
+  parseJwt,
+  redirectToAuth
 }
