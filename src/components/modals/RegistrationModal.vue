@@ -122,7 +122,7 @@ import {
   numeric,
   required,
 } from 'vuelidate/lib/validators';
-import { get, random } from 'lodash-es';
+import { random } from 'lodash-es';
 // import { singleErrorExtractorMixin } from 'vuelidate-error-extractor';
 
 const alpha = (v) => /[a-z\u0400-\u04FF]/.test(v);
@@ -172,14 +172,25 @@ export default {
       /* eslint-enable object-curly-newline, max-len */
     },
   },
+  // computed: {
+  //   apiErrName: ({ errors }) => (errors.find((e) => e.path === 'name') || {}).detail,
+  // },
   methods: {
     errMessagesHandler(fieldName) {
       const field = this.$refs[fieldName];
       if (!field) return null;
 
-      const apiErr = get(this.errors.find((e) => e.path === fieldName), 'details', null);
+      const apiErr = this.errors.find((e) => e.path === fieldName);
 
-      return apiErr || (field.hasFocused ? this.$errorMessage(this.$v, `form.${fieldName}`) : null);
+      if (apiErr) {
+        return apiErr.details;
+      }
+
+      if (field.hasFocused) {
+        return this.$errorMessage(this.$v, `form.${fieldName}`);
+      }
+
+      return null;
     },
     register() {
       this.$http.post('auth/register', this.form).then(() => {
@@ -187,8 +198,8 @@ export default {
         redirectToAuth();
       }).catch((e) => {
         if (e.response && e.response.data && e.response.data.errors) {
-          this.$set(this.errors, e.response.data.errors);
           this.errors = e.response.data.errors;
+          this.$forceUpdate();
         } else {
           console.error(e); // eslint-disable-line
         }
