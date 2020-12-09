@@ -47,8 +47,9 @@
           </v-btn> -->
           <v-btn
             class="ml-2"
-            depressed
             color="primary"
+            depressed
+            :loading="loading"
             type="submit"
           >
             Войти
@@ -78,15 +79,14 @@ export default {
       default: false,
     },
   },
-  data() {
-    return {
-      errors: [],
-      credentials: {
-        email: '',
-        password: '',
-      },
-    };
-  },
+  data: () => ({
+    errors: [],
+    credentials: {
+      email: '',
+      password: '',
+    },
+    loading: false,
+  }),
   computed: {
     visible: {
       get() {
@@ -99,11 +99,16 @@ export default {
   },
   methods: {
     signIn() {
-      APIauthLogin(this.credentials).then(async (response) => {
-        await loginAndRedirect(response);
+      if (this.loading) throw Error('response already loading!');
+
+      this.loading = true;
+      APIauthLogin(this.credentials).then((response) => {
+        loginAndRedirect(response);
         this.visible = false;
       }).catch((e) => {
-        this.errors = e.response.data.errors;
+        this.errors = e.response?.data.errors;
+      }).finally(() => {
+        this.loading = false;
       });
     },
   },

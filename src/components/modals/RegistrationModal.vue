@@ -194,11 +194,12 @@ export default {
       this.$http.post('auth/register', this.form).then(() => {
         this.visible = false;
         redirectToAuth();
-      }).catch((e) => {
-        if (e.response && e.response.data && e.response.data.errors) {
+      }, (e) => {
+        if (e.response && e.response.data && e.response.data.errors && e.response.status > 300 && e.response.status < 500) {
           this.errors = e.response.data.errors;
           this.$forceUpdate();
         } else {
+          this.$toast.error('Ошибка запроса');
           console.error(e); // eslint-disable-line
         }
       }).finally(() => {

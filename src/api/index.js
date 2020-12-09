@@ -16,7 +16,7 @@ axiosInstance.interceptors.response.use(
   async (response) => response,
   async (error) => {
     // редиректы на страницу авторизации
-    if (error.response.status === 401 && app.$route.name !== 'Auth') {
+    if (error.response?.status === 401 && app.$route.name !== 'Auth') {
       app.$router.push('/auth');
       store.commit('signOut');
       return error;
