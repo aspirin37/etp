@@ -11,6 +11,7 @@
     "axios": "^0.20.0",
     "core-js": "^3.6.5",
     "lodash-es": "^4.17.15",
+    "voca": "^1.4.0",
     "vue": "^2.6.11",
     "vue-currency-input": "^1.22.3",
     "vue-moment": "^4.1.0",
@@ -54,11 +55,12 @@
       "parser": "babel-eslint"
     },
     "rules": {
-      "vue/require-default-prop": "off",
-      "vue/valid-v-slot": "off",
-      "no-underscore-dangle": "off",
+      "import/no-cycle": "off",
+      "max-len": "off",
       "no-plusplus": "off",
-      "import/no-cycle": "off"
+      "no-underscore-dangle": "off",
+      "vue/require-default-prop": "off",
+      "vue/valid-v-slot": "off"
     }
   },
   "browserslist": [

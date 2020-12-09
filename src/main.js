@@ -4,6 +4,7 @@ import Vuelidate from 'vuelidate';
 import VueCurrencyInput from 'vue-currency-input';
 import Http from 'api';
 import { get } from 'lodash-es';
+import { getFormErrorMessage } from './plugins/vuelidate-errors';
 
 import App from './App.vue';
 import router from './router';
@@ -38,6 +39,7 @@ const currencyOptions = {
 Vue.use(VueCurrencyInput, currencyOptions);
 
 Vue.config.productionTip = false;
+Vue.prototype.$errorMessage = ($v, field) => getFormErrorMessage($v, field);
 Vue.prototype.$http = Http;
 Vue.prototype.$get = get;
 

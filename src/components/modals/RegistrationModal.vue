@@ -15,9 +15,10 @@
       <div class="modal-primary__wrapper">
         <div class="modal-primary__content">
           <v-text-field
+            ref="name"
             v-model="form.name"
             label="Наименование организации"
-            :error-messages="/* $get($v.form.name, '$error') || */errors.name"
+            :error-messages="errMessagesHandler('name')"
             outlined
             focused
             :rules="rules.name"
@@ -26,7 +27,7 @@
             v-model="form.inn"
             :counter="INN_MAX_LENGTH"
             label="ИНН"
-            :error-messages="/* $v.form.inn.$error || */errors.inn"
+            :error-messages="errMessagesHandler('inn')"
             :rules="rules.inn"
             outlined
           />
@@ -34,21 +35,21 @@
             v-model="form.kpp"
             :counter="KPP_MAX_LENGTH"
             label="КПП"
-            :error-messages="/* $v.form.kpp.$error */null"
+            :error-messages="errMessagesHandler('kpp')"
             :rules="rules.kpp"
             outlined
           />
           <v-text-field
             v-model="form.firstName"
             label="Имя пользователя"
-            :error-messages="/* $v.form.firstName.$error */null"
+            :error-messages="errMessagesHandler('firstName')"
             :rules="rules.firstName"
             outlined
           />
           <v-text-field
             v-model="form.lastName"
             label="Фамилия пользователя"
-            :error-messages="/* $v.form.lastName.$error */null"
+            :error-messages="errMessagesHandler('lastName')"
             :rules="rules.lastName"
             outlined
           />
@@ -56,7 +57,7 @@
             v-model="form.email"
             label="E-mail"
             type="email"
-            :error-messages="/* $v.form.email.$error */null"
+            :error-messages="errMessagesHandler('email')"
             :rules="rules.email"
             outlined
           />
@@ -65,7 +66,7 @@
             :counter="PASSWORD_MAX_LENGTH"
             label="Пароль"
             type="password"
-            :error-messages="/* $v.form.password.$error */null"
+            :error-messages="errMessagesHandler('password')"
             :rules="rules.password"
             outlined
             @input="errors = []"
@@ -103,7 +104,6 @@
 <script>
 import { redirectToAuth } from 'api/helpers';
 import {
-  alpha,
   email,
   minLength,
   maxLength,
@@ -113,7 +113,12 @@ import {
 import { random } from 'lodash-es';
 // import { singleErrorExtractorMixin } from 'vuelidate-error-extractor';
 
+const alpha = (v) => /[a-z\u0400-\u04FF]/.test(v);
 const Fields = ['name', 'inn', 'kpp', 'firstName', 'lastName', 'email', 'password'];
+const STRING_MAX_LENGTH = 255;
+const INN_MAX_LENGTH = 12;
+const KPP_MAX_LENGTH = 9;
+const PASSWORD_MAX_LENGTH = 64;
 
 export default {
   name: 'RegistrationModal',
@@ -133,33 +138,39 @@ export default {
       password: '',
     },
     rules: {
-      name: [required, minLength(3), maxLength(255)],
+      name: [required, minLength(3), maxLength(STRING_MAX_LENGTH)],
       inn: [required, numeric, minLength(10), maxLength(12)],
       kpp: [required, numeric, minLength(9), maxLength(9)],
-      firstName: [required, alpha, minLength(2), maxLength(255)],
-      lastName: [required, alpha, minLength(2), maxLength(255)],
-      email: [required, email, maxLength(255)],
+      firstName: [required, alpha, minLength(2), maxLength(STRING_MAX_LENGTH)],
+      lastName: [required, alpha, minLength(2), maxLength(STRING_MAX_LENGTH)],
+      email: [required, email, maxLength(STRING_MAX_LENGTH)],
       password: [required, minLength(6), maxLength(64)],
     },
     visible: true,
-    INN_MAX_LENGTH: 12,
-    KPP_MAX_LENGTH: 9,
-    PASSWORD_MAX_LENGTH: 64,
+    INN_MAX_LENGTH,
+    KPP_MAX_LENGTH,
+    PASSWORD_MAX_LENGTH,
   }),
-  validations() {
-    return {
-      form: {
-        name: [required, minLength(3), maxLength(255)],
-        inn: [required, numeric, minLength(10), maxLength(this.INN_MAX_LENGTH)],
-        kpp: [required, numeric, minLength(9), maxLength(this.KPP_MAX_LENGTH)],
-        firstName: [required, alpha, minLength(2), maxLength(255)],
-        lastName: [required, alpha, minLength(2), maxLength(255)],
-        email: [required, email, maxLength(255)],
-        password: [required, minLength(6), maxLength(this.PASSWORD_MAX_LENGTH)],
-      },
-    };
+  validations: {
+    form: {
+      /* eslint-disable object-curly-newline, max-len */
+      name: { required, minLength: minLength(3), maxLength: maxLength(STRING_MAX_LENGTH) },
+      inn: { required, numeric, minLength: minLength(10), maxLength: maxLength(INN_MAX_LENGTH) },
+      kpp: { required, numeric, minLength: minLength(9), maxLength: maxLength(KPP_MAX_LENGTH) },
+      firstName: { required, alpha, minLength: minLength(2), maxLength: maxLength(STRING_MAX_LENGTH) },
+      lastName: { required, alpha, minLength: minLength(2), maxLength: maxLength(STRING_MAX_LENGTH) },
+      email: { required, email, maxLength: maxLength(STRING_MAX_LENGTH) },
+      password: { required, minLength: minLength(6), maxLength: maxLength(PASSWORD_MAX_LENGTH) },
+      /* eslint-enable object-curly-newline, max-len */
+    },
   },
   methods: {
+    errMessagesHandler(fieldName) {
+      const field = this.$refs[fieldName];
+      if (!field || !field.hasFocused) return null;
+
+      return this.$errorMessage(this.$v, `form.${fieldName}`) || this.errors[fieldName];
+    },
     register() {
       this.$http.post('auth/register', this.form).then(() => {
         this.visible = false;
