@@ -100,8 +100,9 @@
           </v-btn>
           <v-btn
             class="ml-2"
-            depressed
             color="primary"
+            depressed
+            :loading="loading"
             type="submit"
           >
             Зарегистрировать
@@ -132,6 +133,7 @@ export default {
   name: 'RegistrationModal',
   data: () => ({
     errors: [],
+    loading: false,
     form: {
       name: '',
       inn: '',
@@ -186,6 +188,9 @@ export default {
       return null;
     },
     register() {
+      if (this.loading) throw Error('response already loading!');
+
+      this.loading = true;
       this.$http.post('auth/register', this.form).then(() => {
         this.visible = false;
         redirectToAuth();
@@ -196,6 +201,8 @@ export default {
         } else {
           console.error(e); // eslint-disable-line
         }
+      }).finally(() => {
+        this.loading = false;
       });
     },
   },
