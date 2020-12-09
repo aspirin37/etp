@@ -22,46 +22,58 @@
             outlined
             focused
             :rules="rules.name"
+            @input="errors = []"
           />
           <v-text-field
+            ref="inn"
             v-model="form.inn"
             :counter="INN_MAX_LENGTH"
             label="ИНН"
             :error-messages="errMessagesHandler('inn')"
             :rules="rules.inn"
             outlined
+            @input="errors = []"
           />
           <v-text-field
+            ref="kpp"
             v-model="form.kpp"
             :counter="KPP_MAX_LENGTH"
             label="КПП"
             :error-messages="errMessagesHandler('kpp')"
             :rules="rules.kpp"
             outlined
+            @input="errors = []"
           />
           <v-text-field
+            ref="firstName"
             v-model="form.firstName"
             label="Имя пользователя"
             :error-messages="errMessagesHandler('firstName')"
             :rules="rules.firstName"
             outlined
+            @input="errors = []"
           />
           <v-text-field
+            ref="lastName"
             v-model="form.lastName"
             label="Фамилия пользователя"
             :error-messages="errMessagesHandler('lastName')"
             :rules="rules.lastName"
             outlined
+            @input="errors = []"
           />
           <v-text-field
+            ref="email"
             v-model="form.email"
             label="E-mail"
             type="email"
             :error-messages="errMessagesHandler('email')"
             :rules="rules.email"
             outlined
+            @input="errors = []"
           />
           <v-text-field
+            ref="password"
             v-model="form.password"
             :counter="PASSWORD_MAX_LENGTH"
             label="Пароль"
@@ -114,7 +126,6 @@ import { get, random } from 'lodash-es';
 // import { singleErrorExtractorMixin } from 'vuelidate-error-extractor';
 
 const alpha = (v) => /[a-z\u0400-\u04FF]/.test(v);
-const Fields = ['name', 'inn', 'kpp', 'firstName', 'lastName', 'email', 'password'];
 const STRING_MAX_LENGTH = 255;
 const INN_MAX_LENGTH = 12;
 const KPP_MAX_LENGTH = 9;
@@ -124,10 +135,7 @@ export default {
   name: 'RegistrationModal',
   // mixins: [singleErrorExtractorMixin],
   data: () => ({
-    defaultErr: {
-      details: null,
-    },
-    errors: Fields.reduce((acc, cur) => Object.assign(acc, { [cur]: null }), {}),
+    errors: [],
     form: {
       name: '',
       inn: '',
@@ -167,9 +175,11 @@ export default {
   methods: {
     errMessagesHandler(fieldName) {
       const field = this.$refs[fieldName];
-      if (!field || !field.hasFocused) return null;
+      if (!field) return null;
 
-      return this.$errorMessage(this.$v, `form.${fieldName}`) || get(this.errors.find(e => e.path === fieldName), 'details', null);
+      const apiErr = get(this.errors.find((e) => e.path === fieldName), 'details', null);
+
+      return apiErr || (field.hasFocused ? this.$errorMessage(this.$v, `form.${fieldName}`) : null);
     },
     register() {
       this.$http.post('auth/register', this.form).then(() => {
@@ -177,6 +187,7 @@ export default {
         redirectToAuth();
       }).catch((e) => {
         if (e.response && e.response.data && e.response.data.errors) {
+          this.$set(this.errors, e.response.data.errors);
           this.errors = e.response.data.errors;
         } else {
           console.error(e); // eslint-disable-line
