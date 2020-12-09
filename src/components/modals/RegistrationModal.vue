@@ -110,7 +110,7 @@ import {
   numeric,
   required,
 } from 'vuelidate/lib/validators';
-import { random } from 'lodash-es';
+import { get, random } from 'lodash-es';
 // import { singleErrorExtractorMixin } from 'vuelidate-error-extractor';
 
 const alpha = (v) => /[a-z\u0400-\u04FF]/.test(v);
@@ -169,18 +169,17 @@ export default {
       const field = this.$refs[fieldName];
       if (!field || !field.hasFocused) return null;
 
-      return this.$errorMessage(this.$v, `form.${fieldName}`) || this.errors[fieldName];
+      return this.$errorMessage(this.$v, `form.${fieldName}`) || get(this.errors.find(e => e.path === fieldName), 'details', null);
     },
     register() {
       this.$http.post('auth/register', this.form).then(() => {
         this.visible = false;
         redirectToAuth();
       }).catch((e) => {
-        try {
+        if (e.response && e.response.data && e.response.data.errors) {
           this.errors = e.response.data.errors;
-        } catch (err) {
+        } else {
           console.error(e); // eslint-disable-line
-          console.error(err); // eslint-disable-line
         }
       });
     },

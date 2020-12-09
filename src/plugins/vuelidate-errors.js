@@ -52,15 +52,15 @@ export const getFormErrorMessage = ($v, field, store) => {
  * @param error
  * @returns {string}
  */
-// export const getApiLocaleErrors = (error) => {
-//   let text = null;
-//   const { message, request } = error || {};
-//
-//   if (request) {
-//     text = request.statusText;
-//   } else {
-//     text = message;
-//   }
-//
-//   return text;
-// };
+export const getApiLocaleErrors = (error) => {
+  let text = null;
+  const { message, request } = error || {};
+
+  if (request) {
+    text = request.statusText;
+  } else {
+    text = message;
+  }
+
+  return text;
+};
