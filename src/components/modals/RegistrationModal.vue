@@ -6,6 +6,7 @@
     persistent
   >
     <v-form
+      autocomplete="off"
       class="modal-primary"
       @submit.prevent="register"
     >
@@ -17,6 +18,7 @@
           <v-text-field
             ref="name"
             v-model="form.name"
+            autocomplete="nope"
             label="Наименование организации"
             :error-messages="errMessagesHandler('name')"
             outlined
@@ -47,6 +49,7 @@
           <v-text-field
             ref="firstName"
             v-model="form.firstName"
+            autocomplete="nope"
             label="Имя пользователя"
             :error-messages="errMessagesHandler('firstName')"
             :rules="rules.firstName"
@@ -56,6 +59,7 @@
           <v-text-field
             ref="lastName"
             v-model="form.lastName"
+            autocomplete="nope"
             label="Фамилия пользователя"
             :error-messages="errMessagesHandler('lastName')"
             :rules="rules.lastName"
@@ -65,6 +69,7 @@
           <v-text-field
             ref="email"
             v-model="form.email"
+            autocomplete="nope"
             label="E-mail"
             type="email"
             :error-messages="errMessagesHandler('email')"
@@ -75,6 +80,7 @@
           <v-text-field
             ref="password"
             v-model="form.password"
+            autocomplete="new-password"
             :counter="PASSWORD_MAX_LENGTH"
             label="Пароль"
             type="password"
