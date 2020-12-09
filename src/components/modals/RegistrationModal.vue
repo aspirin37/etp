@@ -101,13 +101,6 @@
           <v-btn
             class="ml-2"
             depressed
-            @click="test"
-          >
-            тест
-          </v-btn>
-          <v-btn
-            class="ml-2"
-            depressed
             color="primary"
             type="submit"
           >
@@ -128,9 +121,7 @@ import {
   numeric,
   required,
 } from 'vuelidate/lib/validators';
-import { random } from 'lodash-es';
 import { alpha, inn, kpp } from '@/utilities/validators';
-// import { singleErrorExtractorMixin } from 'vuelidate-error-extractor';
 
 const STRING_MAX_LENGTH = 255;
 const INN_MAX_LENGTH = 12;
@@ -139,7 +130,6 @@ const PASSWORD_MAX_LENGTH = 64;
 
 export default {
   name: 'RegistrationModal',
-  // mixins: [singleErrorExtractorMixin],
   data: () => ({
     errors: [],
     form: {
@@ -207,22 +197,6 @@ export default {
           console.error(e); // eslint-disable-line
         }
       });
-    },
-    test() {
-      const randomStr = (length) => Math.random()
-        .toString(36)
-        .replace(/[^a-z]+/g, '')
-        .substr(0, length);
-
-      this.form = {
-        name: 'test',
-        inn: String(random(1000000000, 9999999999)),
-        kpp: String(random(100000000, 999999999)),
-        firstName: 'testFirstName',
-        lastName: 'testLastName',
-        email: `${randomStr(5)}@${randomStr(5)}.${randomStr(2)}`,
-        password: 'testtest',
-      };
     },
   },
 };
