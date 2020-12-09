@@ -4,7 +4,7 @@
       <h1 class="page__title mr-6">
         Заказ
         <template v-if="order">
-          от {{ order.createdAt | moment('DD.MM.YYYY') }}
+          {{ order.quoteRequest.name }} от {{ order.createdAt | moment('DD.MM.YYYY') }}
         </template>
       </h1>
       <span v-if="order">
@@ -72,7 +72,7 @@
 
 <script>
 import PurchaseOrderPositionsTable from '@/components/PurchaseOrderPositionsTable.vue';
-import { orderStatuses } from '@/utilities/enums';
+import { orderStatuses, priceRequestTypes } from '@/utilities/enums';
 
 export default {
   name: 'PurchaseOrder',
@@ -93,6 +93,15 @@ export default {
   computed: {
     orderInfo() {
       return [{
+        name: 'Ценовой запрос',
+        fields: [{
+          label: 'Наименование',
+          value: this.order.quoteRequest.name,
+        }, {
+          label: 'Тип ЦЗ',
+          value: priceRequestTypes[this.order.quoteRequest.type],
+        }],
+      }, {
         name: 'Заказчик',
         fields: [{
           label: 'Наименование',

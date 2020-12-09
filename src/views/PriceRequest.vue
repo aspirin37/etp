@@ -347,7 +347,7 @@ export default {
         name: 'Общие сведения',
         fields: [{
           label: 'Тип ЦЗ',
-          value: priceRequestTypes[vm.priceRequest.type] || priceRequestTypes[vm.priceRequest.type],
+          value: priceRequestTypes[vm.priceRequest.type],
         }, {
           label: 'Наименование ЦЗ',
           value: vm.priceRequest.name,
