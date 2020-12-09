@@ -172,9 +172,6 @@ export default {
       /* eslint-enable object-curly-newline, max-len */
     },
   },
-  // computed: {
-  //   apiErrName: ({ errors }) => (errors.find((e) => e.path === 'name') || {}).detail,
-  // },
   methods: {
     errMessagesHandler(fieldName) {
       const field = this.$refs[fieldName];
