@@ -20,6 +20,8 @@ export const getFormErrorMessage = ($v, field, store) => {
       email: 'Неправильный адрес почты',
       minLength: '',
       maxLength: '',
+      inn: 'Неправильный внутренний номер',
+      kpp: 'Неправильный внутренний номер',
     };
     return Object.keys(errorsStack).reduce((errors, key) => {
       if (Object.prototype.hasOwnProperty.call(errorsStack, key) && fieldParams[key] === false) {

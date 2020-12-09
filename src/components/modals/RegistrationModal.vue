@@ -123,9 +123,9 @@ import {
   required,
 } from 'vuelidate/lib/validators';
 import { random } from 'lodash-es';
+import { alpha, inn, kpp } from '@/utilities/validators';
 // import { singleErrorExtractorMixin } from 'vuelidate-error-extractor';
 
-const alpha = (v) => /[a-z\u0400-\u04FF]/.test(v);
 const STRING_MAX_LENGTH = 255;
 const INN_MAX_LENGTH = 12;
 const KPP_MAX_LENGTH = 9;
@@ -147,8 +147,8 @@ export default {
     },
     rules: {
       name: [required, minLength(3), maxLength(STRING_MAX_LENGTH)],
-      inn: [required, numeric, minLength(10), maxLength(12)],
-      kpp: [required, numeric, minLength(9), maxLength(9)],
+      inn: [required, numeric, minLength(10), maxLength(12), inn],
+      kpp: [required, numeric, minLength(9), maxLength(9), kpp],
       firstName: [required, alpha, minLength(2), maxLength(STRING_MAX_LENGTH)],
       lastName: [required, alpha, minLength(2), maxLength(STRING_MAX_LENGTH)],
       email: [required, email, maxLength(STRING_MAX_LENGTH)],
@@ -163,8 +163,8 @@ export default {
     form: {
       /* eslint-disable object-curly-newline, max-len */
       name: { required, minLength: minLength(3), maxLength: maxLength(STRING_MAX_LENGTH) },
-      inn: { required, numeric, minLength: minLength(10), maxLength: maxLength(INN_MAX_LENGTH) },
-      kpp: { required, numeric, minLength: minLength(9), maxLength: maxLength(KPP_MAX_LENGTH) },
+      inn: { required, numeric, minLength: minLength(10), maxLength: maxLength(INN_MAX_LENGTH), inn },
+      kpp: { required, numeric, minLength: minLength(9), maxLength: maxLength(KPP_MAX_LENGTH), kpp },
       firstName: { required, alpha, minLength: minLength(2), maxLength: maxLength(STRING_MAX_LENGTH) },
       lastName: { required, alpha, minLength: minLength(2), maxLength: maxLength(STRING_MAX_LENGTH) },
       email: { required, email, maxLength: maxLength(STRING_MAX_LENGTH) },
@@ -211,7 +211,7 @@ export default {
       this.form = {
         name: 'test',
         inn: String(random(1000000000, 9999999999)),
-        kpp: String(random(10000000, 999999999)),
+        kpp: String(random(100000000, 999999999)),
         firstName: 'testFirstName',
         lastName: 'testLastName',
         email: `${randomStr(5)}@${randomStr(5)}.${randomStr(2)}`,
