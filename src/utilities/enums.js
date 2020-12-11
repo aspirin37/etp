@@ -21,8 +21,4 @@ const orderStatuses = {
   refund: 'Возврат денежных средств',
 };
 
-export {
-  priceRequestTypes,
-  priceRequestStatuses,
-  orderStatuses,
-};
+export { priceRequestTypes, priceRequestStatuses, orderStatuses };
