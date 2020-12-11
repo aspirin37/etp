@@ -1,5 +1,3 @@
-const aliases = require('./aliases');
-
 module.exports = {
   devServer: {
     port: 3000,
@@ -32,7 +30,6 @@ module.exports = {
   },
 
   chainWebpack: (config) => {
-    aliases.apply(null, [config]);
     config.module
       .rule('svg-sprite')
       .use('svgo-loader')
