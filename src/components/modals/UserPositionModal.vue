@@ -8,7 +8,7 @@
       @submit.prevent="onSubmit"
     >
       <div class="modal-primary__header">
-        <span>Мои позиции</span>
+        <span>Добавление позиции</span>
         <v-btn
           icon
           dark
@@ -19,11 +19,33 @@
       </div>
       <div class="modal-primary__wrapper">
         <div class="modal-primary__content">
-          <user-position-table
-            :selected="selected"
-            :editable="false"
-            @selection-changed="selected = $event"
-          />
+          <v-tabs
+            v-model="tab"
+            class="mb-2"
+          >
+            <v-tab
+              v-for="(it, i) in tabs"
+              :key="i"
+              :ripple="false"
+            >
+              {{ it }}
+            </v-tab>
+          </v-tabs>
+          <v-tabs-items
+            v-model="tab"
+            class="wizard__content modal-tabs"
+          >
+            <v-tab-item>
+              <user-position-table
+                :selected="selected"
+                :editable="false"
+                @selection-changed="selected = $event"
+              />
+            </v-tab-item>
+            <v-tab-item>
+              <nsi-position-table />
+            </v-tab-item>
+          </v-tabs-items>
           <div class="modal-primary__actions">
             <v-btn
               class="ml-auto"
@@ -49,11 +71,13 @@
 
 <script>
 import UserPositionTable from '@/components/UserPositionTable.vue';
+import NsiPositionTable from '@/components/NSIPositionTable.vue';
 
 export default {
   name: 'UserPositionModal',
   components: {
     UserPositionTable,
+    NsiPositionTable,
   },
   props: {
     items: {
@@ -64,6 +88,11 @@ export default {
     },
   },
   data: () => ({
+    tab: 0,
+    tabs: [
+      'Мои позиции',
+      'Позиции из справочника',
+    ],
     selected: [],
   }),
   computed: {
@@ -92,3 +121,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.modal-tabs {
+  min-height: 400px;
+}
+</style>
