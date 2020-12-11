@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueMoment from 'vue-moment';
 import Vuelidate from 'vuelidate';
 import VueCurrencyInput from 'vue-currency-input';
-import Http from 'api';
+import Http from '@/api';
 import { get } from 'lodash-es';
 import { getFormErrorMessage } from './plugins/vuelidate-errors';
 

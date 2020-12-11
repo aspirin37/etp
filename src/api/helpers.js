@@ -1,6 +1,6 @@
 /* eslint-disable */
-import API from 'api'
-import Router from '../router'
+import API from './index';
+import Router from '../router';
 import Store from '../store';
 
 export function redirectToAuth () {
