@@ -1,4 +1,4 @@
-import API from 'api';
+import API from '@/api';
 
 function setToCache(okeiList) {
   localStorage.setItem('OKEI', JSON.stringify(okeiList));

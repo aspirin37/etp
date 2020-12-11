@@ -68,8 +68,8 @@
 </template>
 
 <script>
-import APIauthLogin from 'api/authLogin';
-import { loginAndRedirect } from 'api/helpers';
+import APIauthLogin from '@/api/authLogin';
+import { loginAndRedirect } from '@/api/helpers';
 
 export default {
   name: 'AuthModal',

@@ -114,7 +114,7 @@
 </template>
 
 <script>
-import { redirectToAuth } from 'api/helpers';
+import { redirectToAuth } from '@/api/helpers';
 import {
   email,
   minLength,
