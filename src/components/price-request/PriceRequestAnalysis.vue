@@ -12,10 +12,13 @@
       <template v-slot:body="props">
         <tr class="position-relative">
           <td
-            v-for="it in headers"
+            v-for="(it, i) in headers"
             :key="it.id"
-            class="analysis__sticky-cell text-center"
-            :class="{'bordered': it.isSupplier}"
+            class="analysis__sticky-cell"
+            :class="[
+              {'bordered': it.isSupplier},
+              i === headers.length - 1 ? 'text-left' : 'text-center',
+            ]"
           >
             <a
               v-if="it.isSupplier"
@@ -24,6 +27,14 @@
               @click.prevent="selectWinner(it.id, it.quoteId)"
             >
               {{ it.id === winner ? 'Выбрано' : 'Выбрать' }}
+            </a>
+            <a
+              v-if="i === headers.length - 1"
+              href="#"
+              class="text-left"
+              @click.prevent="resetWinner"
+            >
+              Сбросить выбор
             </a>
           </td>
         </tr>
@@ -48,6 +59,20 @@
           >
             {{ toCurrency(it.prices[supplier.id]) }}
           </td>
+          <td>
+            <v-select
+              v-model="winners"
+              :items="supplierOptions"
+              item-text="text"
+              item-value="value"
+              class="price-request-select"
+              placeholder="Не выбрано"
+              clearable
+              hide-details
+              outlined
+              dense
+            />
+          </td>
         </tr>
         <tr>
           <td
@@ -69,6 +94,7 @@
           >
             {{ toCurrency(it.totalVat) }}
           </td>
+          <td />
         </tr>
         <tr>
           <td :colspan="3">
@@ -82,6 +108,7 @@
           >
             {{ toCurrency(it.totalSum) }}
           </td>
+          <td />
         </tr>
         <tr>
           <td
@@ -103,6 +130,7 @@
           >
             {{ it.delivery.date | moment('DD.MM.YYYY') }}
           </td>
+          <td />
         </tr>
         <tr>
           <td :colspan="3">
@@ -116,10 +144,11 @@
           >
             {{ toCurrency(it.delivery.price) }}
           </td>
+          <td />
         </tr>
         <tr>
           <td
-            v-for="it in headers"
+            v-for="(it, i) in headers"
             :key="it.id"
             class="text-center"
           >
@@ -131,6 +160,15 @@
               @click="selectWinner(it.id, it.quoteId)"
             >
               {{ it.id === winner ? 'Выбрано' : 'Выбрать' }}
+            </v-btn>
+            <v-btn
+              v-if="i === headers.length - 1"
+              color="error"
+              :disabled="!winner"
+              depressed
+              @click="resetWinner"
+            >
+              Сбросить выбор
             </v-btn>
           </td>
         </tr>
@@ -157,6 +195,11 @@ export default ({
         value: 'okeiName',
         text: 'ЕИ',
       }],
+      winnerHeader: {
+        text: 'Победитель',
+      },
+      supplierOptions: [],
+      winners: [],
       headers: [],
       positions: [],
       suppliers: [],
@@ -180,7 +223,13 @@ export default ({
         quoteId: it.id,
       }));
 
+      this.supplierOptions = data.map((it) => ({
+        text: it.supplier.name,
+        value: it.supplier.id,
+      }));
+
       this.headers = this.staticHeaders.concat(supplierHeaders);
+      this.headers.push(this.winnerHeader);
 
       const positions = [];
       const map = new Map();
@@ -219,6 +268,9 @@ export default ({
       await this.$http.patch(`quote-requests/${this.id}/winner`, { quoteId });
       this.$emit('winner-selected', this.winner);
     },
+    resetWinner() {
+      this.winner = null;
+    },
     toCurrency(value) {
       if (typeof value !== 'number') {
         return value;
@@ -237,6 +289,10 @@ export default ({
 
   td.bordered {
     box-shadow: inset 0 -1px #DFE2E5, inset 0 0px #DFE2E5, inset 1px 0 #DFE2E5 !important;
+  }
+
+  .price-request-select {
+    width: 240px;
   }
 
   // .not-sticky th, td {
