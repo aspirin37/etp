@@ -18,6 +18,10 @@ const routes = [
     path: '/organization',
     name: 'Organization',
     component: () => import('@/views/Organization.vue'),
+    children: [{
+      path: '/organization/edit',
+      name: 'Organization-edit',
+    }],
   },
   {
     path: '/create-price-request/:id?',

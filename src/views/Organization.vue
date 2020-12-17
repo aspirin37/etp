@@ -3,7 +3,7 @@
     id="organization-view"
     class="page wizard"
   >
-    <organization-header />
+    <organization-header v-model="headerForm" />
     <v-row
       class="page__body"
       align="start"
@@ -48,11 +48,15 @@
                 </v-row>
                 <v-row>
                   <v-col>Адрес сайта</v-col>
-                  <v-col>{{ form.site }}</v-col>
+                  <v-col>
+                    <a :href="`mailto:${form.site}`">{{ form.site }}</a>
+                  </v-col>
                 </v-row>
                 <v-row>
                   <v-col>Официальная электронная почта</v-col>
-                  <v-col>{{ form.email }}</v-col>
+                  <v-col>
+                    <a :href="`mailto:${form.email}`">{{ form.email }}</a>
+                  </v-col>
                 </v-row>
               </v-expansion-panel-content>
             </v-expansion-panel>
@@ -115,7 +119,9 @@
                 </v-row>
                 <v-row>
                   <v-col>E-mail</v-col>
-                  <v-col>{{ form.contact_email }}</v-col>
+                  <v-col>
+                    <a :href="`mailto:${form.contact_email}`">{{ form.contact_email }}</a>
+                  </v-col>
                 </v-row>
               </v-expansion-panel-content>
             </v-expansion-panel>
@@ -137,8 +143,9 @@
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
+          <v-divider />
           <v-btn
-            class="ml-2"
+            class="ma-8"
             color="primary"
             depressed
           >
@@ -164,6 +171,7 @@
 
 <script>
 import OrganizationHeader from '@/components/layout/organization/header.vue';
+// import '@/assets/images/lukoil-example.jpg';
 
 export default {
   name: 'Organization',
@@ -173,6 +181,7 @@ export default {
   data: () => ({
     contentPanels: [0, 1, 2, 3, 4],
     form: {
+      logo: '@/assets/images/lukoil-example.jpg',
       full_name: 'ПАО «Нефтяная компания Лукойл»',
       short_name: 'Нефтяная компания "ЛУКОЙЛ", ПАО',
       inn: '7708004767',
@@ -200,6 +209,15 @@ export default {
       transaction_history: 'Смотреть историю транзакций',
     },
   }),
+  computed: {
+    headerForm({ form: { full_name, logo, site } }) { // eslint-disable-line camelcase
+      return {
+        full_name,
+        logo,
+        site,
+      };
+    },
+  },
 };
 </script>
 
@@ -207,6 +225,9 @@ export default {
   #organization-view {
     .body__content {
       min-height: calc(100vh - 400px - 6em);
+    }
+    .v-expansion-panel-header {
+      font-weight: 500
     }
   }
 </style>
