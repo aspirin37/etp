@@ -15,6 +15,11 @@ const routes = [
     component: () => import('@/views/Registration.vue'),
   },
   {
+    path: '/organization',
+    name: 'Organization',
+    component: () => import('@/views/Organization.vue'),
+  },
+  {
     path: '/create-price-request/:id?',
     name: 'CreatePriceRequest',
     component: () => import('@/views/CreatePriceRequest.vue'),
