@@ -32,23 +32,33 @@
           >
             <v-col>
               ЦЗ создано
-              <p class="primary--text">234</p>
+              <p class="primary--text">
+                234
+              </p>
             </v-col>
             <v-col>
               Ответов на ЦЗ
-              <p class="primary--text">989</p>
+              <p class="primary--text">
+                989
+              </p>
             </v-col>
             <v-col>
               Создано позиций
-              <p class="primary--text">22 009</p>
+              <p class="primary--text">
+                22 009
+              </p>
             </v-col>
             <v-col>
               Ответов на позиций
-              <p class="primary--text">7 002</p>
+              <p class="primary--text">
+                7 002
+              </p>
             </v-col>
             <v-col>
               Выиграно ЦЗ
-              <p class="primary--text">500</p>
+              <p class="primary--text">
+                500
+              </p>
             </v-col>
           </v-row>
         </v-container>
