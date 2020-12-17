@@ -16,9 +16,10 @@
               Компания{{ form.checked ? ' ' : ' не ' }}проверена
             </v-chip>
             <a
+              v-if="mode !== 'edit'"
               class="link-edit ma-6"
               href="@edit"
-              @click.prevent="edit"
+              @click.prevent="$emit('edit')"
             >
               <svg
                 width="18"
@@ -111,11 +112,7 @@ export default {
         site: '—',
       }),
     },
-  },
-  methods: {
-    edit() {
-      this.$router.push({ name: 'Organization-edit' });
-    },
+    mode: String,
   },
 };
 </script>
@@ -135,6 +132,7 @@ export default {
       .top-widgets {
         display: flex;
         justify-content: space-between;
+        height: 80px;
       }
       .organization-header--title {
         font-size: 20px;

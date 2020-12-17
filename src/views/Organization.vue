@@ -3,7 +3,11 @@
     id="organization-view"
     class="page wizard"
   >
-    <organization-header v-model="headerForm" />
+    <organization-header
+      v-model="headerForm"
+      :mode="mode"
+      @edit="toEdit"
+    />
     <v-row
       class="page__body"
       align="start"
@@ -145,12 +149,43 @@
           </v-expansion-panels>
           <v-divider />
           <v-btn
+            v-if="mode === 'view'"
             class="ma-8"
             color="primary"
             depressed
+            @click="toEdit"
           >
             Редактировать
           </v-btn>
+          <div
+            v-else-if="mode === 'edit'"
+            class="d-flex justify-space-between"
+          >
+            <div class="d-inline-flex ma-8">
+              <v-btn
+                class=""
+                depressed
+                @click="toView"
+              >
+                Отмена
+              </v-btn>
+              <v-btn
+                class="ml-2"
+                color="primary"
+                depressed
+                @click="save"
+              >
+                Сохранить
+              </v-btn>
+            </div>
+            <v-btn
+              class="ma-8"
+              depressed
+              @click="remove"
+            >
+              Удалить профиль
+            </v-btn>
+          </div>
         </v-sheet>
       </v-col>
       <v-col cols="3">
@@ -304,16 +339,27 @@ export default {
     },
   }),
   computed: {
-    headerForm({ form: { checked, full_name, logo, site } }) { // eslint-disable-line camelcase, object-curly-newline
-      return {
-        checked,
-        full_name,
-        logo,
-        site,
-      };
+    headerForm: ({ form: { checked, full_name, logo, site } }) => ({ // eslint-disable-line camelcase, object-curly-newline
+      checked,
+      full_name,
+      logo,
+      site,
+    }),
+    mode: ({ $route }) => ($route.name === 'Organization-edit' ? 'edit' : 'view'),
+    totalRate: ({ rates }) => Math.ceil(rates.reduce((acc, cur) => acc + cur.value, 0) / rates.length),
+  },
+  methods: {
+    save() {
+      console.warn('@save'); // eslint-disable-line no-console
     },
-    totalRate({ rates }) {
-      return Math.ceil(rates.reduce((acc, cur) => acc + cur.value, 0) / rates.length);
+    remove() {
+      console.warn('@remove'); // eslint-disable-line no-console
+    },
+    toEdit() {
+      this.$router.push({ name: 'Organization-edit' });
+    },
+    toView() {
+      this.$router.push({ name: 'Organization' });
     },
   },
 };
