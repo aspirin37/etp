@@ -154,14 +154,45 @@
         </v-sheet>
       </v-col>
       <v-col cols="3">
-        <!-- <v-col> -->
-        <v-sheet>
-          Рейтинг
+        <v-sheet class="side-sheet rates-sheet">
+          <p class="sheet-title">Рейтинг</p>
         </v-sheet>
-        <!-- </v-col> -->
-        <!-- <v-col> -->
-        <v-sheet class="mt-3">
-          Шаблоны документов
+        <v-sheet class="side-sheet docs-sheet mt-3">
+          <p class="sheet-title">Шаблоны документов</p>
+          <template v-for="(file, key) in form.doc_files" >
+            <v-row
+              :key="key"
+              class="doc-file"
+              :href="file.link"
+              tag="a"
+              @click.prevent
+            >
+              <v-col>
+                <svg-icon name="doc-file" />
+              </v-col>
+              <v-col>
+                <p>{{ file.name }}</p>
+                <p>{{ file.size }}</p>
+              </v-col>
+            </v-row>
+            <v-divider
+              v-if="key + 1 !== form.doc_files.length"
+              :key="`divider-${key}`"
+            />
+          </template>
+          <a
+            v-if="form.doc_files.length"
+            class="download-all-link"
+            href="@download-all-docs"
+          >
+            Скачать все
+          </a>
+          <p
+            v-else
+            class="empty-files"
+          >
+            Пусто
+          </p>
         </v-sheet>
         <!-- </v-col> -->
       </v-col>
@@ -170,17 +201,19 @@
 </template>
 
 <script>
+import SvgIcon from '@/components/common/SvgIcon.vue';
 import OrganizationHeader from '@/components/layout/organization/header.vue';
 // import '@/assets/images/lukoil-example.jpg';
 
 export default {
   name: 'Organization',
   components: {
-    OrganizationHeader,
+    OrganizationHeader, SvgIcon,
   },
   data: () => ({
     contentPanels: [0, 1, 2, 3, 4],
     form: {
+      checked: true,
       logo: '@/assets/images/lukoil-example.jpg',
       full_name: 'ПАО «Нефтяная компания Лукойл»',
       short_name: 'Нефтяная компания "ЛУКОЙЛ", ПАО',
@@ -207,11 +240,26 @@ export default {
       account_number: '087106003296',
       account_number_balance: '360,00 ₽',
       transaction_history: 'Смотреть историю транзакций',
+      // doc_files: [],
+      doc_files: [{
+        name: 'A_Living_Russian_Grammar_Beginner.pdf',
+        link: '/A_Living_Russian_Grammar_Beginner.pdf',
+        size: '7.6 МБ',
+      }, {
+        name: 'Penguin_Russian_Course_A_Complete_Course.pdf',
+        link: '/Penguin_Russian_Course_A_Complete_Course.pdf',
+        size: '7.6 МБ',
+      }, {
+        name: 'Менеджмент.rar',
+        link: '/Менеджмент.rar',
+        size: '11.2 МБ',
+      }],
     },
   }),
   computed: {
-    headerForm({ form: { full_name, logo, site } }) { // eslint-disable-line camelcase
+    headerForm({ form: { checked, full_name, logo, site } }) { // eslint-disable-line camelcase, object-curly-newline
       return {
+        checked,
         full_name,
         logo,
         site,
@@ -228,6 +276,78 @@ export default {
     }
     .v-expansion-panel-header {
       font-weight: 500
+    }
+    .v-expansion-panel-content {
+      .row {
+        .col {
+          padding: 8px 12px;
+          &:first-child {
+            font-size: 13px;
+            line-height: 22px;
+            color: $gray;
+          }
+          &:nth-child(2) {
+            font-weight: 300;
+            font-size: 13px;
+            line-height: 22px;
+            color: $fontBlack;
+          }
+        }
+      }
+    }
+    .side-sheet {
+      padding: 1.5em;
+      .doc-file {
+        svg {
+          height: 32px;
+          width: 32px;
+        }
+        .col {
+          padding-top: 16px;
+          padding-bottom: 0;
+        }
+        .col:first-child {
+          width: 32px;
+          max-width: 32px;
+          margin-right: 1em;
+        }
+        .col:nth-child(2) {
+          width: calc(100% - 32px);
+        }
+        p:first-child {
+          font-size: 13px;
+          line-height: 19px;
+          word-break: break-all;
+          margin-bottom: .5em
+        }
+        p:nth-child(2) {
+          font-size: 13px;
+          line-height: 21px;
+          color: $gray;
+        }
+      }
+    }
+    .sheet-title {
+      font-size: 14px;
+      line-height: 22px;
+    }
+    .docs-sheet {
+      max-height: 426px;
+      .download-all-link {
+        font-size: 13px;
+        line-height: 19px;
+      }
+      .empty-files {
+        font-weight: 300;
+        color: $gray;
+        font-size: 20px;
+        margin-bottom: 0;
+      }
+    }
+    .v-btn .v-btn__content {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 22px;
     }
   }
 </style>

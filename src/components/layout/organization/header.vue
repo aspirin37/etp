@@ -9,11 +9,11 @@
           <div class="top-widgets">
             <v-chip
               class="ma-6"
-              color="green"
+              :color="form.checked ? 'green' : 'orange'"
               small
               text-color="white"
             >
-              Компания проверена
+              Компания{{ form.checked ? ' ' : ' не ' }}проверена
             </v-chip>
             <a
               class="link-edit ma-6"
@@ -67,34 +67,24 @@
             class="header--counters"
           >
             <v-col>
-              ЦЗ создано
-              <p>
-                234
-              </p>
+              <span>ЦЗ создано</span>
+              <p>234</p>
             </v-col>
             <v-col>
-              Ответов на ЦЗ
-              <p>
-                989
-              </p>
+              <span>Ответов на ЦЗ</span>
+              <p>989</p>
             </v-col>
             <v-col>
-              Создано позиций
-              <p>
-                22 009
-              </p>
+              <span>Создано позиций</span>
+              <p>22 009</p>
             </v-col>
             <v-col>
-              Ответов на позиций
-              <p>
-                7 002
-              </p>
+              <span>Ответов на позиций</span>
+              <p>7 002</p>
             </v-col>
             <v-col>
-              Выиграно ЦЗ
-              <p>
-                500
-              </p>
+              <span>Выиграно ЦЗ</span>
+              <p>500</p>
             </v-col>
           </v-row>
         </v-container>
@@ -115,6 +105,7 @@ export default {
     form: {
       type: Object,
       default: () => ({
+        checked: false,
         logo: '@/assets/images/organization-default.jpg',
         full_name: '—',
         site: '—',
@@ -131,24 +122,40 @@ export default {
 
 <style lang="scss">
 #organization-header {
-  height: 400px;
   text-align: center;
-  .name-with-logo {
-    height: 280px;
-    .top-widgets {
-      display: flex;
-      justify-content: space-between;
-    }
-    .organization-header--title {
-      font-size: 20px;
-      font-weight: 400;
-      line-height: 28px;
+  .v-chip {
+    border-radius: 6px;
+    padding: 0 6px;
+    height: 20px
+  }
+  .v-sheet {
+    height: 400px;
+    .name-with-logo {
+      height: 280px;
+      .top-widgets {
+        display: flex;
+        justify-content: space-between;
+      }
+      .organization-header--title {
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 28px;
+      }
     }
     .header--counters {
       .col {
-        color: $gray;
+        span {
+          font-size: 13px;
+          line-height: 22px;
+          color: $gray;
+        }
         p {
+          font-weight: 300;
+          font-size: 35px;
+          line-height: 27px;
           color: $blue;
+          margin-bottom: 0;
+          padding-top: .5em;
         }
       }
     }
