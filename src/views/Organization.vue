@@ -242,6 +242,7 @@
             v-if="form.doc_files.length"
             class="download-all-link"
             href="@download-all-docs"
+            @click.prevent
           >
             Скачать все
           </a>
