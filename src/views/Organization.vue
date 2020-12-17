@@ -155,11 +155,34 @@
       </v-col>
       <v-col cols="3">
         <v-sheet class="side-sheet rates-sheet">
-          <p class="sheet-title">Рейтинг</p>
+          <div class="rating-round">
+            <v-progress-circular
+              :color="totalRate > 50 ? 'green' : (totalRate < 25 ? 'red' : 'orange')"
+              size="100"
+              :value="totalRate"
+            />
+            <h1>{{ totalRate }}%</h1>
+          </div>
+          <v-container>
+            <v-row
+              v-for="rate in rates"
+              :key="rate.name"
+            >
+              <span>{{ rate.name }}</span>
+              <span>{{ rate.value }}%</span>
+              <v-progress-linear
+                :key="rate.name"
+                :color="rate.value > 50 ? 'green' : (rate.value < 25 ? 'red' : 'orange')"
+                :value="rate.value"
+              />
+            </v-row>
+          </v-container>
         </v-sheet>
         <v-sheet class="side-sheet docs-sheet mt-3">
-          <p class="sheet-title">Шаблоны документов</p>
-          <template v-for="(file, key) in form.doc_files" >
+          <p class="sheet-title">
+            Шаблоны документов
+          </p>
+          <template v-for="(file, key) in form.doc_files">
             <v-row
               :key="key"
               class="doc-file"
@@ -212,6 +235,25 @@ export default {
   },
   data: () => ({
     contentPanels: [0, 1, 2, 3, 4],
+    rates: [{
+      name: 'Основные данные',
+      value: 75,
+    }, {
+      name: 'Банковские реквизиты',
+      value: 60,
+    }, {
+      name: 'Данные о руководителе',
+      value: 25,
+    }, {
+      name: 'Контактное лицо',
+      value: 55,
+    }, {
+      name: 'Шаблоны документов',
+      value: 35,
+    }, {
+      name: 'Данные о лицевом счете',
+      value: 5,
+    }],
     form: {
       checked: true,
       logo: '@/assets/images/lukoil-example.jpg',
@@ -231,8 +273,13 @@ export default {
       ceo_fio: 'Алекперов Вагит Юсуфович',
       ceo_post: 'Президент',
       date_foundation: 'Действующее',
-      order: `Приказ от 12.09.99 «Нефтяная компания «ЛУКОЙЛ».doc
-        Основание и приказ публичного акционерное общество «Нефтяная компания «ЛУКОЙЛ».doc`,
+      order: [{
+        name: 'Приказ от 12.09.99 «Нефтяная компания «ЛУКОЙЛ».doc',
+        link: '/Приказ от 12.09.99 «Нефтяная компания «ЛУКОЙЛ».doc',
+      }, {
+        name: 'Основание и приказ публичного акционерное общество «Нефтяная компания «ЛУКОЙЛ».doc',
+        link: '/Основание и приказ публичного акционерное общество «Нефтяная компания «ЛУКОЙЛ».doc',
+      }],
       contact_fio: 'Михаил Клочков',
       contact_post: 'Секретарь',
       contact_phone: '8 (495) 627-44-44',
@@ -264,6 +311,9 @@ export default {
         logo,
         site,
       };
+    },
+    totalRate({ rates }) {
+      return Math.ceil(rates.reduce((acc, cur) => acc + cur.value, 0) / rates.length);
     },
   },
 };
@@ -342,6 +392,31 @@ export default {
         color: $gray;
         font-size: 20px;
         margin-bottom: 0;
+      }
+    }
+    .rates-sheet {
+      .rating-round {
+        height: 100px;
+        width: 100px;
+        position: relative;
+        margin: 1em auto;
+        h1 {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          font-weight: 300;
+          font-size: 30px;
+          line-height: 100px;
+          text-align: center;
+        }
+      }
+      .row {
+        justify-content: space-between;
+        font-size: 13px;
+        line-height: 27px;
+        color: $gray;
+        margin-top: 1em;
       }
     }
     .v-btn .v-btn__content {
