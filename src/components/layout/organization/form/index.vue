@@ -6,7 +6,10 @@
         flat
         multiple
       >
-        <organization-form-basic :form="form" :mode="mode" />
+        <organization-form-basic
+          :form="form"
+          :mode="mode"
+        />
         <v-expansion-panel>
           <v-expansion-panel-header>Банковские реквизиты</v-expansion-panel-header>
           <v-expansion-panel-content>
@@ -105,7 +108,8 @@
               <v-col>
                 <a
                   :href="`/fake-get-transactions/${getField('transaction_history')}`"
-                  @click.prevent>
+                  @click.prevent
+                >
                   Смотреть историю транзакций
                 </a>
               </v-col>
