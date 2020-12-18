@@ -30,7 +30,7 @@
 
 <script>
 import OrganizationHeader from '@/components/layout/organization/header.vue';
-import OrganizationForm from '@/components/layout/organization/form.vue';
+import OrganizationForm from '@/components/layout/organization/form/index.vue';
 import OrganizationSideFiles from '@/components/layout/organization/side-files.vue';
 import OrganizationSideRates from '@/components/layout/organization/side-rates.vue';
 // import '@/assets/images/lukoil-example.jpg';
@@ -92,7 +92,7 @@ export default {
       contact_email: 'michael.klochkov@citi.com',
       account_number: '087106003296',
       account_number_balance: '360,00 ₽',
-      transaction_history: 'Смотреть историю транзакций',
+      transaction_history: '123456789',
       // doc_files: [],
       doc_files: [{
         name: 'A_Living_Russian_Grammar_Beginner.pdf',
