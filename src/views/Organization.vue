@@ -24,42 +24,42 @@
               <v-expansion-panel-content>
                 <v-row>
                   <v-col>Полное наименование</v-col>
-                  <v-col>{{ form.full_name }}</v-col>
+                  <v-col>{{ getField('full_name') }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>Краткое наименование</v-col>
-                  <v-col>{{ form.short_name }}</v-col>
+                  <v-col>{{ getField('short_name') }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>ИНН</v-col>
-                  <v-col>{{ form.inn }}</v-col>
+                  <v-col>{{ getField('inn') }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>КПП</v-col>
-                  <v-col>{{ form.kpp }}</v-col>
+                  <v-col>{{ getField('kpp') }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>ОГРН</v-col>
-                  <v-col>{{ form.ogrn }}</v-col>
+                  <v-col>{{ getField('ogrn') }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>Юридический адрес</v-col>
-                  <v-col>{{ form.legal_address }}</v-col>
+                  <v-col>{{ getField('legal_address') }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>Почтовый адрес</v-col>
-                  <v-col>{{ form.mailing_address }}</v-col>
+                  <v-col>{{ getField('mailing_address') }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>Адрес сайта</v-col>
                   <v-col>
-                    <a :href="`mailto:${form.site}`">{{ form.site }}</a>
+                    <a :href="form.site ? `mailto:${form.site}` : null">{{ getField('site') }}</a>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col>Официальная электронная почта</v-col>
                   <v-col>
-                    <a :href="`mailto:${form.email}`">{{ form.email }}</a>
+                    <a :href="form.email ? `mailto:${form.email}`: null">{{ getField('email') }}</a>
                   </v-col>
                 </v-row>
               </v-expansion-panel-content>
@@ -69,19 +69,19 @@
               <v-expansion-panel-content>
                 <v-row>
                   <v-col>Расчетный счет</v-col>
-                  <v-col>{{ form.checking_account }}</v-col>
+                  <v-col>{{ getField('checking_account') }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>БИК</v-col>
-                  <v-col>{{ form.bik }}</v-col>
+                  <v-col>{{ getField('bik') }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>Корреспондентский счет</v-col>
-                  <v-col>{{ form.correspondent_account }}</v-col>
+                  <v-col>{{ getField('correspondent_account') }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>Адрес банка</v-col>
-                  <v-col>{{ form.bank_address }}</v-col>
+                  <v-col>{{ getField('bank_address') }}</v-col>
                 </v-row>
               </v-expansion-panel-content>
             </v-expansion-panel>
@@ -90,19 +90,19 @@
               <v-expansion-panel-content>
                 <v-row>
                   <v-col>ФИО</v-col>
-                  <v-col>{{ form.ceo_fio }}</v-col>
+                  <v-col>{{ getField('ceo_fio') }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>Должность</v-col>
-                  <v-col>{{ form.ceo_post }}</v-col>
+                  <v-col>{{ getField('ceo_post') }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>Срок действия основания</v-col>
-                  <v-col>{{ form.date_foundation }}</v-col>
+                  <v-col>{{ getField('date_foundation') }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>Основание (приказ, доверенность и т.п.)</v-col>
-                  <v-col>{{ form.order }}</v-col>
+                  <v-col>{{ getField('order') }}</v-col>
                 </v-row>
               </v-expansion-panel-content>
             </v-expansion-panel>
@@ -111,20 +111,20 @@
               <v-expansion-panel-content>
                 <v-row>
                   <v-col>ФИО</v-col>
-                  <v-col>{{ form.contact_fio }}</v-col>
+                  <v-col>{{ getField('contact_fio') }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>Должность</v-col>
-                  <v-col>{{ form.contact_post }}</v-col>
+                  <v-col>{{ getField('contact_post') }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>Телефон</v-col>
-                  <v-col>{{ form.contact_phone }}</v-col>
+                  <v-col>{{ getField('contact_phone') }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>E-mail</v-col>
                   <v-col>
-                    <a :href="`mailto:${form.contact_email}`">{{ form.contact_email }}</a>
+                    <a :href="form.contact_email ? `mailto:${form.contact_email}` : null">{{ getField('contact_email') }}</a>
                   </v-col>
                 </v-row>
               </v-expansion-panel-content>
@@ -134,15 +134,15 @@
               <v-expansion-panel-content>
                 <v-row>
                   <v-col>Номер лицевого счета</v-col>
-                  <v-col>{{ form.account_number }}</v-col>
+                  <v-col>{{ getField('account_number') }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>Остаток на лицевом счету</v-col>
-                  <v-col>{{ form.account_number_balance }}</v-col>
+                  <v-col>{{ getField('account_number_balance') }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>История транзакций</v-col>
-                  <v-col>{{ form.transaction_history }}</v-col>
+                  <v-col>{{ getField('transaction_history') }}</v-col>
                 </v-row>
               </v-expansion-panel-content>
             </v-expansion-panel>
@@ -260,6 +260,7 @@
 </template>
 
 <script>
+import { get, isNil } from 'lodash-es';
 import SvgIcon from '@/components/common/SvgIcon.vue';
 import OrganizationHeader from '@/components/layout/organization/header.vue';
 // import '@/assets/images/lukoil-example.jpg';
@@ -350,6 +351,13 @@ export default {
     totalRate: ({ rates }) => Math.ceil(rates.reduce((acc, cur) => acc + cur.value, 0) / rates.length),
   },
   methods: {
+    getField(field, defaultValue = '—') {
+      const value = get(this.form, field);
+      if (isNil(value)) {
+        return defaultValue;
+      }
+      return value;
+    },
     save() {
       console.warn('@save'); // eslint-disable-line no-console
     },
