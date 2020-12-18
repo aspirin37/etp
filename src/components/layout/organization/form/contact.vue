@@ -2,7 +2,7 @@
   <v-expansion-panel>
     <v-expansion-panel-header>Контактное лицо</v-expansion-panel-header>
     <v-expansion-panel-content>
-      <v-row>
+      <v-row :class="{'field-view': view}">
         <template v-if="view">
           <v-col>ФИО</v-col>
           <v-col>{{ getField(form, 'contact_fio') }}</v-col>
@@ -15,7 +15,7 @@
           />
         </template>
       </v-row>
-      <v-row>
+      <v-row :class="{'field-view': view}">
         <template v-if="view">
           <v-col>Должность</v-col>
           <v-col>{{ getField(form, 'contact_post') }}</v-col>
@@ -29,11 +29,11 @@
         </template>
       </v-row>
       <template v-if="view">
-        <v-row>
+        <v-row class="field-view">
           <v-col>Телефон</v-col>
           <v-col>{{ getField(form, 'contact_phone') }}</v-col>
         </v-row>
-        <v-row>
+        <v-row class="field-view">
           <v-col>E-mail</v-col>
           <v-col>
             <a

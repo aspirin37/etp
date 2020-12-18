@@ -2,7 +2,7 @@
   <v-expansion-panel>
     <v-expansion-panel-header>Основные данные</v-expansion-panel-header>
     <v-expansion-panel-content>
-      <v-row>
+      <v-row :class="{'field-view': view}">
         <template v-if="view">
           <v-col>Полное наименование</v-col>
           <v-col>{{ getField(form, 'full_name') }}</v-col>
@@ -16,7 +16,7 @@
           />
         </template>
       </v-row>
-      <v-row>
+      <v-row :class="{'field-view': view}">
         <template v-if="view">
           <v-col>Краткое наименование</v-col>
           <v-col>{{ getField(form, 'short_name') }}</v-col>
@@ -30,15 +30,15 @@
         </template>
       </v-row>
       <template v-if="view">
-        <v-row>
+        <v-row class="field-view">
           <v-col>ИНН</v-col>
           <v-col>{{ getField(form, 'inn') }}</v-col>
         </v-row>
-        <v-row>
+        <v-row class="field-view">
           <v-col>КПП</v-col>
           <v-col>{{ getField(form, 'kpp') }}</v-col>
         </v-row>
-        <v-row>
+        <v-row class="field-view">
           <v-col>ОГРН</v-col>
           <v-col>{{ getField(form, 'ogrn') }}</v-col>
         </v-row>
@@ -68,7 +68,7 @@
           </v-col>
         </v-row>
       </template>
-      <v-row>
+      <v-row :class="{'field-view': view}">
         <template v-if="view">
           <v-col>Юридический адрес</v-col>
           <v-col>{{ getField(form, 'legal_address') }}</v-col>
@@ -81,7 +81,7 @@
           />
         </template>
       </v-row>
-      <v-row>
+      <v-row :class="{'field-view': view}">
         <template v-if="view">
           <v-col>Почтовый адрес</v-col>
           <v-col>{{ getField(form, 'mailing_address') }}</v-col>
@@ -95,7 +95,7 @@
         </template>
       </v-row>
       <template v-if="view">
-        <v-row>
+        <v-row class="field-view">
           <v-col>Адрес сайта</v-col>
           <v-col>
             <a
@@ -106,7 +106,7 @@
             </a>
           </v-col>
         </v-row>
-        <v-row>
+        <v-row class="field-view">
           <v-col>Официальная электронная почта</v-col>
           <v-col>
             <a :href="form.email ? `mailto:${form.email}`: null">{{ getField(form, 'email') }}</a>

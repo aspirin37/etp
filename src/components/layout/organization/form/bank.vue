@@ -3,11 +3,11 @@
     <v-expansion-panel-header>Банковские реквизиты</v-expansion-panel-header>
     <v-expansion-panel-content>
       <template v-if="view">
-        <v-row>
+        <v-row class="field-view">
           <v-col>Расчетный счет</v-col>
           <v-col>{{ getField(form, 'checking_account') }}</v-col>
         </v-row>
-        <v-row>
+        <v-row class="field-view">
           <v-col>БИК</v-col>
           <v-col>{{ getField(form, 'bik') }}</v-col>
         </v-row>
@@ -30,7 +30,7 @@
           </v-col>
         </v-row>
       </template>
-      <v-row>
+      <v-row :class="{'field-view': view}">
         <template v-if="view">
           <v-col>Корреспондентский счет</v-col>
           <v-col>{{ getField(form, 'correspondent_account') }}</v-col>
@@ -43,7 +43,7 @@
           />
         </template>
       </v-row>
-      <v-row>
+      <v-row :class="{'field-view': view}">
         <template v-if="view">
           <v-col>Адрес банка</v-col>
           <v-col>{{ getField(form, 'bank_address') }}</v-col>

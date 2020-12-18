@@ -2,7 +2,7 @@
   <v-expansion-panel>
     <v-expansion-panel-header>Данные о руководителе</v-expansion-panel-header>
     <v-expansion-panel-content>
-      <v-row>
+      <v-row :class="{'field-view': view}">
         <template v-if="view">
           <v-col>ФИО</v-col>
           <v-col>{{ getField(form, 'ceo_fio') }}</v-col>
@@ -15,7 +15,7 @@
           />
         </template>
       </v-row>
-      <v-row>
+      <v-row :class="{'field-view': view}">
         <template v-if="view">
           <v-col>Должность</v-col>
           <v-col>{{ getField(form, 'ceo_post') }}</v-col>
@@ -28,7 +28,7 @@
           />
         </template>
       </v-row>
-      <v-row>
+      <v-row :class="{'field-view': view}">
         <template v-if="view">
           <v-col>Срок действия основания</v-col>
           <v-col>{{ getField(form, 'date_foundation') }}</v-col>
@@ -60,33 +60,56 @@
           </v-menu> -->
         </template>
       </v-row>
-      <v-row>
-        <v-col>Основание (приказ, доверенность и т.п.)</v-col>
-        <v-col>
-          <p
-            v-for="orderFile in form.order"
-            :key="orderFile.name"
-          >
-            <a
-              :href="orderFile.link"
-              target="_blank"
+      <template v-if="view">
+        <v-row class="field-view">
+          <v-col>Основание (приказ, доверенность и т.п.)</v-col>
+          <v-col>
+            <p
+              v-for="orderFile in form.order"
+              :key="orderFile.name"
             >
-              {{ orderFile.name }}
-            </a>
-          </p>
-        </v-col>
-      </v-row>
+              <a
+                :href="orderFile.link"
+                target="_blank"
+              >
+                {{ orderFile.name }}
+              </a>
+            </p>
+          </v-col>
+        </v-row>
+      </template>
+      <template v-else>
+        <v-row class="file-order--uploader">
+          Перетащите файл – основание (приказ, доверенность и т.п.) сюда или выберите файл вручную
+        </v-row>
+        <doc-file
+          v-for="(orderFile, key) in form.order"
+          :key="key"
+          v-bind="orderFile"
+          mode="edit"
+        />
+      </template>
     </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
 
 <script>
+import DocFile from '@/components/common/DocFile.vue';
 import formMixin from './mixin';
 
 export default {
+  components: {
+    DocFile,
+  },
   mixins: [formMixin],
   data: () => ({
     pickerDateFoundationOpened: false,
   }),
 };
 </script>
+
+<style lang="scss">
+  .file-order--uploader {
+    height: 150px;
+  }
+</style>

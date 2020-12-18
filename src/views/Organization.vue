@@ -86,9 +86,11 @@ export default {
       order: [{
         name: 'Приказ от 12.09.99 «Нефтяная компания «ЛУКОЙЛ».doc',
         link: '/Приказ от 12.09.99 «Нефтяная компания «ЛУКОЙЛ».doc',
+        size: '23.6 МБ',
       }, {
         name: 'Основание и приказ публичного акционерное общество «Нефтяная компания «ЛУКОЙЛ».doc',
         link: '/Основание и приказ публичного акционерное общество «Нефтяная компания «ЛУКОЙЛ».doc',
+        size: '23.6 МБ',
       }],
       contact_fio: 'Михаил Клочков',
       contact_post: 'Секретарь',
@@ -142,7 +144,7 @@ export default {
       font-weight: 500
     }
     .v-expansion-panel-content {
-      .row {
+      .row.field-view {
         .col {
           padding: 8px 12px;
           &:first-child {
@@ -161,35 +163,6 @@ export default {
     }
     .side-sheet {
       padding: 1.5em;
-      .doc-file {
-        svg {
-          height: 32px;
-          width: 32px;
-        }
-        .col {
-          padding-top: 16px;
-          padding-bottom: 0;
-        }
-        .col:first-child {
-          width: 32px;
-          max-width: 32px;
-          margin-right: 1em;
-        }
-        .col:nth-child(2) {
-          width: calc(100% - 32px);
-        }
-        p:first-child {
-          font-size: 13px;
-          line-height: 19px;
-          word-break: break-all;
-          margin-bottom: .5em
-        }
-        p:nth-child(2) {
-          font-size: 13px;
-          line-height: 21px;
-          color: $gray;
-        }
-      }
     }
     .sheet-title {
       font-size: 14px;

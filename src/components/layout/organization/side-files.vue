@@ -1,5 +1,5 @@
 <template>
-  <v-sheet :class="['side-sheet', 'docs-sheet', 'mt-3', { 'editable': mode === 'edit' }]">
+  <v-sheet :class="['side-sheet', 'docs-sheet', 'mt-3']">
     <p class="sheet-title">
       Шаблоны документов
     </p>
@@ -44,25 +44,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-  .docs-sheet {
-    &.editable {
-      .doc-file-wrapper .doc-file {
-        width: calc(100% - 15px);
-      }
-    }
-    .doc-file-wrapper {
-      position: relative;
-      .delete-link {
-        position: absolute;
-        top: 15px;
-        right: 0;
-        svg {
-          width: 13px;
-          height: 14px;
-        }
-      }
-    }
-  }
-</style>
