@@ -208,8 +208,8 @@
               <span>{{ rate.name }}</span>
               <span>{{ rate.value }}%</span>
               <v-progress-linear
-                background-opacity="1"
                 :key="rate.name"
+                background-opacity="1"
                 :color="rate.value > 50 ? 'green' : (rate.value < 25 ? 'red' : 'orange')"
                 :value="rate.value"
               />
@@ -259,6 +259,11 @@
         <!-- </v-col> -->
       </v-col>
     </v-row>
+    <delete-organization-modal
+      v-if="deleteModal"
+      v-model="deleteModal"
+      @submit="onDelete"
+    />
   </v-container>
 </template>
 
@@ -266,15 +271,17 @@
 import { get, isNil } from 'lodash-es';
 import SvgIcon from '@/components/common/SvgIcon.vue';
 import OrganizationHeader from '@/components/layout/organization/header.vue';
+import DeleteOrganizationModal from '@/components/modals/DeleteOrganization.vue';
 // import '@/assets/images/lukoil-example.jpg';
 
 export default {
   name: 'Organization',
   components: {
-    OrganizationHeader, SvgIcon,
+    DeleteOrganizationModal, OrganizationHeader, SvgIcon,
   },
   data: () => ({
     contentPanels: [0, 1, 2, 3, 4],
+    deleteModal: false,
     rates: [{
       name: 'Основные данные',
       value: 75,
@@ -365,7 +372,10 @@ export default {
       console.warn('@save'); // eslint-disable-line no-console
     },
     remove() {
-      console.warn('@remove'); // eslint-disable-line no-console
+      this.deleteModal = true;
+    },
+    onDelete() {
+      console.warn('@delete API'); // eslint-disable-line no-console
     },
     toEdit() {
       this.$router.push({ name: 'Organization-edit' });
