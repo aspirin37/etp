@@ -211,33 +211,7 @@
         </v-sheet>
       </v-col>
       <v-col cols="3">
-        <v-sheet class="side-sheet rates-sheet">
-          <div class="rating-round">
-            <v-progress-circular
-              :color="totalRate > 50 ? 'green' : (totalRate < 25 ? 'red' : 'orange')"
-              rotate="-90"
-              size="100"
-              :value="totalRate"
-              width="5"
-            />
-            <h1>{{ totalRate }}%</h1>
-          </div>
-          <v-container>
-            <v-row
-              v-for="rate in rates"
-              :key="rate.name"
-            >
-              <span>{{ rate.name }}</span>
-              <span>{{ rate.value }}%</span>
-              <v-progress-linear
-                :key="rate.name"
-                background-opacity="1"
-                :color="rate.value > 50 ? 'green' : (rate.value < 25 ? 'red' : 'orange')"
-                :value="rate.value"
-              />
-            </v-row>
-          </v-container>
-        </v-sheet>
+        <organization-side-rates :value="rates" />
         <v-sheet class="side-sheet docs-sheet mt-3">
           <p class="sheet-title">
             Шаблоны документов
@@ -293,13 +267,14 @@
 import { get, isNil } from 'lodash-es';
 import SvgIcon from '@/components/common/SvgIcon.vue';
 import OrganizationHeader from '@/components/layout/organization/header.vue';
+import OrganizationSideRates from '@/components/layout/organization/side-rates.vue';
 import DeleteOrganizationModal from '@/components/modals/DeleteOrganization.vue';
 // import '@/assets/images/lukoil-example.jpg';
 
 export default {
   name: 'Organization',
   components: {
-    DeleteOrganizationModal, OrganizationHeader, SvgIcon,
+    DeleteOrganizationModal, OrganizationHeader, OrganizationSideRates, SvgIcon,
   },
   data: () => ({
     contentPanels: [0, 1, 2, 3, 4],
@@ -380,7 +355,6 @@ export default {
       site,
     }),
     mode: ({ $route }) => ($route.name === 'Organization-edit' ? 'edit' : 'view'),
-    totalRate: ({ rates }) => Math.ceil(rates.reduce((acc, cur) => acc + cur.value, 0) / rates.length),
   },
   methods: {
     getField(field, defaultValue = '—') {
