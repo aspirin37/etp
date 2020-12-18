@@ -12,7 +12,7 @@
     </div>
     <v-container>
       <v-row
-        v-for="rate in value"
+        v-for="rate in rates"
         :key="rate.name"
       >
         <span>{{ rate.name }}</span>
@@ -31,10 +31,10 @@
 <script>
 export default {
   props: {
-    value: Array,
+    rates: Array,
   },
   computed: {
-    totalRate: ({ value }) => Math.ceil(value.reduce((acc, cur) => acc + cur.value, 0) / value.length),
+    totalRate: ({ rates }) => Math.ceil(rates.reduce((acc, cur) => acc + cur.value, 0) / rates.length),
   },
 };
 </script>
