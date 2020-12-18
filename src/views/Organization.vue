@@ -23,7 +23,10 @@
       </v-col>
       <v-col cols="3">
         <organization-side-rates :rates="rates" />
-        <organization-side-files :files="form.doc_files" />
+        <organization-side-files
+          :mode="mode"
+          :files="form.doc_files"
+        />
       </v-col>
     </v-row>
   </v-container>
