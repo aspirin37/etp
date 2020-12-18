@@ -53,7 +53,12 @@
                 <v-row>
                   <v-col>Адрес сайта</v-col>
                   <v-col>
-                    <a :href="form.site ? `mailto:${form.site}` : null">{{ getField('site') }}</a>
+                    <a
+                      :href="form.site || null"
+                      target="_blank"
+                    >
+                      {{ getField('site') }}
+                    </a>
                   </v-col>
                 </v-row>
                 <v-row>
@@ -102,7 +107,19 @@
                 </v-row>
                 <v-row>
                   <v-col>Основание (приказ, доверенность и т.п.)</v-col>
-                  <v-col>{{ getField('order') }}</v-col>
+                  <v-col>
+                    <p
+                      v-for="orderFile in form.order"
+                      :key="orderFile.name"
+                    >
+                      <a
+                        :href="orderFile.link"
+                        target="_blank"
+                      >
+                        {{ orderFile.name }}
+                      </a>
+                    </p>
+                  </v-col>
                 </v-row>
               </v-expansion-panel-content>
             </v-expansion-panel>
@@ -124,7 +141,12 @@
                 <v-row>
                   <v-col>E-mail</v-col>
                   <v-col>
-                    <a :href="form.contact_email ? `mailto:${form.contact_email}` : null">{{ getField('contact_email') }}</a>
+                    <a
+                      :href="form.contact_email ? `mailto:${form.contact_email}` : null"
+                      target="_blank"
+                    >
+                      {{ getField('contact_email') }}
+                    </a>
                   </v-col>
                 </v-row>
               </v-expansion-panel-content>

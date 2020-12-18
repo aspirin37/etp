@@ -55,7 +55,12 @@
           <h3 class="mt-5 organization-header--title">
             {{ form.full_name }}
           </h3>
-          <a :href="form.site">{{ form.site }}</a>
+          <a
+            :href="form.site"
+            target="_blank"
+          >
+            {{ form.site }}
+          </a>
         </v-flex>
         <v-divider />
         <v-container
