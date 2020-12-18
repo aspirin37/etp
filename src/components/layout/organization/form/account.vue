@@ -10,7 +10,7 @@
         <v-col>Остаток на лицевом счету</v-col>
         <v-col>{{ getField(form, 'account_number_balance') }}</v-col>
       </v-row>
-      <v-row>
+      <v-row v-if="view">
         <v-col>История транзакций</v-col>
         <v-col>
           <a
