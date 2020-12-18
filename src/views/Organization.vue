@@ -193,6 +193,7 @@
           <div class="rating-round">
             <v-progress-circular
               :color="totalRate > 50 ? 'green' : (totalRate < 25 ? 'red' : 'orange')"
+              rotate="-90"
               size="100"
               :value="totalRate"
             />
