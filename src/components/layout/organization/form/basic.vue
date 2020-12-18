@@ -136,21 +136,9 @@
 </template>
 
 <script>
-import { getField } from '@/utilities/form';
+import formMixin from './mixin';
 
 export default {
-  props: {
-    form: Object,
-    mode: String,
-  },
-  computed: {
-    view: ({ mode }) => mode === 'view',
-  },
-  methods: {
-    getField,
-  },
+  mixins: [formMixin],
 };
 </script>
-
-<style lang="sass">
-</style>
