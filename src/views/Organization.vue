@@ -206,6 +206,7 @@
               <span>{{ rate.name }}</span>
               <span>{{ rate.value }}%</span>
               <v-progress-linear
+                background-opacity="1"
                 :key="rate.name"
                 :color="rate.value > 50 ? 'green' : (rate.value < 25 ? 'red' : 'orange')"
                 :value="rate.value"
@@ -450,6 +451,23 @@ export default {
       }
     }
     .rates-sheet {
+      .v-progress-linear {
+        border-radius: 10px;
+        .v-progress-linear__background {
+          background-color: $lightGray !important;
+        }
+        .v-progress-linear__determinate {
+          &.green {
+            background: linear-gradient(90deg, #2BB415 2.15%, #5AD946 97.85%);
+          }
+          &.orange {
+            background: linear-gradient(90deg, #F69F39 2.15%, #F6C739 97.85%);
+          }
+          &.red {
+            background: linear-gradient(90deg, #B41515 2.15%, #D94646 97.85%);
+          }
+        }
+      }
       .rating-round {
         height: 100px;
         width: 100px;
