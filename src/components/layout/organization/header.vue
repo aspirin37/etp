@@ -45,12 +45,22 @@
               </svg>
             </a>
           </div>
-          <v-img
-            class="rounded-circle ma-auto"
-            height="100"
-            width="100"
-            src="@/assets/images/lukoil-example.jpg"
-          />
+          <div class="logo-holder ma-auto">
+            <v-img
+              class="rounded-circle"
+              height="100"
+              width="100"
+              src="@/assets/images/lukoil-example.jpg"
+            />
+            <a
+              v-if="mode === 'edit'"
+              class="logo-uploader-trigger"
+              href="@uploadLogo"
+              @click.prevent
+            >
+              <svg-icon name="photo" />
+            </a>
+          </div>
           <!-- v-img dynamic src is bad, please research it -->
           <h3 class="mt-5 organization-header--title">
             {{ form.full_name }}
@@ -101,8 +111,12 @@
 
 <script>
 // import '@/assets/images/organization-default.jpg';
+import SvgIcon from '@/components/common/SvgIcon.vue';
 
 export default {
+  components: {
+    SvgIcon,
+  },
   model: {
     prop: 'form',
     event: 'changed',
@@ -143,6 +157,26 @@ export default {
         font-size: 20px;
         font-weight: 400;
         line-height: 28px;
+      }
+      .logo-holder {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        background-color: #fff;
+        .logo-uploader-trigger {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          height: 30px;
+          width: 30px;
+          background-color: #fff;
+          border-radius: 50%;
+          padding: 6px;
+          svg {
+            width: 18px;
+            height: 18px;
+          }
+        }
       }
     }
     .header--counters {

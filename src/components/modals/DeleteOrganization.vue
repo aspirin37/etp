@@ -1,8 +1,8 @@
 <template>
   <v-dialog
+    id="delete-organization-modal"
     v-model="visible"
     class="modal-primary"
-    id="delete-organization-modal"
     max-width="620px"
   >
     <v-form
