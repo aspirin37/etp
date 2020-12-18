@@ -196,6 +196,7 @@
               rotate="-90"
               size="100"
               :value="totalRate"
+              width="5"
             />
             <h1>{{ totalRate }}%</h1>
           </div>
