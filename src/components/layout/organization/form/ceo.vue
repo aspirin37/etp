@@ -29,8 +29,36 @@
         </template>
       </v-row>
       <v-row>
-        <v-col>Срок действия основания</v-col>
-        <v-col>{{ getField(form, 'date_foundation') }}</v-col>
+        <template v-if="view">
+          <v-col>Срок действия основания</v-col>
+          <v-col>{{ getField(form, 'date_foundation') }}</v-col>
+        </template>
+        <template v-else>
+          <!-- ДЕЙСТВУЮЩЕЕ? Date picker?! Research it please -->
+          <!-- <v-menu
+            v-model="pickerDateFoundationOpened"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="290px"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="form.date_foundation"
+                label="Picker without buttons"
+                prepend-icon="mdi-calendar"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="form.date_foundation"
+              @input="pickerDateFoundationOpened = false"
+            ></v-date-picker>
+          </v-menu> -->
+        </template>
       </v-row>
       <v-row>
         <v-col>Основание (приказ, доверенность и т.п.)</v-col>
@@ -57,5 +85,8 @@ import formMixin from './mixin';
 
 export default {
   mixins: [formMixin],
+  data: () => ({
+    pickerDateFoundationOpened: false,
+  }),
 };
 </script>
