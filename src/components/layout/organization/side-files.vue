@@ -3,39 +3,17 @@
     <p class="sheet-title">
       Шаблоны документов
     </p>
-    <div
-      v-for="(file, key) in files"
-      :key="key"
-      class="doc-file-wrapper"
-    >
-      <v-row
+    <template v-for="(file, key) in files">
+      <doc-file
         :key="key"
-        class="doc-file"
-        :href="file.link"
-        tag="a"
-        @click.prevent
-      >
-        <v-col>
-          <svg-icon name="doc-file" />
-        </v-col>
-        <v-col>
-          <p>{{ file.name }}</p>
-          <p>{{ file.size }}</p>
-        </v-col>
-      </v-row>
-      <a
-        v-if="mode === 'edit'"
-        class="delete-link"
-        href="@delete-doc-file"
-        @click.prevent="deleteFile"
-      >
-        <svg-icon name="trash-can" />
-      </a>
+        v-bind="file"
+        :mode="mode"
+      />
       <v-divider
         v-if="key + 1 !== files.length"
         :key="`divider-${key}`"
       />
-    </div>
+    </template>
     <a
       v-if="files.length"
       class="download-all-link"
@@ -54,20 +32,15 @@
 </template>
 
 <script>
-import SvgIcon from '@/components/common/SvgIcon.vue';
+import DocFile from '@/components/common/DocFile.vue';
 
 export default {
   components: {
-    SvgIcon,
+    DocFile,
   },
   props: {
     files: Array,
     mode: String,
-  },
-  methods: {
-    deleteFile() {
-      console.warn('@deleteFile'); // eslint-disable-line no-console
-    },
   },
 };
 </script>
