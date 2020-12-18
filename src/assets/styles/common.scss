@@ -6,7 +6,7 @@
 
 a[href] {
   text-decoration: none;
-  &:hover {
+  &:not(.no-underline):hover {
     text-decoration: underline;
   }
 }

@@ -6,6 +6,7 @@
     <organization-header
       v-model="headerForm"
       :mode="mode"
+      @cancel="toView"
       @edit="toEdit"
     />
     <v-row
@@ -121,6 +122,9 @@ export default {
   methods: {
     toEdit() {
       this.$router.push({ name: 'Organization-edit' });
+    },
+    toView() {
+      this.$router.push({ name: 'Organization' });
     },
   },
 };
