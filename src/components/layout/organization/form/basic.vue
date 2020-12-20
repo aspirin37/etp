@@ -45,7 +45,10 @@
       </template>
       <template v-else>
         <v-row>
-          <v-col class="pl-0" cols="4">
+          <v-col
+            class="pl-0"
+            cols="4"
+          >
             <v-text-field
               v-model="form.inn"
               label="ИНН"
@@ -59,7 +62,10 @@
               outlined
             />
           </v-col>
-          <v-col class="pr-0" cols="4">
+          <v-col
+            class="pr-0"
+            cols="4"
+          >
             <v-text-field
               v-model="form.ogrn"
               label="ОГРН"
@@ -115,14 +121,20 @@
       </template>
       <template v-else>
         <v-row>
-          <v-col class="pl-0" cols="6">
+          <v-col
+            class="pl-0"
+            cols="6"
+          >
             <v-text-field
               v-model="form.site"
               label="Адрес сайта"
               outlined
             />
           </v-col>
-          <v-col class="pr-0" cols="6">
+          <v-col
+            class="pr-0"
+            cols="6"
+          >
             <v-text-field
               v-model="form.email"
               label="Официальная электронная почта"

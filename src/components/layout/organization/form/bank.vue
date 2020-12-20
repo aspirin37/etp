@@ -14,14 +14,20 @@
       </template>
       <template v-else>
         <v-row>
-          <v-col class="pl-0" cols="6">
+          <v-col
+            class="pl-0"
+            cols="6"
+          >
             <v-text-field
               v-model="form.checking_account"
               label="Расчетный счет"
               outlined
             />
           </v-col>
-          <v-col class="pr-0" cols="6">
+          <v-col
+            class="pr-0"
+            cols="6"
+          >
             <v-text-field
               v-model="form.bik"
               label="БИК"
