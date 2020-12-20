@@ -44,3 +44,19 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.docs-sheet {
+  // max-height: 426px;
+  .download-all-link {
+    font-size: 13px;
+    line-height: 19px;
+  }
+  .empty-files {
+    font-weight: 300;
+    color: $gray;
+    font-size: 20px;
+    margin-bottom: 0;
+  }
+}
+</style>

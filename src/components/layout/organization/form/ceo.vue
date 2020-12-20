@@ -79,8 +79,21 @@
         </v-row>
       </template>
       <template v-else>
-        <v-row class="file-order--uploader">
-          Перетащите файл – основание (приказ, доверенность и т.п.) сюда или выберите файл вручную
+        <v-row class="file-order--uploader flex-column">
+          <v-col class="pt-6 pb-0">
+            <svg-icon name="blank-file" />
+          </v-col>
+          <v-col>
+            <p class="px-3">
+              Перетащите файл – основание (приказ, доверенность и т.п.) сюда или
+              <a
+                href="@uploadLogo"
+                @click.prevent
+              >
+                выберите файл вручную
+              </a>
+            </p>
+          </v-col>
         </v-row>
         <doc-file
           v-for="(orderFile, key) in form.order"
@@ -95,11 +108,12 @@
 
 <script>
 import DocFile from '@/components/common/DocFile.vue';
+import SvgIcon from '@/components/common/SvgIcon.vue';
 import formMixin from './mixin';
 
 export default {
   components: {
-    DocFile,
+    DocFile, SvgIcon,
   },
   mixins: [formMixin],
   data: () => ({
@@ -111,5 +125,11 @@ export default {
 <style lang="scss">
   .file-order--uploader {
     height: 150px;
+    font-size: 14px;
+    line-height: 22px;
+    text-align: center;
+    border: 1px dashed #A9BDCC;
+    border-radius: 6px;
+    color: $gray;
   }
 </style>
