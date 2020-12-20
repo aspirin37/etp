@@ -14,14 +14,14 @@
       </template>
       <template v-else>
         <v-row>
-          <v-col cols="6">
+          <v-col class="pl-0" cols="6">
             <v-text-field
               v-model="form.checking_account"
               label="Расчетный счет"
               outlined
             />
           </v-col>
-          <v-col cols="6">
+          <v-col class="pr-0" cols="6">
             <v-text-field
               v-model="form.bik"
               label="БИК"
@@ -30,7 +30,7 @@
           </v-col>
         </v-row>
       </template>
-      <v-row :class="{'field-view': view}">
+      <v-row :class="['pl-0', {'field-view': view}]">
         <template v-if="view">
           <v-col>Корреспондентский счет</v-col>
           <v-col>{{ getField(form, 'correspondent_account') }}</v-col>
@@ -43,7 +43,7 @@
           />
         </template>
       </v-row>
-      <v-row :class="{'field-view': view}">
+      <v-row :class="['pr-0', {'field-view': view}]">
         <template v-if="view">
           <v-col>Адрес банка</v-col>
           <v-col>{{ getField(form, 'bank_address') }}</v-col>
