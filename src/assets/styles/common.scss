@@ -6,7 +6,7 @@
 
 a[href] {
   text-decoration: none;
-  &:not(.no-underline):hover {
+  &:not(.no-underline):not(.app-sidebar__link):hover {
     text-decoration: underline;
   }
 }
