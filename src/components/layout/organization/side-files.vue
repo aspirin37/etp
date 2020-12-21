@@ -34,23 +34,37 @@
       v-else-if="mode === 'edit'"
       class="download-all-link"
       href="@add-doc"
-      @click.prevent
+      @click.prevent="addDocTempModal = true"
     >
       Добавить шаблон
     </a>
+    <add-doc-template-modal
+      v-if="addDocTempModal"
+      v-model="addDocTempModal"
+      @submit="onAddDocTemplate"
+    />
   </v-sheet>
 </template>
 
 <script>
 import DocFile from '@/components/common/DocFile.vue';
+import AddDocTemplateModal from '@/components/modals/AddDocTemplate.vue';
 
 export default {
   components: {
-    DocFile,
+    AddDocTemplateModal, DocFile,
   },
   props: {
     files: Array,
     mode: String,
+  },
+  data: () => ({
+    addDocTempModal: false,
+  }),
+  methods: {
+    onAddDocTemplate() {
+      console.warn('@onAddDocTemplate'); // eslint-disable-line no-console
+    },
   },
 };
 </script>

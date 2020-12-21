@@ -5,13 +5,13 @@
     max-width="620px"
   >
     <v-form
-      id="delete-organization-form"
+      id="add-doc-template-form"
       autocomplete="off"
       class="modal-primary"
       @submit.prevent="$emit('submit')"
     >
       <div class="modal-primary__header">
-        <span>Удалить карточку организации</span>
+        <span>Загрузить шаблон</span>
         <v-btn
           icon
           dark
@@ -22,12 +22,10 @@
       </div>
       <div class="modal-primary__wrapper">
         <div class="modal-primary__content">
-          <p>
-            Компания будет удалена из списка компаний, но факты деятельности компании останутся доступными для других пользователей.
-          </p>
-          <p>
-            Действие обратимое, компанию можно восстановить. Для восстановления обратитесь к специалисту технической поддержки
-          </p>
+          <file-uploader-drop
+            class="file-uploader--doc-template"
+            :file-types="['xls', 'xlsx', 'doc', 'pfd', 'txt', 'jpg', 'png']"
+          />
         </div>
         <div class="modal-primary__actions">
           <v-btn
@@ -43,7 +41,7 @@
             color="primary"
             type="submit"
           >
-            Удалить
+            Добавить
           </v-btn>
         </div>
       </div>
@@ -52,8 +50,13 @@
 </template>
 
 <script>
+import FileUploaderDrop from '@/components/common/FileUploaderDrop.vue';
+
 export default {
-  name: 'DeleteOrganizationModal',
+  name: 'AddDocTemplate',
+  components: {
+    FileUploaderDrop,
+  },
   props: {
     value: {
       type: Boolean,
@@ -73,11 +76,10 @@ export default {
 </script>
 
 <style lang="scss">
-  #delete-organization-form {
-    .modal-primary__content {
-      font-weight: 300;
-      font-size: 14px;
-      line-height: 22px;
+  #add-doc-template-form {
+    .file-uploader--doc-template {
+      min-height: 340px;
+      padding: 65px 155px;
     }
   }
 </style>
