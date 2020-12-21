@@ -3,31 +3,41 @@
     <p class="sheet-title">
       Шаблоны документов
     </p>
-    <template v-for="(file, key) in files">
-      <doc-file
-        :key="key"
-        v-bind="file"
-        :mode="mode"
-      />
-      <v-divider
-        v-if="key + 1 !== files.length"
-        :key="`divider-${key}`"
-      />
+    <template v-if="files.length">
+      <template v-for="(file, key) in files">
+        <doc-file
+          :key="key"
+          v-bind="file"
+          :mode="mode"
+        />
+        <v-divider
+          v-if="key + 1 !== files.length"
+          :key="`divider-${key}`"
+        />
+      </template>
     </template>
-    <a
-      v-if="files.length"
-      class="download-all-link"
-      href="@download-all-docs"
-      @click.prevent
-    >
-      Скачать все
-    </a>
     <p
       v-else
       class="empty-files"
     >
       Пусто
     </p>
+    <a
+      v-if="files.length && mode === 'view'"
+      class="download-all-link"
+      href="@download-all-docs"
+      @click.prevent
+    >
+      Скачать все
+    </a>
+    <a
+      v-else-if="mode === 'edit'"
+      class="download-all-link"
+      href="@add-doc"
+      @click.prevent
+    >
+      Добавить шаблон
+    </a>
   </v-sheet>
 </template>
 
