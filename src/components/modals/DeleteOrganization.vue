@@ -59,9 +59,6 @@ export default {
       type: Boolean,
     },
   },
-  data: () => ({
-    name: '',
-  }),
   computed: {
     visible: {
       get() {
