@@ -74,3 +74,13 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+  #delete-organization-modal {
+    .modal-primary__content {
+      font-weight: 300;
+      font-size: 14px;
+      line-height: 22px;
+    }
+  }
+</style>
