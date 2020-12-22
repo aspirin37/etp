@@ -88,7 +88,12 @@
         </v-container>
       </v-sheet>
     </v-col>
-    <upload-crop-logo-modal v-model="uploadCropLogoModal" />
+    <upload-crop-logo-modal
+      v-if="uploadCropLogoModal"
+      v-model="uploadCropLogoModal"
+      :src="form.logo"
+      @submit="saveLogo"
+    />
   </v-row>
 </template>
 
@@ -121,6 +126,9 @@ export default {
     uploadCropLogoModal: false,
   }),
   methods: {
+    saveLogo() {
+      this.$toast.info('Обновляем лого...');
+    },
     uploadCropLogo() {
       this.uploadCropLogoModal = true;
     },

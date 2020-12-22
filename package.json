@@ -15,6 +15,7 @@
     "lodash-es": "^4.17.15",
     "voca": "^1.4.0",
     "vue": "^2.6.11",
+    "vue-croppie": "^2.0.2",
     "vue-currency-input": "^1.22.3",
     "vue-moment": "^4.1.0",
     "vue-router": "^3.2.0",

@@ -25,6 +25,17 @@
           <p>
             Выберите область, которая будет отображаться на вашем фото профиля.
           </p>
+          <template v-if="src">
+            <vue-croppie
+              ref="croppieRef"
+              :boundary="{ width: 230, height: 230 }"
+              :show-zoomer="false"
+              :viewport="{ width: 230, height: 230, type: 'circle' }"
+            />
+          </template>
+          <template v-else>
+            <file-uploader-drop :file-types="['jpg', 'png']" />
+          </template>
         </div>
         <v-row
           align="center"
@@ -50,7 +61,12 @@
             />
           </v-col>
           <v-col cols="4">
-            <v-slider />
+            <v-slider
+              v-model="sliderVal"
+              :min="minZoom"
+              :max="maxZoom"
+              @input="setZoom"
+            />
           </v-col>
           <v-col
             class="text-center"
@@ -78,18 +94,25 @@
 </template>
 
 <script>
+import FileUploaderDrop from '@/components/common/FileUploaderDrop.vue';
 import SvgIcon from '@/components/common/SvgIcon.vue';
 
 export default {
   name: 'UploadCropLogoModal',
   components: {
-    SvgIcon,
+    FileUploaderDrop, SvgIcon,
   },
   props: {
+    src: String,
     value: {
       type: Boolean,
     },
   },
+  data: () => ({
+    maxZoom: 1,
+    minZoom: 100,
+    sliderVal: 1,
+  }),
   computed: {
     visible: {
       get() {
@@ -98,6 +121,27 @@ export default {
       set(value) {
         this.$emit('input', value);
       },
+    },
+  },
+  mounted() {
+    if (this.value && this.src) {
+      this.$refs.croppieRef.bind({
+        // url: this.src,
+        url: 'http://www.soulbounce.com/wp-content/uploads/2019/10/Tyler-The-Creator-I-Think-Still.jpg',
+      });
+      setTimeout(() => this.initZoom(), 1000);
+    }
+  },
+  methods: {
+    initZoom() {
+      if (!this.$refs.croppieRef.croppie.elements) return;
+
+      this.maxZoom = this.$refs.croppieRef.croppie.elements.zoomer.max * 100;
+      this.minZoom = this.$refs.croppieRef.croppie.elements.zoomer.min * 100;
+      this.sliderVal = this.$refs.croppieRef.croppie.elements.zoomer.value * 100;
+    },
+    setZoom(value) {
+      this.$refs.croppieRef.setZoom(value / 100);
     },
   },
 };
