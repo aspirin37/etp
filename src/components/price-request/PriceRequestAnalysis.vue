@@ -54,14 +54,14 @@
             class="text-center"
             :class="{
               'lowest-price': getLowestPrice(it.prices, supplier.id),
-              'font-weight-bold': supplier.supplier.id === winner,
+              'font-weight-bold': supplier.id === it.winner,
             }"
           >
+            <!-- || supplier.supplier.id === winner -->
             {{ toCurrency(it.prices[supplier.id]) }}
           </td>
           <td>
             <v-select
-              v-model="winners"
               :items="supplierOptions"
               item-text="text"
               item-value="value"
@@ -71,6 +71,7 @@
               hide-details
               outlined
               dense
+              @change="selectPositionWinner(it.id, $event)"
             />
           </td>
         </tr>
@@ -90,8 +91,8 @@
             v-for="it in suppliers"
             :key="it.id"
             class="text-center"
-            :class="{'font-weight-bold': it.supplier.id === winner}"
           >
+            <!-- :class="{'font-weight-bold': it.supplier.id === winner}" -->
             {{ toCurrency(it.totalVat) }}
           </td>
           <td />
@@ -104,8 +105,8 @@
             v-for="it in suppliers"
             :key="it.id"
             class="text-center"
-            :class="{'font-weight-bold': it.supplier.id === winner}"
           >
+            <!-- :class="{'font-weight-bold': it.supplier.id === winner}" -->
             {{ toCurrency(it.totalSum) }}
           </td>
           <td />
@@ -199,7 +200,6 @@ export default ({
         text: 'Победитель',
       },
       supplierOptions: [],
-      winners: [],
       headers: [],
       positions: [],
       suppliers: [],
@@ -264,9 +264,14 @@ export default ({
         .sort((a, b) => a.price - b.price)[0].supplierId === supplierId;
     },
     async selectWinner(supplierId, quoteId) {
-      this.winner = supplierId;
+      // this.winner = supplierId;
       await this.$http.patch(`quote-requests/${this.id}/winner`, { quoteId });
       this.$emit('winner-selected', this.winner);
+      this.getAnalysis();
+    },
+    async selectPositionWinner() {
+      // positionId, supplierId;
+      // this.
     },
     resetWinner() {
       this.winner = null;
