@@ -114,7 +114,7 @@ export default {
       return value;
     },
     onDelete() {
-      console.warn('@delete API'); // eslint-disable-line no-console
+      this.$toast.info('Удаляем...');
     },
     toView() {
       this.$router.push({ name: 'Organization' });
@@ -123,7 +123,7 @@ export default {
       this.deleteModal = true;
     },
     save() {
-      console.warn('@save'); // eslint-disable-line no-console
+      this.$toast.info('Сохраняем...');
     },
   },
 };
