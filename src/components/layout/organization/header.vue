@@ -38,7 +38,7 @@
               v-if="mode === 'edit'"
               class="logo-uploader-trigger"
               href="@uploadLogo"
-              @click.prevent
+              @click.prevent="uploadCropLogo"
             >
               <svg-icon name="photo" />
             </a>
@@ -88,16 +88,18 @@
         </v-container>
       </v-sheet>
     </v-col>
+    <upload-crop-logo-modal v-model="uploadCropLogoModal" />
   </v-row>
 </template>
 
 <script>
 // import '@/assets/images/organization-default.jpg';
 import SvgIcon from '@/components/common/SvgIcon.vue';
+import UploadCropLogoModal from '@/components/modals/UploadCropLogo.vue';
 
 export default {
   components: {
-    SvgIcon,
+    SvgIcon, UploadCropLogoModal,
   },
   model: {
     prop: 'form',
@@ -114,6 +116,14 @@ export default {
       }),
     },
     mode: String,
+  },
+  data: () => ({
+    uploadCropLogoModal: false,
+  }),
+  methods: {
+    uploadCropLogo() {
+      this.uploadCropLogoModal = true;
+    },
   },
 };
 </script>
