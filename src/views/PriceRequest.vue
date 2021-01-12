@@ -31,7 +31,7 @@
         >
           <analysis
             :id="requestId"
-            @winner-selected="selectWinner"
+            @winners-selected="selectWinners"
           />
         </v-card>
       </v-tab-item>
@@ -248,7 +248,7 @@
         depressed
         color="accent"
         :loading="loading"
-        :disabled="!winner"
+        :disabled="createOrderDisabled"
         @click="createOrder"
       >
         Создать заказ
@@ -288,7 +288,7 @@ export default {
     formSubmitted: false,
     isQuote: false,
     loading: false,
-    winner: null,
+    winners: null,
   }),
   validations() {
     return {
@@ -402,6 +402,9 @@ export default {
         }],
       }];
     },
+    createOrderDisabled() {
+      return this.winners && Array.from(Object.values(this.winners)).some((it) => it === null);
+    },
   },
   created() {
     if (this.$route.query.isQuote) {
@@ -488,8 +491,8 @@ export default {
         this.loading = false;
       }
     },
-    selectWinner(supplierId) {
-      this.winner = supplierId;
+    selectWinners(winners) {
+      this.winners = winners;
     },
     async createOrder() {
       const { headers } = await this.$http.patch(`quote-requests/${this.requestId}/create-order`);

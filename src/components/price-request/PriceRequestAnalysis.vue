@@ -26,7 +26,7 @@
               color="accent"
               @click.prevent="selectWinner(it.id, it.quoteId)"
             >
-              {{ it.id === winner ? 'Выбрано' : 'Выбрать' }}
+              {{ isTheOnlyWinner(it.id) ? 'Выбрано' : 'Выбрать' }}
             </a>
             <a
               v-if="i === headers.length - 1"
@@ -62,13 +62,12 @@
           </td>
           <td>
             <v-select
-              v-model="positionWinners[it.id]"
+              v-model="winners[it.id]"
               :items="supplierOptions"
               item-text="text"
               item-value="value.quoteId"
               class="price-request-select"
               placeholder="Не выбрано"
-              clearable
               hide-details
               outlined
               dense
@@ -128,8 +127,8 @@
             v-for="it in suppliers"
             :key="it.id"
             class="text-center"
-            :class="{'font-weight-bold': it.supplier.id === winner}"
           >
+            <!-- :class="{'font-weight-bold': it.supplier.id === winner}" -->
             {{ it.delivery.date | moment('DD.MM.YYYY') }}
           </td>
           <td />
@@ -142,8 +141,8 @@
             v-for="it in suppliers"
             :key="it.id"
             class="text-center"
-            :class="{'font-weight-bold': it.supplier.id === winner}"
           >
+            <!-- :class="{'font-weight-bold': it.supplier.id === winner}" -->
             {{ toCurrency(it.delivery.price) }}
           </td>
           <td />
@@ -157,7 +156,7 @@
             <v-btn
               v-if="it.isSupplier"
               color="accent"
-              :disabled="it.id === winner"
+              :disabled="it.id === winner || selectionLoader"
               depressed
               @click="selectWinner(it.id, it.quoteId)"
             >
@@ -166,7 +165,7 @@
             <v-btn
               v-if="i === headers.length - 1"
               color="error"
-              :disabled="!winner"
+              :disabled="resetDisabled"
               depressed
               @click="resetWinner"
             >
@@ -203,10 +202,16 @@ export default ({
       supplierOptions: [],
       headers: [],
       positions: [],
-      positionWinners: {},
+      winners: {},
       suppliers: [],
       winner: null,
+      selectionLoader: false,
     };
+  },
+  computed: {
+    resetDisabled() {
+      return Array.from(Object.values(this.winners)).some((it) => it === null);
+    },
   },
   created() {
     this.getAnalysis();
@@ -259,10 +264,12 @@ export default ({
 
       this.positions = positions;
 
-      this.positionWinners = this.positions.reduce((acc, it) => {
+      this.winners = this.positions.reduce((acc, it) => {
         acc[it.id] = it.winner;
         return acc;
       }, {});
+
+      return Promise.resolve;
     },
     getLowestPrice(prices, supplierId) {
       return Array.from(Object.entries(prices))
@@ -274,29 +281,40 @@ export default ({
         .sort((a, b) => a.price - b.price)[0].supplierId === supplierId;
     },
     async selectWinner(supplierId, quoteId) {
-      this.winner = supplierId;
-      this.positionWinners = this.positions.reduce((acc, it) => {
-        acc[it.id] = supplierId;
-        return acc;
-      }, {});
+      this.selectionLoader = true;
 
       await this.$http.patch(`quote-requests/${this.id}/winner`, { quoteId });
-      this.$emit('winner-selected', this.winner);
-      this.getAnalysis();
+      await this.getAnalysis().finally(() => {
+        this.selectionLoader = false;
+      });
+
+      this.$emit('winners-selected', this.winners);
+      this.winner = supplierId;
     },
-    async selectPositionWinner(itemId, { quoteId }) {
-      console.log(quoteId);
+    async selectPositionWinner(itemId, quoteId) {
+      this.winner = null;
       await this.$http.patch(`quote-requests/${this.id}/items/${itemId}/winner`, { quoteId });
       this.getAnalysis();
       // positionId, supplierId;
       // this.
     },
     async resetWinner() {
-      this.winner = null;
+      this.selectionLoader = true;
+
       await this.$http.patch(`quote-requests/${this.id}/winner`, {
         quoteId: null,
       });
-      this.getAnalysis();
+      await this.getAnalysis().finally(() => {
+        this.selectionLoader = false;
+      });
+
+      this.winner = null;
+      this.winners = this.positions.reduce((acc, it) => {
+        acc[it.id] = null;
+        return acc;
+      }, {});
+
+      this.$emit('winners-selected', this.winners);
     },
     toCurrency(value) {
       if (typeof value !== 'number') {
@@ -304,6 +322,9 @@ export default ({
       }
 
       return value.toLocaleString('ru-RU', { minimumFractionDigits: 2 });
+    },
+    isTheOnlyWinner(id) {
+      Array.from(Object.values(this.winners)).every((it) => it === id);
     },
   },
 });
