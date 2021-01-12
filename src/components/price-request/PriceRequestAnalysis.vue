@@ -62,9 +62,10 @@
           </td>
           <td>
             <v-select
+              v-model="positionWinners[it.id]"
               :items="supplierOptions"
               item-text="text"
-              item-value="value"
+              item-value="value.quoteId"
               class="price-request-select"
               placeholder="Не выбрано"
               clearable
@@ -202,6 +203,7 @@ export default ({
       supplierOptions: [],
       headers: [],
       positions: [],
+      positionWinners: {},
       suppliers: [],
       winner: null,
     };
@@ -225,7 +227,10 @@ export default ({
 
       this.supplierOptions = data.map((it) => ({
         text: it.supplier.name,
-        value: it.supplier.id,
+        value: {
+          supplierId: it.supplier.id,
+          quoteId: it.id,
+        },
       }));
 
       this.headers = this.staticHeaders.concat(supplierHeaders);
@@ -253,6 +258,11 @@ export default ({
       });
 
       this.positions = positions;
+
+      this.positionWinners = this.positions.reduce((acc, it) => {
+        acc[it.id] = it.winner;
+        return acc;
+      }, {});
     },
     getLowestPrice(prices, supplierId) {
       return Array.from(Object.entries(prices))
@@ -264,17 +274,29 @@ export default ({
         .sort((a, b) => a.price - b.price)[0].supplierId === supplierId;
     },
     async selectWinner(supplierId, quoteId) {
-      // this.winner = supplierId;
+      this.winner = supplierId;
+      this.positionWinners = this.positions.reduce((acc, it) => {
+        acc[it.id] = supplierId;
+        return acc;
+      }, {});
+
       await this.$http.patch(`quote-requests/${this.id}/winner`, { quoteId });
       this.$emit('winner-selected', this.winner);
       this.getAnalysis();
     },
-    async selectPositionWinner() {
+    async selectPositionWinner(itemId, { quoteId }) {
+      console.log(quoteId);
+      await this.$http.patch(`quote-requests/${this.id}/items/${itemId}/winner`, { quoteId });
+      this.getAnalysis();
       // positionId, supplierId;
       // this.
     },
-    resetWinner() {
+    async resetWinner() {
       this.winner = null;
+      await this.$http.patch(`quote-requests/${this.id}/winner`, {
+        quoteId: null,
+      });
+      this.getAnalysis();
     },
     toCurrency(value) {
       if (typeof value !== 'number') {
