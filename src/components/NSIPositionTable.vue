@@ -106,7 +106,6 @@ export default {
     },
   },
   created() {
-    this.http.defaults.headers.authorization = `Bearer ${this.jwt}`;
     this.getPositions();
   },
   methods: {
