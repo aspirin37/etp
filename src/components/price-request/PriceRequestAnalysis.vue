@@ -26,7 +26,7 @@
               color="accent"
               @click.prevent="selectWinner(it.id, it.quoteId)"
             >
-              {{ isTheOnlyWinner(it.id) ? 'Выбрано' : 'Выбрать' }}
+              {{ isTheOnlyWinner(it.quoteId) ? 'Выбрано' : 'Выбрать' }}
             </a>
             <a
               v-if="i === headers.length - 1"
@@ -156,7 +156,7 @@
             <v-btn
               v-if="it.isSupplier"
               color="accent"
-              :disabled="it.id === winner || selectionLoader"
+              :disabled="isTheOnlyWinner(it.quoteId)"
               depressed
               @click="selectWinner(it.id, it.quoteId)"
             >
@@ -205,7 +205,6 @@ export default ({
       winners: {},
       suppliers: [],
       winner: null,
-      selectionLoader: false,
     };
   },
   computed: {
@@ -269,6 +268,7 @@ export default ({
         return acc;
       }, {});
 
+      this.$emit('winners-selected', this.winners);
       return Promise.resolve;
     },
     getLowestPrice(prices, supplierId) {
@@ -281,32 +281,18 @@ export default ({
         .sort((a, b) => a.price - b.price)[0].supplierId === supplierId;
     },
     async selectWinner(supplierId, quoteId) {
-      this.selectionLoader = true;
-
       await this.$http.patch(`quote-requests/${this.id}/winner`, { quoteId });
-      await this.getAnalysis().finally(() => {
-        this.selectionLoader = false;
-      });
-
-      this.$emit('winners-selected', this.winners);
+      await this.getAnalysis();
       this.winner = supplierId;
     },
     async selectPositionWinner(itemId, quoteId) {
       this.winner = null;
       await this.$http.patch(`quote-requests/${this.id}/items/${itemId}/winner`, { quoteId });
       this.getAnalysis();
-      // positionId, supplierId;
-      // this.
     },
     async resetWinner() {
-      this.selectionLoader = true;
-
-      await this.$http.patch(`quote-requests/${this.id}/winner`, {
-        quoteId: null,
-      });
-      await this.getAnalysis().finally(() => {
-        this.selectionLoader = false;
-      });
+      await this.$http.patch(`quote-requests/${this.id}/winner`, { quoteId: null });
+      await this.getAnalysis();
 
       this.winner = null;
       this.winners = this.positions.reduce((acc, it) => {
@@ -324,7 +310,7 @@ export default ({
       return value.toLocaleString('ru-RU', { minimumFractionDigits: 2 });
     },
     isTheOnlyWinner(id) {
-      Array.from(Object.values(this.winners)).every((it) => it === id);
+      return Array.from(Object.values(this.winners)).every((it) => it === id);
     },
   },
 });
