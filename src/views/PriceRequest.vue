@@ -403,7 +403,7 @@ export default {
       }];
     },
     createOrderDisabled() {
-      return !this.winners || Array.from(Object.values(this.winners)).some((it) => it === null);
+      return !this.winners || Array.from(Object.values(this.winners)).every((it) => it === null);
     },
   },
   created() {

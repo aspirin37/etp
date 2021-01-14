@@ -55,7 +55,9 @@
             :class="{
               'lowest-price': getLowestPrice(it.prices, supplier.id),
               'font-weight-bold': supplier.id === it.winner,
+              'cursor-pointer': supplier.id !== it.winner
             }"
+            @click="selectPositionWinner(it.id, supplier.id)"
           >
             <!-- || supplier.supplier.id === winner -->
             {{ toCurrency(it.prices[supplier.id]) }}
@@ -68,6 +70,7 @@
               item-value="value.quoteId"
               class="price-request-select"
               placeholder="Не выбрано"
+              clearable
               hide-details
               outlined
               dense
@@ -209,7 +212,7 @@ export default ({
   },
   computed: {
     resetDisabled() {
-      return Array.from(Object.values(this.winners)).some((it) => it === null);
+      return Array.from(Object.values(this.winners)).every((it) => it === null);
     },
   },
   created() {
@@ -287,7 +290,9 @@ export default ({
     },
     async selectPositionWinner(itemId, quoteId) {
       this.winner = null;
-      await this.$http.patch(`quote-requests/${this.id}/items/${itemId}/winner`, { quoteId });
+      await this.$http.patch(`quote-requests/${this.id}/items/${itemId}/winner`, {
+        quoteId: quoteId || null,
+      });
       this.getAnalysis();
     },
     async resetWinner() {
