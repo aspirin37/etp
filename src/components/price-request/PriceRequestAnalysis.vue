@@ -94,8 +94,11 @@
             v-for="it in suppliers"
             :key="it.id"
             class="text-center"
+            :class="{
+              'lowest-price': lowestTotalVat === it.totalVat,
+              'font-weight-bold': it.supplier.id === winner
+            }"
           >
-            <!-- :class="{'font-weight-bold': it.supplier.id === winner}" -->
             {{ toCurrency(it.totalVat) }}
           </td>
           <td />
@@ -108,8 +111,11 @@
             v-for="it in suppliers"
             :key="it.id"
             class="text-center"
+            :class="{
+              'lowest-price': lowestTotalSum === it.totalSum,
+              'font-weight-bold': it.supplier.id === winner
+            }"
           >
-            <!-- :class="{'font-weight-bold': it.supplier.id === winner}" -->
             {{ toCurrency(it.totalSum) }}
           </td>
           <td />
@@ -130,8 +136,11 @@
             v-for="it in suppliers"
             :key="it.id"
             class="text-center"
+            :class="{
+              'lowest-price': bestDeliveryDate === it.delivery.date,
+              'font-weight-bold': it.supplier.id === winner
+            }"
           >
-            <!-- :class="{'font-weight-bold': it.supplier.id === winner}" -->
             {{ it.delivery.date | moment('DD.MM.YYYY') }}
           </td>
           <td />
@@ -144,8 +153,11 @@
             v-for="it in suppliers"
             :key="it.id"
             class="text-center"
+            :class="{
+              'lowest-price': lowestDeliveryPrice === it.delivery.price,
+              'font-weight-bold': it.supplier.id === winner
+            }"
           >
-            <!-- :class="{'font-weight-bold': it.supplier.id === winner}" -->
             {{ toCurrency(it.delivery.price) }}
           </td>
           <td />
@@ -207,6 +219,10 @@ export default ({
       positions: [],
       winners: {},
       suppliers: [],
+      lowestTotalVat: null,
+      lowestTotalSum: null,
+      lowestDeliveryPrice: null,
+      bestDeliveryDate: null,
       winner: null,
     };
   },
@@ -265,6 +281,17 @@ export default ({
       });
 
       this.positions = positions;
+
+      const clone = JSON.parse(JSON.stringify(data));
+      const [{ totalVat, totalSum }] = clone.length && clone.sort((a, b) => a.totalVat - b.totalVat);
+      this.lowestTotalVat = totalVat;
+      this.lowestTotalSum = totalSum;
+
+      const delivery = clone.map((it) => it.delivery);
+      const [{ price }] = clone.length && JSON.parse(JSON.stringify(delivery)).sort((a, b) => a.price - b.price);
+      this.lowestDeliveryPrice = price;
+      const [{ date }] = clone.length && JSON.parse(JSON.stringify(delivery)).sort((a, b) => new Date(a.date) - new Date(b.date));
+      this.bestDeliveryDate = date;
 
       this.winners = this.positions.reduce((acc, it) => {
         acc[it.id] = it.winner;
@@ -333,8 +360,4 @@ export default ({
   .price-request-select {
     width: 240px;
   }
-
-  // .not-sticky th, td {
-  //   position: relative !important;
-  // }
 </style>
