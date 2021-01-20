@@ -5,7 +5,7 @@
         cols-lg="6"
         offset-lg="6"
       >
-        <div class="d-flex">
+        <div class="d-flex mt-lg-n15">
           <v-text-field
             v-model="positionName"
             label="Наименование позиции"
@@ -23,7 +23,7 @@
             dense
           />
           <v-btn
-            class="mr-2"
+            class="mr-2 height-auto"
             color="accent"
             depressed
             :disbled="positionName !== '' || positionCode !== ''"
@@ -32,6 +32,7 @@
             Искать
           </v-btn>
           <v-btn
+            class="height-auto"
             depressed
             @click="resetPositions"
           >
@@ -45,10 +46,11 @@
       v-model="selectedItems"
       :headers="headers"
       :items="items"
+      item-key="key"
       show-select
       disable-sort
       fixed-header
-      class="elevation-0"
+      class="nsi-table elevation-0"
     />
     <div
       v-else
@@ -66,6 +68,12 @@ import axios from 'axios';
 
 export default {
   name: 'NSIPositionTable',
+  props: {
+    selected: {
+      type: Array,
+      default: () => [],
+    },
+  },
   data: () => ({
     jwt: localStorage.getItem('jwt'),
     http: axios.create({
@@ -74,22 +82,17 @@ export default {
     positionName: '',
     positionCode: '',
     items: [],
-    selectedItems: [],
     positionsShown: false,
     headers: [{
       value: 'name',
       text: 'Наименование позиции контрагента',
     }, {
-      value: 'okei',
+      value: 'okei.name',
       text: 'ЕИ',
       editable: true,
     }, {
-      value: 'okpd2',
+      value: 'okpd2.code',
       text: 'ОКПД2',
-      editable: true,
-    }, {
-      value: 'specifications',
-      text: 'Характеристики',
       editable: true,
     }],
   }),
@@ -104,16 +107,34 @@ export default {
       }
       return params;
     },
-  },
-  created() {
-    this.http.defaults.headers.authorization = `Bearer ${this.jwt}`;
+    selectedItems: {
+      get() {
+        return this.selected;
+      },
+      set(val) {
+        this.$emit('selection-changed', val);
+      },
+    },
   },
   methods: {
     async getPositions() {
       const { data } = await this.http.get('dictionary/positions', {
         params: this.params,
       });
-      this.items = data;
+      this.items = data.map((it) => ({
+        key: it.id,
+        name: it.name,
+        okei: {
+          code: it.okei_code,
+          name: it.okei_name,
+        },
+        okpd2: {
+          code: it.okpd2_code,
+          name: it.okpd2_name,
+        },
+        specifications: '',
+      }));
+
       this.positionsShown = true;
     },
     resetPositions() {
@@ -126,6 +147,9 @@ export default {
 };
 </script>
 
-<style>
-
+<style lang="scss">
+.nsi-table .v-data-table__wrapper{
+  max-height: calc(100vh - 420px) !important;
+  @include scrollbar;
+}
 </style>
