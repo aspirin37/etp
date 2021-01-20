@@ -1,5 +1,6 @@
 <template>
   <v-dialog
+    :key="key"
     v-model="visible"
   >
     <v-form
@@ -33,7 +34,7 @@
           </v-tabs>
           <v-tabs-items
             v-model="tab"
-            class="wizard__content modal-tabs"
+            class="wizard__content modal-tabs mb-0"
           >
             <v-tab-item>
               <user-position-table
@@ -43,7 +44,10 @@
               />
             </v-tab-item>
             <v-tab-item>
-              <nsi-position-table />
+              <nsi-position-table
+                :selected="selected"
+                @selection-changed="selected = $event"
+              />
             </v-tab-item>
           </v-tabs-items>
           <div class="modal-primary__actions">
@@ -94,6 +98,7 @@ export default {
       'Позиции из справочника',
     ],
     selected: [],
+    key: 0,
   }),
   computed: {
     visible: {
@@ -109,6 +114,10 @@ export default {
   methods: {
     close() {
       this.visible = false;
+      setTimeout(() => {
+        this.tab = 0;
+        this.key++;
+      }, 500);
     },
     async onSubmit() {
       this.$emit('submit', this.selected.map((it) => ({
