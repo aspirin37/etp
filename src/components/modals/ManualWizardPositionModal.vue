@@ -167,6 +167,7 @@ export default {
         return this.value;
       },
       set(value) {
+        this.reset();
         this.$emit('input', value);
       },
     },

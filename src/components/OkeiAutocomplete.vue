@@ -8,6 +8,7 @@
     item-value="code"
     :error-messages="errorMessages"
     :hide-details="hideDetails"
+    :allow-overflow="false"
     :outlined="outlined"
     :dense="dense"
     return-object

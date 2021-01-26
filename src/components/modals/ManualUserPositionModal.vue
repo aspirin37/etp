@@ -85,7 +85,7 @@ import OkeiAutocomplete from '@/components/OkeiAutocomplete.vue';
 import Okpd2Modal from '@/components/modals/Okpd2Modal.vue';
 
 export default {
-  name: 'UserPositionModal',
+  name: 'ManualUserPositionModal',
   components: {
     Okpd2Modal,
     OkeiAutocomplete,

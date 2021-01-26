@@ -1,5 +1,6 @@
 <template>
   <v-dialog
+    :key="key"
     v-model="visible"
     max-width="900"
   >
@@ -18,14 +19,16 @@
         <div class="modal-primary__sub-header">
           <v-text-field
             v-model="search"
-            label="Поиск категории, по коду или имени"
-            prepend-inner-icon="mdi-search"
+            label="Поиск по коду или имени"
+            prepend-inner-icon="mdi-magnify"
             hide-details
+            clearable
             filled
           />
         </div>
         <div class="modal-primary__content">
           <v-treeview
+            v-if="search === '' || search === null"
             :active.sync="active"
             :items="items"
             :load-children="loadChild"
@@ -39,6 +42,25 @@
               <span class="grey--text">{{ item.code }}</span>
             </template>
           </v-treeview>
+          <v-list
+            v-if="search !== ''"
+            dense
+          >
+            <v-list-item-group
+              v-model="activeFromSearch"
+              color="primary"
+            >
+              <v-list-item
+                v-for="(item, i) in itemsFromSearch"
+                :key="i"
+              >
+                <div class="d-flex">
+                  <span class="mr-4 grey--text">{{ item.code }}</span>
+                  <span>{{ item.name }}</span>
+                </div>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
         </div>
         <div class="modal-primary__actions">
           <v-btn
@@ -65,6 +87,7 @@
 </template>
 
 <script>
+import throttle from 'lodash.throttle';
 
 export default {
   name: 'Okpd2Modal',
@@ -78,7 +101,10 @@ export default {
     return {
       search: '',
       items: [],
+      itemsFromSearch: [],
       active: [],
+      activeFromSearch: null,
+      key: 0,
     };
   },
   computed: {
@@ -90,15 +116,21 @@ export default {
         this.$emit('input', value);
       },
     },
+    throttleSearch() {
+      return throttle(this.searchItems, 300);
+    },
   },
-  async created() {
-    const { data } = await this.$http.get('okpd2');
-    this.items = data.map((item) => ({
-      ...item,
-      id: item.code,
-      locked: true,
-      children: [],
-    }));
+  watch: {
+    search() {
+      this.active = [];
+      this.searchItems();
+    },
+    activeFromSearch(val) {
+      this.active = [this.itemsFromSearch[val]];
+    },
+  },
+  created() {
+    this.getTree();
   },
   methods: {
     async loadChild(item) {
@@ -109,6 +141,24 @@ export default {
       });
 
       item.children.push(...data.map((it) => ({ ...it, id: it.code, children: [] })));
+    },
+    async getTree() {
+      const { data } = await this.$http.get('okpd2');
+      this.items = data.map((item) => ({
+        ...item,
+        id: item.code,
+        locked: true,
+        children: [],
+      }));
+    },
+    async searchItems() {
+      const { data } = await this.$http.get('okpd2/search', {
+        params: {
+          query: this.search,
+          perPage: 50,
+        },
+      });
+      this.itemsFromSearch = data;
     },
     onClose() {
       this.visible = false;

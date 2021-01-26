@@ -110,21 +110,14 @@
         >
           <v-row v-if="quoteRequest">
             <v-col cols="5">
-              <v-row>
-                <v-col
-                  class="py-0"
-                  cols="8"
-                >
-                  <date-picker
-                    v-model="quoteRequest.delivery.date"
-                    label="Дата поставки"
-                    :min="responseMinDate"
-                    :error-messages="deliveryDateErrors"
-                    :disabled="!editable"
-                    required
-                  />
-                </v-col>
-              </v-row>
+              <date-picker
+                v-model="quoteRequest.delivery.date"
+                label="Дата поставки"
+                :min="responseMinDate"
+                :error-messages="deliveryDateErrors"
+                :disabled="!editable"
+                required
+              />
               <v-text-field
                 v-model="quoteRequest.delivery.price"
                 v-currency
@@ -132,20 +125,13 @@
                 label="Стоимость доставки без НДС"
                 outlined
               />
-              <v-row>
-                <v-col
-                  class="py-0"
-                  cols="8"
-                >
-                  <v-select
-                    v-model="quoteRequest.delivery.vat"
-                    :items="[20, 10, 0]"
-                    :disabled="!editable"
-                    label="Ставка НДС, %"
-                    outlined
-                  />
-                </v-col>
-              </v-row>
+              <v-select
+                v-model="quoteRequest.delivery.vat"
+                :items="[20, 10, 0]"
+                :disabled="!editable"
+                label="Ставка НДС, %"
+                outlined
+              />
               <v-textarea
                 v-model="quoteRequest.comment"
                 :disabled="!editable"

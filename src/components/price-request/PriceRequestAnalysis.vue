@@ -236,8 +236,9 @@ export default ({
   },
   methods: {
     async getAnalysis() {
-      const { data } = await this.$http.get(`quote-requests/${this.id}/analysis`);
+      let { data } = await this.$http.get(`quote-requests/${this.id}/analysis`);
 
+      data = Array.from(Object.values(data));
       this.suppliers = data;
 
       const supplierHeaders = data.map((it, i) => ({
