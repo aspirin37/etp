@@ -6,6 +6,12 @@
       :position-edited="positionEdited"
       @submit="onSubmit"
     />
+    <my-positions-modal
+      v-if="myPositionsModal"
+      v-model="myPositionsModal"
+      :position-edited="positionEdited"
+      @submit="onSubmit"
+    />
     <div
       v-if="editable"
       class="main-table__wrapper mb-3"
@@ -24,13 +30,13 @@
           <dropdown
             :split="true"
             variant="warning"
-            @click="positionModal = true"
+            @click="myPositionsModal = true"
           >
             Добавить позицию
             <template v-slot:dropdown-content>
-              <dropdown-item href="#">
+              <!-- <dropdown-item href="#">
                 Создать из файла
-              </dropdown-item>
+              </dropdown-item> -->
               <dropdown-item @click.prevent.native="positionModal = true">
                 Создать вручную
               </dropdown-item>
@@ -109,6 +115,7 @@
 <script>
 import Dropdown, { DropdownItem } from '@/components/common//Dropdown.vue';
 import ManualUserPositionModal from '@/components/modals/ManualUserPositionModal.vue';
+import MyPositionsModal from '@/components/modals/MyPositionsModal.vue';
 
 export default {
   name: 'UserPositions',
@@ -116,6 +123,7 @@ export default {
     Dropdown,
     DropdownItem,
     ManualUserPositionModal,
+    MyPositionsModal,
   },
   props: {
     selected: {
@@ -130,6 +138,7 @@ export default {
   data: () => ({
     items: [],
     positionModal: false,
+    myPositionsModal: false,
     positionEdited: undefined,
   }),
   computed: {
@@ -194,6 +203,16 @@ export default {
       this.positionModal = true;
     },
     onSubmit(data) {
+      if (Array.isArray(data)) {
+        data.forEach((it) => {
+          this.prepareRequest(it);
+        });
+        return;
+      }
+
+      this.prepareRequest(data);
+    },
+    prepareRequest(data) {
       const params = {
         ...data,
         okpd2: data.okpd2.code,
