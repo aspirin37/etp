@@ -20,9 +20,9 @@
           >
             Добавить позицию
             <template v-slot:dropdown-content>
-              <dropdown-item href="#">
+              <!-- <dropdown-item href="#">
                 Создать из файла
-              </dropdown-item>
+              </dropdown-item> -->
               <dropdown-item @click.prevent.native="manualModalVisible = true">
                 Создать вручную
               </dropdown-item>
