@@ -2,7 +2,7 @@
   <v-navigation-drawer
     class="app-sidebar"
     :class="{'once-opened': onceOpened}"
-    expand-on-hover
+    :expand-on-hover="!navigatorLock"
     :mini-variant.sync="mini"
     :mini-variant-width="80"
     :width="300"
@@ -16,10 +16,23 @@
       <app-sidebar-user :mini="mini" />
       <app-sidebar-navigation :mini="mini" />
     </div>
-    <SvgIcon
-      class="buttonIcon__lock"
-      :name="mini ? 'lock' : 'uplock'"
-    />
+    <a
+      class="text-right mb-5"
+      href="@lock"
+      style="margin-right: 28px;"
+      @click.prevent="lock"
+    >
+      <SvgIcon
+        v-show="!navigatorLock"
+        class="buttonIcon__lock"
+        name="uplock"
+      />
+      <SvgIcon
+        v-show="navigatorLock"
+        class="buttonIcon__lock"
+        name="lock"
+      />
+    </a>
   </v-navigation-drawer>
 </template>
 
@@ -28,6 +41,7 @@ import AppSidebarNavigation from '@/components/layout/AppSidebarNavigation.vue';
 import AppSidebarUser from '@/components/layout/AppSidebarUser.vue';
 import AppSidebarLogo from '@/components/layout/AppSidebarLogo.vue';
 import SvgIcon from '@/components/common/SvgIcon.vue';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'AppSidebar',
@@ -40,11 +54,27 @@ export default {
   data: () => ({
     mini: true,
     onceOpened: false,
+    locked: false,
   }),
+  computed: {
+    ...mapGetters(['navigatorLock']),
+  },
   watch: {
     mini(val) {
       if (!val) {
         this.onceOpened = true;
+      }
+    },
+  },
+  methods: {
+    ...mapActions(['setNavigatorLock']),
+    lock() {
+      const locked = !this.navigatorLock;
+      this.setNavigatorLock(locked);
+      if (!locked) {
+        this.$nextTick(() => {
+          this.mini = false;
+        });
       }
     },
   },
