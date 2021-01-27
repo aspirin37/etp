@@ -20,6 +20,7 @@
     <v-card
       class="pa-0"
       flat="flat"
+      height="100%"
     >
       <purchase-order-list-table
         :type="tabs[tab].value"
