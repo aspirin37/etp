@@ -43,6 +43,43 @@
             </template>
           </dropdown>
         </div>
+        <v-spacer />
+        <div class="col-auto pl-1">
+          <a
+            class="view-setter"
+            :class="{ active: activeView === 'grid' }"
+            href="@shape-grid"
+            @click.prevent="setView('grid')"
+          >
+            <SvgIcon
+              name="shape-grid"
+              original
+            />
+          </a>
+          <a
+            class="view-setter"
+            :class="{ active: activeView === 'list-big' }"
+            disabled
+            href="@shape-list-big"
+            @click.prevent="setView('list-big')"
+          >
+            <SvgIcon
+              name="shape-list-big"
+              original
+            />
+          </a>
+          <a
+            class="view-setter"
+            :class="{ active: activeView === 'list-small' }"
+            href="@shape-list-small"
+            @click.prevent="setView('list-small')"
+          >
+            <SvgIcon
+              name="shape-list-small"
+              original
+            />
+          </a>
+        </div>
       </div>
     </div>
     <v-data-table
@@ -116,6 +153,7 @@
 import Dropdown, { DropdownItem } from '@/components/common//Dropdown.vue';
 import ManualUserPositionModal from '@/components/modals/ManualUserPositionModal.vue';
 import MyPositionsModal from '@/components/modals/MyPositionsModal.vue';
+import SvgIcon from '@/components/common/SvgIcon.vue';
 
 export default {
   name: 'UserPositions',
@@ -124,6 +162,7 @@ export default {
     DropdownItem,
     ManualUserPositionModal,
     MyPositionsModal,
+    SvgIcon,
   },
   props: {
     selected: {
@@ -136,6 +175,7 @@ export default {
     },
   },
   data: () => ({
+    activeView: 'list-small',
     items: [],
     positionModal: false,
     myPositionsModal: false,
@@ -191,6 +231,9 @@ export default {
     this.getPositions();
   },
   methods: {
+    setView(viewMode) {
+      this.activeView = viewMode;
+    },
     async getPositions() {
       const { data } = await this.$http.get('positions');
       this.items = data;
@@ -269,3 +312,29 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+  .view-setter {
+    svg path {
+      fill: #AABDCD;
+    }
+    &[disabled] {
+      cursor: not-allowed;
+      svg path {
+        fill: #999;
+      }
+    }
+    &.active {
+      svg path {
+        fill: #316DA4;
+      }
+    }
+    + .view-setter {
+      margin-left: .75em;
+    }
+    svg.svg-icon {
+      width: 20px;
+      height: 20px;
+    }
+  }
+</style>

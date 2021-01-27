@@ -5,8 +5,13 @@
   >
     <title v-if="title">{{ title }}</title>
     <use
+      v-if="!original"
       :xlink:href="iconPath"
       xmlns:xlink="http://www.w3.org/1999/xlink"
+    />
+    <svg
+      v-else
+      v-html="iconBody"
     />
   </svg>
 </template>
@@ -14,20 +19,25 @@
 <script>
 export default {
   name: 'SvgIcon',
-
   props: {
     name: {
       type: String,
       required: true,
     },
-
+    original: Boolean,
     title: {
       type: String,
       default: null,
     },
   },
-
   computed: {
+    iconBody() {
+      // eslint-disable-next-line
+      const icon = require(`!!raw-loader!@/assets/icons/${this.name}.svg`);
+      // console.log(icon);
+      // return icon;
+      return icon.default;
+    },
     iconPath() {
       // eslint-disable-next-line
       let icon = require(`@/assets/icons/${this.name}.svg`);
@@ -37,7 +47,6 @@ export default {
 
       return icon.url;
     },
-
     className() {
       return `svg-icon svg-icon--${this.name}`;
     },
