@@ -16,6 +16,10 @@
       <app-sidebar-user :mini="mini" />
       <app-sidebar-navigation :mini="mini" />
     </div>
+    <SvgIcon
+      class="buttonIcon__lock"
+      :name="mini ? 'lock' : 'uplock'"
+    />
   </v-navigation-drawer>
 </template>
 
@@ -23,6 +27,7 @@
 import AppSidebarNavigation from '@/components/layout/AppSidebarNavigation.vue';
 import AppSidebarUser from '@/components/layout/AppSidebarUser.vue';
 import AppSidebarLogo from '@/components/layout/AppSidebarLogo.vue';
+import SvgIcon from '@/components/common/SvgIcon.vue';
 
 export default {
   name: 'AppSidebar',
@@ -30,6 +35,7 @@ export default {
     AppSidebarLogo,
     AppSidebarUser,
     AppSidebarNavigation,
+    SvgIcon,
   },
   data: () => ({
     mini: true,
