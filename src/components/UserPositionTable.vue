@@ -153,25 +153,73 @@
       v-else-if="dataView === 'grid'"
       class="grid-table"
     >
-      <div class="grid-table--header">
-        <div class="favorite-all">
-          ⭐️
+      <div class="grid-table--header row">
+        <div class="favorite-all col-auto">
+          <SvgIcon
+            name="starred"
+          />
         </div>
-        <div class="checkbox-all">
+        <div class="checkbox-all col-auto">
           <input type="checkbox" />
           Выбрать все
         </div>
-        <div class="checkbox-page">
+        <div class="checkbox-page col-auto">
           <input type="checkbox" />
           Выбрать все на странице
         </div>
-        <div class="sort">
+        <v-spacer />
+        <div class="sort-positions col-auto">
           Сортировать
           по наименованию
           <SvgIcon
             name="arrow-down"
           />
           по цене
+        </div>
+      </div>
+      <div class="grid-table--body row">
+        <div
+          v-for="(i, k) in items"
+          :key="k"
+          class="grid-item col-4"
+        >
+          <div class="row">
+            <input type="checkbox" />
+            <SvgIcon
+              name="starred-filled"
+            />
+          </div>
+          <div class="row item-logo">
+            <img src="@/assets/images/test-position-tv.jpg" />
+          </div>
+          <div class="row item-price">
+            от 3 223 888,00 ₽
+            <span class="for-unit">
+               за шт
+            </span>
+          </div>
+          <div class="row item-title">
+            {{ i.name }}
+          </div>
+          <div class="row item-description">
+            Комплектующие, компьютеры, ноутбуки, мониторы
+          </div>
+          <div class="row item-actions">
+            <v-btn
+              class="ml-2"
+              depressed
+            >
+              Добавить в ЦЗ
+            </v-btn>
+            <v-btn
+              class="button-also ml-2"
+              color="grey"
+              depressed
+              outlined
+            >
+              ...
+            </v-btn>
+          </div>
         </div>
       </div>
     </div>
@@ -370,10 +418,65 @@ export default {
   }
   .grid-table {
     padding: 0 30px;
+    .svg-icon--starred,
+    .svg-icon--starred-filled {
+      height: 16px;
+      width: 16px;
+    }
     .grid-table--header {
+      font-weight: 300;
+      font-size: 13px;
       border: 1px solid #DFE2E5;
       border-left: 0;
       border-right: 0;
+      .svg-icon--arrow-down {
+        width: 12px;
+        height: 12px;
+      }
+    }
+    .grid-table--body {
+      .grid-item {
+        height: 450px;
+        .item-logo {
+          padding: 0 30px;
+          justify-content: center;
+          img {
+            max-height: 260px;
+            max-width: 100%;
+          }
+        }
+        .item-price {
+          color: #316DA4;
+          font-size: 18px;
+          line-height: 24px;
+          .for-unit {
+            margin-left: .5em;
+            font-weight: 300;
+            font-size: 12px;
+            line-height: 19px;
+            color: #2E2E2E;
+          }
+        }
+        .item-title {
+          font-size: 13px;
+          line-height: 19px;
+          color: #242F38;
+        }
+        .item-description {
+          font-weight: 300;
+          font-size: 13px;
+          line-height: 19px;
+          color: #2E2E2E;
+        }
+        .item-actions {
+          margin-top: 75px;
+          .button-also {
+            padding: 0;
+            min-width: 40px;
+            border-color: #DFE2E5;
+          }
+        }
+      }
     }
   }
 </style>
