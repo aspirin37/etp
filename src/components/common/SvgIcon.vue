@@ -9,10 +9,12 @@
       :xlink:href="iconPath"
       xmlns:xlink="http://www.w3.org/1999/xlink"
     />
+    <!-- eslint-disable -->
     <svg
       v-else
       v-html="iconBody"
     />
+    <!-- eslint-enable -->
   </svg>
 </template>
 

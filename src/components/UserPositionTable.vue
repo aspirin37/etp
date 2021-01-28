@@ -47,7 +47,7 @@
         <div class="col-auto pl-1">
           <a
             class="view-setter"
-            :class="{ active: activeView === 'grid' }"
+            :class="{ active: dataView === 'grid' }"
             href="@shape-grid"
             @click.prevent="setView('grid')"
           >
@@ -58,7 +58,7 @@
           </a>
           <a
             class="view-setter"
-            :class="{ active: activeView === 'list-big' }"
+            :class="{ active: dataView === 'list-big' }"
             disabled
             href="@shape-list-big"
             @click.prevent="setView('list-big')"
@@ -70,7 +70,7 @@
           </a>
           <a
             class="view-setter"
-            :class="{ active: activeView === 'list-small' }"
+            :class="{ active: dataView === 'list-small' }"
             href="@shape-list-small"
             @click.prevent="setView('list-small')"
           >
@@ -83,7 +83,7 @@
       </div>
     </div>
     <v-data-table
-      v-if="items.length"
+      v-if="items.length && dataView === 'list-small'"
       v-model="selectedItems"
       :headers="headers"
       :items="items"
@@ -146,6 +146,35 @@
         </v-menu>
       </template>
     </v-data-table>
+    <div v-else-if="dataView === 'list-big'">
+      list-big
+    </div>
+    <div
+      v-else-if="dataView === 'grid'"
+      class="grid-table"
+    >
+      <div class="grid-table--header">
+        <div class="favorite-all">
+          ⭐️
+        </div>
+        <div class="checkbox-all">
+          <input type="checkbox" />
+          Выбрать все
+        </div>
+        <div class="checkbox-page">
+          <input type="checkbox" />
+          Выбрать все на странице
+        </div>
+        <div class="sort">
+          Сортировать
+          по наименованию
+          <SvgIcon
+            name="arrow-down"
+          />
+          по цене
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -154,6 +183,7 @@ import Dropdown, { DropdownItem } from '@/components/common//Dropdown.vue';
 import ManualUserPositionModal from '@/components/modals/ManualUserPositionModal.vue';
 import MyPositionsModal from '@/components/modals/MyPositionsModal.vue';
 import SvgIcon from '@/components/common/SvgIcon.vue';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'UserPositions',
@@ -175,13 +205,13 @@ export default {
     },
   },
   data: () => ({
-    activeView: 'list-small',
     items: [],
     positionModal: false,
     myPositionsModal: false,
     positionEdited: undefined,
   }),
   computed: {
+    ...mapGetters(['dataView']),
     selectedItems: {
       get() {
         return this.selected;
@@ -231,8 +261,9 @@ export default {
     this.getPositions();
   },
   methods: {
+    ...mapActions(['setDataView']),
     setView(viewMode) {
-      this.activeView = viewMode;
+      this.setDataView(viewMode);
     },
     async getPositions() {
       const { data } = await this.$http.get('positions');
@@ -335,6 +366,14 @@ export default {
     svg.svg-icon {
       width: 20px;
       height: 20px;
+    }
+  }
+  .grid-table {
+    padding: 0 30px;
+    .grid-table--header {
+      border: 1px solid #DFE2E5;
+      border-left: 0;
+      border-right: 0;
     }
   }
 </style>
