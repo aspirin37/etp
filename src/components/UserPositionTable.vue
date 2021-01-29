@@ -170,7 +170,9 @@
         <v-spacer />
         <div class="sort-positions col-auto">
           Сортировать
-          по наименованию
+          <b>
+            по наименованию
+          </b>
           <SvgIcon
             name="arrow-down"
           />
@@ -186,6 +188,7 @@
           <div class="row">
             <input type="checkbox" />
             <SvgIcon
+              class="item-favorite"
               name="starred-filled"
             />
           </div>
@@ -202,7 +205,7 @@
             {{ i.name }}
           </div>
           <div class="row item-description">
-            Комплектующие, компьютеры, ноутбуки, мониторы
+            {{ i.specifications }}
           </div>
           <div class="row item-actions">
             <v-btn
@@ -437,6 +440,11 @@ export default {
     .grid-table--body {
       .grid-item {
         height: 450px;
+        .item-favorite {
+          position: relative;
+          bottom: 2px;
+          margin-left: .375em;
+        }
         .item-logo {
           padding: 0 30px;
           justify-content: center;
