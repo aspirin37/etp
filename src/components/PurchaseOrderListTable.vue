@@ -8,6 +8,7 @@
         itemsPerPageOptions: [20],
       }"
       :server-items-length="total"
+      :hide-default-footer="!items.length"
       :loading="loading"
       disable-sort
       fixed-header
@@ -62,16 +63,16 @@ export default ({
         text: 'Дата доставки',
       }, {
         value: 'total.sum',
-        text: 'Сумма заказа без НДС',
+        text: 'Сумма без НДС (₽)',
       }, {
         value: 'total.withVat',
-        text: 'Сумма заказа с НДС',
+        text: 'Сумма с НДС (₽)',
       }, {
         value: 'total.withDelivery',
-        text: 'Сумма заказа с доставкой',
+        text: 'Сумма с доставкой (₽)',
       }, {
         value: 'total.withDeliveryVat',
-        text: 'Сумма с доставкой и НДС',
+        text: 'Сумма с доставкой и НДС (₽)',
       }, {
         value: 'status',
         text: 'Статус',
