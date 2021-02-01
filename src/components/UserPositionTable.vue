@@ -159,13 +159,21 @@
             name="starred"
           />
         </div>
-        <div class="checkbox-all col-auto">
-          <input type="checkbox" />
-          Выбрать все
+        <div class="checkbox-all col-auto pa-0 py-1">
+          <v-checkbox
+            v-model="allChecked"
+            class="ma-0 mr-3"
+            label="Выбрать все"
+            hide-details="hide-details"
+          />
         </div>
-        <div class="checkbox-page col-auto">
-          <input type="checkbox" />
-          Выбрать все на странице
+        <div class="checkbox-page col-auto pa-0 py-1">
+          <v-checkbox
+            v-model="allCheckedPage"
+            class="ma-0"
+            label="Выбрать все на странице"
+            hide-details="hide-details"
+          />
         </div>
         <v-spacer />
         <div class="sort-positions col-auto">
@@ -186,7 +194,11 @@
           class="grid-item col-4"
         >
           <div class="row">
-            <input type="checkbox" />
+            <v-checkbox
+              v-model="i.__checked"
+              class="ma-0 pa-0"
+              hide-details="hide-details"
+            />
             <SvgIcon
               class="item-favorite"
               name="starred-filled"
@@ -256,6 +268,8 @@ export default {
     },
   },
   data: () => ({
+    allChecked: false,
+    allCheckedPage: false,
     items: [],
     positionModal: false,
     myPositionsModal: false,
@@ -436,14 +450,18 @@ export default {
         width: 12px;
         height: 12px;
       }
+      .favorite-all {
+        cursor: pointer;
+      }
     }
     .grid-table--body {
       .grid-item {
         height: 450px;
         .item-favorite {
           position: relative;
-          bottom: 2px;
-          margin-left: .375em;
+          bottom: -2px;
+          cursor: pointer;
+          // margin-left: .375em;
         }
         .item-logo {
           padding: 0 30px;
