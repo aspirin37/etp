@@ -6,9 +6,14 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    navigatorLock: JSON.parse(localStorage.getItem('navigatorLock')) || false,
     user: JSON.parse(localStorage.getItem('user')),
   },
   mutations: {
+    setNavigatorLock: (state, payload) => {
+      state.navigatorLock = payload;
+      localStorage.setItem('navigatorLock', JSON.stringify(payload));
+    },
     setUser: (state, payload) => {
       state.user = payload;
       localStorage.setItem('user', JSON.stringify(payload));
@@ -22,6 +27,14 @@ export default new Vuex.Store({
 
       delete API.defaults.headers.jwtacc;
       return Promise.resolve();
+    },
+  },
+  getters: {
+    navigatorLock: (state) => state.navigatorLock,
+  },
+  actions: {
+    setNavigatorLock: ({ commit }, payload) => {
+      commit('setNavigatorLock', payload);
     },
   },
 });

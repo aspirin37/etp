@@ -99,8 +99,11 @@
             <v-text-field
               v-model.number="item.quantity"
               type="number"
+              min="1"
+              max="1000"
               label="Количество"
               hide-details
+              oninput="validity.valid||(value='');"
             />
           </template>
         </v-edit-dialog>

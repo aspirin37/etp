@@ -20,6 +20,7 @@
     <v-card
       class="pa-0 pt-3"
       flat="flat"
+      height="100%"
     >
       <user-position-table />
     </v-card>

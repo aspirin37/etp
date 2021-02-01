@@ -20,6 +20,7 @@
     <v-card
       class="pa-0"
       flat="flat"
+      height="100%"
     >
       <price-request-list-table
         :type="tabs[tab].value"
