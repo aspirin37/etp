@@ -1,6 +1,5 @@
 <template>
   <v-dialog
-    :key="key"
     v-model="visible"
     max-width="900"
   >
@@ -104,7 +103,6 @@ export default {
       itemsFromSearch: [],
       active: [],
       activeFromSearch: null,
-      key: 0,
     };
   },
   computed: {
