@@ -226,14 +226,30 @@
             >
               Добавить в ЦЗ
             </v-btn>
-            <v-btn
-              class="button-also ml-2"
-              color="grey"
+            <dropdown
+              button-class="button-also ml-2"
+              :button-color="null"
               depressed
+              min-width="265"
               outlined
+              whole
             >
               ...
-            </v-btn>
+              <template v-slot:dropdown-content>
+                <dropdown-item @click.prevent.native="manualModalVisible = true">
+                  Сделать позицию невидимой
+                </dropdown-item>
+                <dropdown-item>
+                  Редактировать
+                </dropdown-item>
+                <dropdown-item>
+                  Копировать
+                </dropdown-item>
+                <dropdown-item>
+                  Удалить
+                </dropdown-item>
+              </template>
+            </dropdown>
           </div>
         </div>
       </div>
