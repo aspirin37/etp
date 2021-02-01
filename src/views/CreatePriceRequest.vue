@@ -140,7 +140,7 @@
           flat="flat"
         >
           <div class="w-550">
-            <div class="subtitle-2 mb-6">
+            <div class="subtitle-2 mb-4">
               Требования к поставщику
             </div>
             <v-checkbox
@@ -157,20 +157,20 @@
             />
             <v-checkbox
               v-model="priceRequest.requirements.authorizedDealer"
-              class="mt-0 mb-10"
+              class="mt-0 mb-6"
               label="Официальный дилер"
               hide-details="hide-details"
             />
-            <div class="subtitle-2 mb-6">
+            <div class="subtitle-2 mb-4">
               Требования к позициям
             </div>
             <v-checkbox
               v-model="priceRequest.requirements.russianProduction"
-              class="mt-0 mb-10"
+              class="mt-0 mb-6"
               label="Только товары российского производства"
               hide-details="hide-details"
             />
-            <div class="subtitle-2 mb-6">
+            <div class="subtitle-2 mb-4">
               Характеристики ЦЗ
             </div>
             <v-checkbox
@@ -181,7 +181,7 @@
             />
             <v-checkbox
               v-model="priceRequest.requirements.privateRequest"
-              class="mt-0 mb-10"
+              class="mt-0 mb-6"
               label="Не отображать ЦЗ в открытых источниках"
               hide-details="hide-details"
             />

@@ -33,6 +33,7 @@
       </div>
     </div>
     <v-data-table
+      v-if="items"
       :headers="headers"
       :items="items"
       :options.sync="options"
@@ -41,7 +42,7 @@
         itemsPerPageOptions: [20],
       }"
       :server-items-length="total"
-      show-select
+      :hide-default-footer="!items.length"
       disable-sort
       fixed-header
       class="elevation-0"
