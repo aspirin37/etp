@@ -46,11 +46,14 @@
       </div>
     </div>
     <v-data-table
-      v-if="items.length"
       v-model="selectedItems"
       :headers="headers"
       :items="items"
-      show-select
+      :hide-default-footer="!items.length"
+      :show-select="!editable"
+      :footer-props="{
+        itemsPerPageOptions: [20],
+      }"
       disable-sort
       fixed-header
       class="elevation-0"
