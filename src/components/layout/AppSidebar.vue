@@ -1,8 +1,9 @@
 <template>
   <v-navigation-drawer
+    ref="navDrawer"
     class="app-sidebar"
     :class="{'once-opened': onceOpened}"
-    :expand-on-hover="!navigatorLock"
+    :e1xpand-on-hover="!navigatorLock"
     :mini-variant.sync="mini"
     :mini-variant-width="80"
     :width="300"
@@ -10,6 +11,8 @@
     clipped
     dark
     app
+    @mouseenter.native.capture="mouseEnterDrawer"
+    @mouseleave.native.capture="mouseLeaveDrawer"
   >
     <app-sidebar-logo :mini="mini" />
     <div class="app-sidebar__container">
@@ -17,9 +20,8 @@
       <app-sidebar-navigation :mini="mini" />
     </div>
     <a
-      class="text-right mb-5"
+      class="navigator-lock text-right mb-5"
       href="@lock"
-      style="margin-right: 28px;"
       @click.prevent="lock"
     >
       <SvgIcon
@@ -42,6 +44,8 @@ import AppSidebarUser from '@/components/layout/AppSidebarUser.vue';
 import AppSidebarLogo from '@/components/layout/AppSidebarLogo.vue';
 import SvgIcon from '@/components/common/SvgIcon.vue';
 import { mapActions, mapGetters } from 'vuex';
+import eventPath from '@/utilities/dom/eventPath';
+import parentsHasClass from '@/utilities/dom/parentsHasClass';
 
 export default {
   name: 'AppSidebar',
@@ -77,12 +81,38 @@ export default {
         });
       }
     },
+    mouseEnterDrawer(event) {
+      if (!this.$refs.navDrawer) return;
+      if (this.$refs.navDrawer.isMouseover) return;
+
+      const path = eventPath(event);
+      console.log(path);
+      if (parentsHasClass(path[0], 'navigator-lock')) {
+        return; // navigator-lock feature works and slim-mode
+      }
+      console.log('блять');
+      this.$refs.navDrawer.isMouseover = true;
+    },
+    mouseLeaveDrawer() {
+      if (!this.$refs.navDrawer) return;
+      if (!this.$refs.navDrawer.isMouseover) return;
+
+      this.$refs.navDrawer.isMouseover = false;
+    },
   },
 };
 </script>
 
 <style lang="scss">
 .v-application .app-sidebar {
+  .navigator-lock {
+    margin-bottom: 0 !important;
+    height: 64px;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
   .v-expansion-panel {
     background: transparent !important;
   }
