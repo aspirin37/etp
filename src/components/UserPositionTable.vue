@@ -59,7 +59,6 @@
           <a
             class="view-setter"
             :class="{ active: dataView === 'list-big' }"
-            disabled
             href="@shape-list-big"
             @click.prevent="setView('list-big')"
           >
@@ -146,12 +145,9 @@
         </v-menu>
       </template>
     </v-data-table>
-    <div v-else-if="dataView === 'list-big'">
-      list-big
-    </div>
     <div
-      v-else-if="dataView === 'grid'"
-      class="grid-table"
+      v-else-if="dataView === 'list-big' || dataView === 'grid'"
+      :class="`${dataView}-table`"
     >
       <div class="grid-table--header row">
         <div class="favorite-all col-auto">
@@ -199,10 +195,15 @@
               class="ma-0 pa-0"
               hide-details="hide-details"
             />
-            <SvgIcon
-              class="item-favorite"
-              name="starred-filled"
-            />
+            <a
+              href="@set-favorite"
+              @click.prevent="i.__favorite = !i.__favorite"
+            >
+              <SvgIcon
+                class="item-favorite"
+                :name="i.__favorite ? 'starred-filled' : 'starred'"
+              />
+            </a>
           </div>
           <div class="row item-logo">
             <template v-if="random(0, 1)">
@@ -373,6 +374,13 @@ export default {
     },
     async getPositions() {
       const { data } = await this.$http.get('positions');
+      data.forEach((item) => {
+        /* eslint-disable no-param-reassign */
+        item.__checked = false;
+        item.__favorite = false;
+        /* eslint-enable no-param-reassign */
+      });
+
       this.items = data;
     },
     resetPositionEdited() {
@@ -474,7 +482,8 @@ export default {
       height: 20px;
     }
   }
-  .grid-table {
+  .grid-table,
+  .list-big-table {
     padding: 0 30px;
     .svg-icon--starred,
     .svg-icon--starred-filled {
