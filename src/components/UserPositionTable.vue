@@ -208,7 +208,7 @@
             </div>
             <div class="item-logo col-a d-flex align-center">
               <template v-if="random(0, 1)">
-                <img src="@/assets/images/test-position-tv.jpg" />
+                <img src="@/assets/images/test-position-tv.jpg">
               </template>
               <SvgIcon
                 v-else
@@ -228,7 +228,7 @@
             <div class="item-price col-2 ma-auto">
               от 3 223 888,00 ₽
               <span class="for-unit">
-                 за шт
+                за шт
               </span>
             </div>
             <div class="item-actions col-a ma-auto">
@@ -308,7 +308,7 @@
             </div>
             <div class="row item-logo">
               <template v-if="random(0, 1)">
-                <img src="@/assets/images/test-position-tv.jpg" />
+                <img src="@/assets/images/test-position-tv.jpg">
               </template>
               <SvgIcon
                 v-else
@@ -319,7 +319,7 @@
             <div class="row item-price">
               от 3 223 888,00 ₽
               <span class="for-unit">
-                 за шт
+                за шт
               </span>
             </div>
             <div class="row item-title">

@@ -1,5 +1,8 @@
 <template>
-  <div class="dropdown" :class="{ 'dropdown-whole': whole }">
+  <div
+    class="dropdown"
+    :class="{ 'dropdown-whole': whole }"
+  >
     <v-btn
       :class="buttonClass"
       :color="buttonColor"
