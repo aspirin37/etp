@@ -205,7 +205,14 @@
             />
           </div>
           <div class="row item-logo">
-            <img src="@/assets/images/test-position-tv.jpg" />
+            <template v-if="random(0, 1)">
+              <img src="@/assets/images/test-position-tv.jpg" />
+            </template>
+            <SvgIcon
+              v-else
+              name="empty-image"
+              original
+            />
           </div>
           <div class="row item-price">
             от 3 223 888,00 ₽
@@ -237,19 +244,31 @@
               ...
               <template v-slot:dropdown-content>
                 <dropdown-item @click.prevent.native="manualModalVisible = true">
-                  <SvgIcon name="eye" original/>
+                  <SvgIcon
+                    name="eye"
+                    original
+                  />
                   Сделать позицию невидимой
                 </dropdown-item>
                 <dropdown-item>
-                  <SvgIcon name="edit" original/>
+                  <SvgIcon
+                    name="edit"
+                    original
+                  />
                   Редактировать
                 </dropdown-item>
                 <dropdown-item>
-                  <SvgIcon name="copy" original/>
+                  <SvgIcon
+                    name="copy"
+                    original
+                  />
                   Копировать
                 </dropdown-item>
                 <dropdown-item>
-                  <SvgIcon name="remove" original/>
+                  <SvgIcon
+                    name="remove"
+                    original
+                  />
                   Удалить
                 </dropdown-item>
               </template>
@@ -262,6 +281,7 @@
 </template>
 
 <script>
+import { random } from 'lodash-es';
 import Dropdown, { DropdownItem } from '@/components/common//Dropdown.vue';
 import ManualUserPositionModal from '@/components/modals/ManualUserPositionModal.vue';
 import MyPositionsModal from '@/components/modals/MyPositionsModal.vue';
@@ -347,6 +367,7 @@ export default {
   },
   methods: {
     ...mapActions(['setDataView']),
+    random,
     setView(viewMode) {
       this.setDataView(viewMode);
     },
@@ -486,9 +507,15 @@ export default {
         .item-logo {
           padding: 0 30px;
           justify-content: center;
+          min-height: 185px;
           img {
             max-height: 260px;
             max-width: 100%;
+          }
+          .svg-icon--empty-image {
+            width: 85px;
+            height: 85px;
+            margin: auto;
           }
         }
         .item-price {
