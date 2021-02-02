@@ -1,0 +1,69 @@
+.modal-primary {
+  position: relative;
+
+  &__header {
+    position: absolute;
+    top: -46px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background: transparent;
+    font-size: 18px;
+    color: #FFFFFF;
+  }
+
+  &__wrapper { 
+    position: relative;
+    background: white;
+    width: calc(100% - 10px);
+  }
+
+  &__sub-header {
+    display: flex;
+    padding: 20px;
+    background:  #E4EAEE;
+
+    .theme--light.v-text-field--filled {
+      border-radius: 4px !important;
+      
+      & > .v-input__control > .v-input__slot {
+        background-color: white !important;
+
+        &:before,
+        &:after {
+          display: none;
+        } 
+      }
+    }
+  }
+
+  &__content {
+    padding: 30px;
+    padding-top: 35px;
+    padding-bottom: 0;
+    overflow-y: auto;
+    @include scrollbar;
+  }
+
+  &:not(&--full-height) &__content {
+    max-height: 60vh;
+  }
+
+  &--overflowed &__content {
+    min-height: 60vh;
+    padding: 15px 30px;
+  }
+
+  &__actions {
+    position: relative;
+    display: flex;
+    padding: 30px;
+    background: white;
+  }
+
+  &--overflowed &__actions {
+    padding: 15px 30px;
+    border-top: 1px solid #E5EAEE;
+  }
+}
