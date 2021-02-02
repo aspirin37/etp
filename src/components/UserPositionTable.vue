@@ -183,100 +183,202 @@
           по цене
         </div>
       </div>
-      <div class="grid-table--body row">
-        <div
-          v-for="(i, k) in items"
-          :key="k"
-          class="grid-item col-4"
-        >
-          <div class="row">
-            <v-checkbox
-              v-model="i.__checked"
-              class="ma-0 pa-0"
-              hide-details="hide-details"
-            />
-            <a
-              href="@set-favorite"
-              @click.prevent="i.__favorite = !i.__favorite"
-            >
-              <SvgIcon
-                class="item-favorite"
-                :name="i.__favorite ? 'starred-filled' : 'starred'"
+      <template v-if="dataView === 'list-big'">
+        <div class="grid-table--body">
+          <div
+            v-for="(i, k) in items"
+            :key="k"
+            class="grid-item row"
+          >
+            <div class="col-a ma-auto">
+              <v-checkbox
+                v-model="i.__checked"
+                class="ma-0 pa-0"
+                hide-details="hide-details"
               />
-            </a>
-          </div>
-          <div class="row item-logo">
-            <template v-if="random(0, 1)">
-              <img src="@/assets/images/test-position-tv.jpg" />
-            </template>
-            <SvgIcon
-              v-else
-              name="empty-image"
-              original
-            />
-          </div>
-          <div class="row item-price">
-            от 3 223 888,00 ₽
-            <span class="for-unit">
-               за шт
-            </span>
-          </div>
-          <div class="row item-title">
-            {{ i.name }}
-          </div>
-          <div class="row item-description">
-            {{ i.specifications }}
-          </div>
-          <div class="row item-actions">
-            <v-btn
-              class="ml-2"
-              depressed
-            >
-              Добавить в ЦЗ
-            </v-btn>
-            <dropdown
-              button-class="button-also ml-2"
-              :button-color="null"
-              depressed
-              min-width="265"
-              outlined
-              whole
-            >
-              ...
-              <template v-slot:dropdown-content>
-                <dropdown-item @click.prevent.native="manualModalVisible = true">
-                  <SvgIcon
-                    name="eye"
-                    original
-                  />
-                  Сделать позицию невидимой
-                </dropdown-item>
-                <dropdown-item>
-                  <SvgIcon
-                    name="edit"
-                    original
-                  />
-                  Редактировать
-                </dropdown-item>
-                <dropdown-item>
-                  <SvgIcon
-                    name="copy"
-                    original
-                  />
-                  Копировать
-                </dropdown-item>
-                <dropdown-item>
-                  <SvgIcon
-                    name="remove"
-                    original
-                  />
-                  Удалить
-                </dropdown-item>
+              <a
+                href="@set-favorite"
+                @click.prevent="i.__favorite = !i.__favorite"
+              >
+                <SvgIcon
+                  class="item-favorite"
+                  :name="i.__favorite ? 'starred-filled' : 'starred'"
+                />
+              </a>
+            </div>
+            <div class="item-logo col-a d-flex align-center">
+              <template v-if="random(0, 1)">
+                <img src="@/assets/images/test-position-tv.jpg" />
               </template>
-            </dropdown>
+              <SvgIcon
+                v-else
+                name="empty-image-mini"
+                original
+              />
+            </div>
+            <div class="col-a ma-auto">
+              <div class="item-title">
+                {{ i.name }}
+              </div>
+              <div class="item-description">
+                {{ i.specifications }}
+              </div>
+            </div>
+            <v-spacer />
+            <div class="item-price col-2 ma-auto">
+              от 3 223 888,00 ₽
+              <span class="for-unit">
+                 за шт
+              </span>
+            </div>
+            <div class="item-actions col-a ma-auto">
+              <v-btn
+                class="ml-2"
+                depressed
+              >
+                Добавить в ЦЗ
+              </v-btn>
+              <dropdown
+                class="d-inline-flex"
+                button-class="button-also ml-2"
+                :button-color="null"
+                depressed
+                min-width="265"
+                outlined
+                whole
+              >
+                ...
+                <template v-slot:dropdown-content>
+                  <dropdown-item @click.prevent.native="manualModalVisible = true">
+                    <SvgIcon
+                      name="eye"
+                      original
+                    />
+                    Сделать позицию невидимой
+                  </dropdown-item>
+                  <dropdown-item>
+                    <SvgIcon
+                      name="edit"
+                      original
+                    />
+                    Редактировать
+                  </dropdown-item>
+                  <dropdown-item>
+                    <SvgIcon
+                      name="copy"
+                      original
+                    />
+                    Копировать
+                  </dropdown-item>
+                  <dropdown-item>
+                    <SvgIcon
+                      name="remove"
+                      original
+                    />
+                    Удалить
+                  </dropdown-item>
+                </template>
+              </dropdown>
+            </div>
           </div>
         </div>
-      </div>
+      </template>
+      <template v-else-if="dataView === 'grid'">
+        <div class="grid-table--body row">
+          <div
+            v-for="(i, k) in items"
+            :key="k"
+            class="grid-item col-4"
+          >
+            <div class="row">
+              <v-checkbox
+                v-model="i.__checked"
+                class="ma-0 pa-0"
+                hide-details="hide-details"
+              />
+              <a
+                href="@set-favorite"
+                @click.prevent="i.__favorite = !i.__favorite"
+              >
+                <SvgIcon
+                  class="item-favorite"
+                  :name="i.__favorite ? 'starred-filled' : 'starred'"
+                />
+              </a>
+            </div>
+            <div class="row item-logo">
+              <template v-if="random(0, 1)">
+                <img src="@/assets/images/test-position-tv.jpg" />
+              </template>
+              <SvgIcon
+                v-else
+                name="empty-image"
+                original
+              />
+            </div>
+            <div class="row item-price">
+              от 3 223 888,00 ₽
+              <span class="for-unit">
+                 за шт
+              </span>
+            </div>
+            <div class="row item-title">
+              {{ i.name }}
+            </div>
+            <div class="row item-description">
+              {{ i.specifications }}
+            </div>
+            <div class="row item-actions">
+              <v-btn
+                class="ml-2"
+                depressed
+              >
+                Добавить в ЦЗ
+              </v-btn>
+              <dropdown
+                button-class="button-also ml-2"
+                :button-color="null"
+                depressed
+                min-width="265"
+                outlined
+                whole
+              >
+                ...
+                <template v-slot:dropdown-content>
+                  <dropdown-item @click.prevent.native="manualModalVisible = true">
+                    <SvgIcon
+                      name="eye"
+                      original
+                    />
+                    Сделать позицию невидимой
+                  </dropdown-item>
+                  <dropdown-item>
+                    <SvgIcon
+                      name="edit"
+                      original
+                    />
+                    Редактировать
+                  </dropdown-item>
+                  <dropdown-item>
+                    <SvgIcon
+                      name="copy"
+                      original
+                    />
+                    Копировать
+                  </dropdown-item>
+                  <dropdown-item>
+                    <SvgIcon
+                      name="remove"
+                      original
+                    />
+                    Удалить
+                  </dropdown-item>
+                </template>
+              </dropdown>
+            </div>
+          </div>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -506,7 +608,6 @@ export default {
     }
     .grid-table--body {
       .grid-item {
-        height: 450px;
         .item-favorite {
           position: relative;
           bottom: -2px;
@@ -514,16 +615,8 @@ export default {
           // margin-left: .375em;
         }
         .item-logo {
-          padding: 0 30px;
           justify-content: center;
-          min-height: 185px;
-          img {
-            max-height: 260px;
-            max-width: 100%;
-          }
           .svg-icon--empty-image {
-            width: 85px;
-            height: 85px;
             margin: auto;
           }
         }
@@ -551,7 +644,6 @@ export default {
           color: #2E2E2E;
         }
         .item-actions {
-          margin-top: 75px;
           .button-also {
             padding: 0;
             min-width: 40px;
@@ -564,6 +656,50 @@ export default {
             color: #AABDCD;
           }
         }
+      }
+    }
+  }
+  .list-big-table {
+    .grid-table--body {
+      .item-favorite {
+        position: relative;
+        margin-top: .5em;
+        left: 3px;
+      }
+      .item-logo {
+        padding: 0 30px;
+        height: 90px;
+        width: 90px;
+        box-sizing: content-box;
+        img {
+          max-height: 90px;
+          max-width: 90px;
+        }
+        .svg-icon--empty-image-mini {
+          width: 55px;
+          height: 55px;
+        }
+      }
+    }
+  }
+  .grid-table {
+    .grid-table--body {
+      .grid-item {
+        height: 450px;
+      }
+      .item-logo {
+        padding: 0 30px;
+        min-height: 185px;
+        img {
+          max-height: 185px;
+        }
+        .svg-icon--empty-image {
+          width: 85px;
+          height: 85px;
+        }
+      }
+      .item-actions {
+        margin-top: 75px;
       }
     }
   }
