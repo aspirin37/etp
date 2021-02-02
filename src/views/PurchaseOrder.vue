@@ -193,7 +193,7 @@ export default {
         return value;
       }
 
-      return value.toLocaleString('ru-RU', { minimumFractionDigits: 2 });
+      return `${value.toLocaleString('ru-RU', { minimumFractionDigits: 2 })} ₽`;
     },
     // f2e5de40-1cab-43c9-af8e-c24814a99439
   },

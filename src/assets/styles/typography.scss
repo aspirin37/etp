@@ -13,9 +13,11 @@
   font-size: 14px;
   line-height: 22px;
   color: #99A0A8;
+  flex-shrink: 0;
 }
 
 .list-value {
+  max-width: 270px;
   margin-bottom: 16px;
   font-size: 14px;
   line-height: 22px;

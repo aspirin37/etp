@@ -33,6 +33,7 @@
       </div>
     </div>
     <v-data-table
+      v-if="items"
       :headers="headers"
       :items="items"
       :options.sync="options"
@@ -41,7 +42,7 @@
         itemsPerPageOptions: [20],
       }"
       :server-items-length="total"
-      show-select
+      :hide-default-footer="!items.length"
       disable-sort
       fixed-header
       class="elevation-0"
@@ -98,8 +99,11 @@
             <v-text-field
               v-model.number="item.quantity"
               type="number"
+              min="1"
+              max="1000"
               label="Количество"
               hide-details
+              oninput="validity.valid||(value='');"
             />
           </template>
         </v-edit-dialog>

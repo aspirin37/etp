@@ -54,9 +54,10 @@
                 v-model.trim.number="position.quantity"
                 label="Количество"
                 type="number"
-                :min="1"
-                :max="1000"
+                min="1"
+                max="1000"
                 outlined
+                oninput="validity.valid||(value='');"
               />
             </v-col>
             <v-col

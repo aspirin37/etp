@@ -3,6 +3,7 @@
     <v-data-table
       :headers="headers"
       :items="positions"
+      :hide-default-footer="!positions.length"
       disable-sort
       fixed-header
       class="elevation-0"
