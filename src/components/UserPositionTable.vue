@@ -237,15 +237,19 @@
               ...
               <template v-slot:dropdown-content>
                 <dropdown-item @click.prevent.native="manualModalVisible = true">
+                  <SvgIcon name="eye" original/>
                   Сделать позицию невидимой
                 </dropdown-item>
                 <dropdown-item>
+                  <SvgIcon name="edit" original/>
                   Редактировать
                 </dropdown-item>
                 <dropdown-item>
+                  <SvgIcon name="copy" original/>
                   Копировать
                 </dropdown-item>
                 <dropdown-item>
+                  <SvgIcon name="remove" original/>
                   Удалить
                 </dropdown-item>
               </template>
@@ -516,6 +520,12 @@ export default {
             padding: 0;
             min-width: 40px;
             border-color: #DFE2E5;
+          }
+          .dropdownItem .svg-icon {
+            width: 16px;
+            height: 13px;
+            margin-right: 5px;
+            color: #AABDCD;
           }
         }
       }
