@@ -14,7 +14,8 @@
     <div
       class="app-sidebar--hover-area"
       @mouseenter="mouseEnterDrawer"
-      @mouseleave="mouseLeaveDrawer">
+      @mouseleave="mouseLeaveDrawer"
+    >
       <app-sidebar-logo :mini="mini" />
       <div class="app-sidebar__container">
         <app-sidebar-user :mini="mini" />
@@ -71,6 +72,11 @@ export default {
       }
     },
   },
+  mounted() {
+    if (this.navigatorLock === 'pinned') {
+      this.mini = false;
+    }
+  },
   methods: {
     ...mapActions(['setNavigatorLock']),
     lock() {
@@ -80,7 +86,6 @@ export default {
       const locked = this.navigatorLock ? null : mode;
       this.setNavigatorLock(locked);
     },
-    /* eslint-disable */
     mouseEnterDrawer() {
       if (!this.mini) return;
       if (this.navigatorLock) return;
@@ -98,11 +103,6 @@ export default {
 
       this.mouseLeaveDrawer(event);
     },
-  },
-  mounted() {
-    if (this.navigatorLock === 'pinned') {
-      this.mini = false;
-    }
   },
 };
 </script>
