@@ -7,7 +7,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     dataView: JSON.parse(localStorage.getItem('dataView')) || 'list-small',
-    navigatorLock: JSON.parse(localStorage.getItem('navigatorLock')) || false,
+    navigatorLock: JSON.parse(localStorage.getItem('navigatorLock')) || null,
     user: JSON.parse(localStorage.getItem('user')),
   },
   mutations: {
