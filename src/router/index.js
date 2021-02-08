@@ -28,7 +28,10 @@ const routes = [
   {
     path: '/price-requests/:type',
     name: 'PriceRequests',
-    component: () => import('@/views/PriceRequests.vue'),
+    components: {
+      default: () => import('@/views/PriceRequests.vue'),
+      ExternalSearch: () => import('@/views/sidebar/ExternalSearch.vue'),
+    },
     props: true,
   },
   {

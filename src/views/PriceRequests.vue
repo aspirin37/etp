@@ -1,5 +1,5 @@
 <template>
-  <div class="page wizard">
+  <div class="page wizard with_sidebar">
     <div class="page__header">
       <h1 class="page__title">
         Реестры ЦЗ
