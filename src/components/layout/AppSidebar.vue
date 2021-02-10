@@ -1,8 +1,8 @@
 <template>
   <v-navigation-drawer
+    ref="navDrawer"
     class="app-sidebar"
     :class="{'once-opened': onceOpened}"
-    :expand-on-hover="!navigatorLock"
     :mini-variant.sync="mini"
     :mini-variant-width="80"
     :width="300"
@@ -11,16 +11,22 @@
     dark
     app
   >
-    <app-sidebar-logo :mini="mini" />
-    <div class="app-sidebar__container">
-      <app-sidebar-user :mini="mini" />
-      <app-sidebar-navigation :mini="mini" />
+    <div
+      class="app-sidebar--hover-area"
+      @mouseenter="mouseEnterDrawer"
+      @mouseleave="mouseLeaveDrawer"
+    >
+      <app-sidebar-logo :mini="mini" />
+      <div class="app-sidebar__container">
+        <app-sidebar-user :mini="mini" />
+        <app-sidebar-navigation :mini="mini" />
+      </div>
     </div>
     <a
-      class="text-right mb-5"
+      class="navigator-lock text-right mb-5"
       href="@lock"
-      style="margin-right: 28px;"
-      @click.prevent="lock"
+      @click.prevent.stop="lock"
+      @mouseleave="mouseLeaveLock"
     >
       <SvgIcon
         v-show="!navigatorLock"
@@ -42,6 +48,7 @@ import AppSidebarUser from '@/components/layout/AppSidebarUser.vue';
 import AppSidebarLogo from '@/components/layout/AppSidebarLogo.vue';
 import SvgIcon from '@/components/common/SvgIcon.vue';
 import { mapActions, mapGetters } from 'vuex';
+import parentsHasClass from '@/utilities/dom/parentsHasClass';
 
 export default {
   name: 'AppSidebar',
@@ -54,7 +61,6 @@ export default {
   data: () => ({
     mini: true,
     onceOpened: false,
-    locked: false,
   }),
   computed: {
     ...mapGetters(['navigatorLock']),
@@ -66,16 +72,36 @@ export default {
       }
     },
   },
+  mounted() {
+    if (this.navigatorLock === 'pinned') {
+      this.mini = false;
+    }
+  },
   methods: {
     ...mapActions(['setNavigatorLock']),
     lock() {
-      const locked = !this.navigatorLock;
+      if (!this.$refs.navDrawer) return;
+
+      const mode = !this.mini ? 'pinned' : 'unpinned';
+      const locked = this.navigatorLock ? null : mode;
       this.setNavigatorLock(locked);
-      if (!locked) {
-        this.$nextTick(() => {
-          this.mini = false;
-        });
-      }
+    },
+    mouseEnterDrawer() {
+      if (!this.mini) return;
+      if (this.navigatorLock) return;
+
+      this.mini = false;
+    },
+    mouseLeaveDrawer(event) {
+      if (this.navigatorLock === 'pinned') return;
+      if (parentsHasClass(event.relatedTarget, 'navigator-lock')) return;
+
+      this.mini = true;
+    },
+    mouseLeaveLock(event) {
+      if (parentsHasClass(event.relatedTarget, 'app-sidebar--hover-area')) return;
+
+      this.mouseLeaveDrawer(event);
     },
   },
 };
@@ -83,6 +109,18 @@ export default {
 
 <style lang="scss">
 .v-application .app-sidebar {
+  .app-sidebar--hover-area {
+    height: calc(100vh - 64px);
+  }
+  .navigator-lock {
+    margin-bottom: 0 !important;
+    height: 64px;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 26px;
+  }
   .v-expansion-panel {
     background: transparent !important;
   }
