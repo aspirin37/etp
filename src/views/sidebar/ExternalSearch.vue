@@ -17,10 +17,22 @@
           </v-expansion-panel-header>
           <v-expansion-panel-content class="app-sidebar-navigation__sub">
             <v-radio-group v-model="radioGroup">
-              <v-radio label="Не выбрано" :value="null"></v-radio>
-              <v-radio label="Новые позиции" :value="1"></v-radio>
-              <v-radio label="Выгодное предложение от …" :value="2"></v-radio>
-              <v-radio label="Актуальные позиции" :value="3"></v-radio>
+              <v-radio
+                label="Не выбрано"
+                :value="null"
+              />
+              <v-radio
+                label="Новые позиции"
+                :value="1"
+              />
+              <v-radio
+                label="Выгодное предложение от …"
+                :value="2"
+              />
+              <v-radio
+                label="Актуальные позиции"
+                :value="3"
+              />
             </v-radio-group>
             <v-btn
               class="ml-auto"
@@ -37,7 +49,7 @@
           <v-expansion-panel-content>
             <v-text-field
               placeholder="Все"
-            ></v-text-field>
+            />
           </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel>
@@ -47,7 +59,7 @@
           <v-expansion-panel-content>
             <v-text-field
               placeholder="Все"
-            ></v-text-field>
+            />
           </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel>
@@ -57,7 +69,7 @@
           <v-expansion-panel-content>
             <v-text-field
               placeholder="Все"
-            ></v-text-field>
+            />
           </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel>
@@ -67,7 +79,7 @@
           <v-expansion-panel-content>
             <v-text-field
               placeholder="Все"
-            ></v-text-field>
+            />
           </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel>
@@ -79,7 +91,7 @@
               :items="['г. Москва']"
               placeholder="Город"
               value="г. Москва"
-            ></v-select>
+            />
           </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel>
@@ -87,7 +99,47 @@
             Дата создания ЦЗ
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <v-date-picker v-model="filters.createDate" range></v-date-picker>
+            <v-menu
+              ref="menu"
+              v-model="menu"
+              :close-on-content-click="false"
+              :return-value.sync="filters.createDate"
+              offset-y
+              max-width="290px"
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="filters.createDate"
+                  label="Период"
+                  prepend-icon="mdi-calendar"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                />
+              </template>
+              <v-date-picker
+                v-model="filters.createDate"
+                no-title
+                range
+              >
+                <v-spacer />
+                <v-btn
+                  text
+                  color="primary"
+                  @click="filters.createDate = null"
+                >
+                  Отмена
+                </v-btn>
+                <v-btn
+                  text
+                  color="primary"
+                  @click="$refs.menu.save(date)"
+                >
+                  OK
+                </v-btn>
+              </v-date-picker>
+            </v-menu>
           </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel>
@@ -140,5 +192,8 @@ export default {
 
 <style lang="scss">
   .external-search {
+    .v-date-picker-table {
+      height: 200px;
+    }
   }
 </style>
