@@ -47,7 +47,7 @@ export default {
     tabs: [{
       text: 'Черновики',
       value: 'drafts',
-      url: 'quote-requests?status=draft',
+      url: 'quotes?status=draft',
     }, {
       text: 'Исходящие ЦЗ',
       value: 'outbox',

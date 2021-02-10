@@ -4,10 +4,24 @@
       Расширенный поиск
     </div>
     <div>
-      Не выбрано
-      Новые позиции
-      Выгодное предложение от …
-
+      <v-expansion-panels
+        v-model="panelsOpened"
+        class="external-search--panels"
+        accordion
+        multiple
+        flat
+      >
+        <v-expansion-panel>
+          <v-expansion-panel-header class="align-center">
+            Сохранённые поиски
+          </v-expansion-panel-header>
+          <v-expansion-panel-content class="app-sidebar-navigation__sub">
+            Не выбрано
+            Новые позиции
+            Выгодное предложение от …
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>
       Номер ЦЗ
       ФИО создавшего пользователя
       Заказчик
@@ -44,6 +58,9 @@
 <script>
 export default {
   name: 'ExternalSearch',
+  data: () => ({
+    panelsOpened: [0],
+  }),
 };
 </script>
 
