@@ -236,8 +236,9 @@ export default ({
   },
   methods: {
     async getAnalysis() {
-      const { data } = await this.$http.get(`quote-requests/${this.id}/analysis`);
+      let { data } = await this.$http.get(`quote-requests/${this.id}/analysis`);
 
+      data = Array.from(Object.values(data));
       this.suppliers = data;
 
       const supplierHeaders = data.map((it, i) => ({
@@ -302,13 +303,14 @@ export default ({
       return Promise.resolve;
     },
     getLowestPrice(prices, supplierId) {
-      return Array.from(Object.entries(prices))
+      const [lowestPriceSupplier] = Array.from(Object.entries(prices))
         .map(([key, value]) => ({
           supplierId: key,
           price: value,
         }))
         .filter((it) => it.price !== null)
-        .sort((a, b) => a.price - b.price)[0].supplierId === supplierId;
+        .sort((a, b) => a.price - b.price);
+      return lowestPriceSupplier && lowestPriceSupplier.supplierId === supplierId;
     },
     async selectWinner(supplierId, quoteId) {
       await this.$http.patch(`quote-requests/${this.id}/winner`, { quoteId });

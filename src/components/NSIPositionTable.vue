@@ -5,7 +5,10 @@
         cols-lg="6"
         offset-lg="6"
       >
-        <div class="d-flex mt-lg-n15">
+        <v-form
+          class="d-flex mt-lg-n15"
+          @submit.prevent="getPositions"
+        >
           <v-text-field
             v-model="positionName"
             label="Наименование позиции"
@@ -27,7 +30,7 @@
             color="accent"
             depressed
             :disbled="positionName !== '' || positionCode !== ''"
-            @click="getPositions"
+            type="submit"
           >
             Искать
           </v-btn>
@@ -38,7 +41,7 @@
           >
             Очистить поиск
           </v-btn>
-        </div>
+        </v-form>
       </v-col>
     </v-row>
     <v-data-table
@@ -50,6 +53,7 @@
       show-select
       disable-sort
       fixed-header
+      :hide-default-footer="!items.length"
       class="nsi-table elevation-0"
     />
     <div

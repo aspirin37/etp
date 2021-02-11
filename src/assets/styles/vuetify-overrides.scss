@@ -84,4 +84,18 @@
   }
 }
 
+.v-treeview-node__root {
+  align-items: start;
+  min-height: auto;
+  padding: 6px 8px;
+}
+
+.v-treeview-node__label {
+  white-space: normal;
+}
+
+.v-treeview-node__content {
+  align-items: start;
+}
+
 

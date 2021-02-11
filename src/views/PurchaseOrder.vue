@@ -33,27 +33,53 @@
           flat="flat"
         >
           <v-row v-if="order">
-            <v-col>
-              <div
-                v-for="(it, i) in orderInfo"
-                :key="i"
-              >
-                <div class="app-title">
-                  {{ it.name }}
-                </div>
+            <v-col xl="4">
+              <template v-for="(it, i) in orderInfo">
                 <div
-                  v-for="(field, j) in it.fields"
-                  :key="j"
-                  class="d-flex"
+                  v-if="it.position === 'left'"
+                  :key="i"
                 >
-                  <div class="list-label">
-                    {{ field.label }}
+                  <div class="app-title">
+                    {{ it.name }}
                   </div>
-                  <div class="list-value">
-                    {{ field.value }}
+                  <div
+                    v-for="(field, j) in it.fields"
+                    :key="j"
+                    class="d-flex"
+                  >
+                    <div class="list-label">
+                      {{ field.label }}
+                    </div>
+                    <div class="list-value">
+                      {{ field.value }}
+                    </div>
                   </div>
                 </div>
-              </div>
+              </template>
+            </v-col>
+            <v-col xl="4">
+              <template v-for="(it, i) in orderInfo">
+                <div
+                  v-if="it.position === 'right'"
+                  :key="i"
+                >
+                  <div class="app-title">
+                    {{ it.name }}
+                  </div>
+                  <div
+                    v-for="(field, j) in it.fields"
+                    :key="j"
+                    class="d-flex"
+                  >
+                    <div class="list-label">
+                      {{ field.label }}
+                    </div>
+                    <div class="list-value">
+                      {{ field.value }}
+                    </div>
+                  </div>
+                </div>
+              </template>
             </v-col>
           </v-row>
         </v-card>
@@ -94,6 +120,7 @@ export default {
     orderInfo() {
       return [{
         name: 'Ценовой запрос',
+        position: 'left',
         fields: [{
           label: 'Наименование',
           value: this.order.quoteRequest.name,
@@ -103,18 +130,21 @@ export default {
         }],
       }, {
         name: 'Заказчик',
+        position: 'left',
         fields: [{
           label: 'Наименование',
           value: this.order.customer.name,
         }],
       }, {
         name: 'Поставщик',
+        position: 'left',
         fields: [{
           label: 'Наименование',
           value: this.order.supplier.name,
         }],
       }, {
         name: 'Стоимость',
+        position: 'left',
         fields: [{
           label: 'Сумма заказа без НДС',
           value: this.toCurrency(this.order.total.sum),
@@ -130,6 +160,7 @@ export default {
         }],
       }, {
         name: 'Дополнительная информация',
+        position: 'right',
         fields: [{
           label: 'Дата доставки',
           value: this.$moment(this.order.delivery.date).format('DD.MM.YYYY'),
@@ -162,7 +193,7 @@ export default {
         return value;
       }
 
-      return value.toLocaleString('ru-RU', { minimumFractionDigits: 2 });
+      return `${value.toLocaleString('ru-RU', { minimumFractionDigits: 2 })} ₽`;
     },
     // f2e5de40-1cab-43c9-af8e-c24814a99439
   },

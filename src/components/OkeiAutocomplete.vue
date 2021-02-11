@@ -6,6 +6,10 @@
     :class="{'required': required}"
     item-text="name"
     item-value="code"
+    :menu-props="{
+      maxWidth: '550px',
+      contentClass: 'okei-menu'
+    }"
     :error-messages="errorMessages"
     :hide-details="hideDetails"
     :outlined="outlined"
@@ -47,6 +51,12 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+  .okei-menu .v-list-item__title{
+    white-space: normal !important;
+  }
 
+  .okei-menu .v-list-item {
+    min-height: auto;
+  }
 </style>

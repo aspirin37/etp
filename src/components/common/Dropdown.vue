@@ -1,17 +1,23 @@
 <template>
-  <div class="dropdown">
+  <div
+    class="dropdown"
+    :class="{ 'dropdown-whole': whole }"
+  >
     <v-btn
-      color="accent"
+      :class="buttonClass"
+      :color="buttonColor"
       depressed
-      v-bind="{ ...$attrs, ...$props }"
+      v-bind="{ ...$attrs }"
       v-on="$listeners"
+      @click.prevent="whole && open()"
     >
       <slot />
     </v-btn>
     <div
+      v-if="!whole"
       class="dropdown__pointer"
       :class="classList"
-      @click.prevent="showContent = !showContent"
+      @click.prevent="open"
     >
       <svg-icon
         class="dropdown__pointerIcon"
@@ -21,6 +27,7 @@
     <div
       class="dropdown__content"
       :class="{ 'dropdown__content--show': showContent }"
+      :style="{ minWidth: `${minWidth}px` }"
       @click="onDropdownSelect"
     >
       <slot name="dropdown-content" />
@@ -40,6 +47,12 @@ export default ({
     SvgIcon,
   },
   props: {
+    buttonClass: String,
+    buttonColor: {
+      type: String,
+      default: 'accent',
+    },
+    minWidth: String,
     split: {
       type: Boolean,
       default: false,
@@ -48,6 +61,7 @@ export default ({
       type: String,
       default: '',
     },
+    whole: Boolean,
   },
   data() {
     return {
@@ -69,6 +83,9 @@ export default ({
     document.removeEventListener('click', this.onDocumentClick);
   },
   methods: {
+    open() {
+      this.showContent = true;
+    },
     onDocumentClick(e) {
       const { target } = e;
       if (target && !target.closest('.dropdown')) {
@@ -93,7 +110,7 @@ export { DropdownItem };
   display: flex;
   position: relative;
 
-  .v-btn {
+  &:not(.dropdown-whole) .v-btn {
     border-radius: 4px 0 0 4px;
   }
 
