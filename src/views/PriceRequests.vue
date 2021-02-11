@@ -104,7 +104,6 @@ export default {
         }
         return acc + filter;
       }, '');
-      console.warn(restFilters);
       return `${apiUrl}?${restFilters}`;
     },
   },
