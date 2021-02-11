@@ -23,6 +23,7 @@
       height="100%"
     >
       <price-request-list-table
+        ref="PriceRequestListTable"
         :type="tabs[tab].value"
         :url="url"
       />
@@ -75,9 +76,43 @@ export default {
       },
     },
     url() {
+      const s = this.extraSearch;
       const apiUrl = 'quotes';
-      console.warn(this.extraSearch);
-      return `${apiUrl}`;
+      const notNullFilters = Object.keys(s)
+        .filter((k) => s[k] !== null && s[k] !== false && k !== 'savedSearch')
+        .reduce((acc, cur) => Object.assign(acc, { [cur]: s[cur] }), {});
+      if (!Object.keys(notNullFilters).length) {
+        return apiUrl;
+      }
+
+      const restFiltersObj = Object.keys(notNullFilters)
+        .reduce((acc, cur) => acc.concat({
+          field: cur,
+          op: 'eq',
+          value: notNullFilters[cur],
+        }), []);
+      const restFilters = restFiltersObj.reduce((acc, cur, key) => {
+        let filter = '';
+        Object.keys(cur).forEach((v) => {
+          if (filter) {
+            filter += '&';
+          }
+          filter += `filter[${key}][${v}]=${cur[v]}`;
+        });
+        if (acc) {
+          filter = `&${filter}`;
+        }
+        return acc + filter;
+      }, '');
+      console.warn(restFilters);
+      return `${apiUrl}?${restFilters}`;
+    },
+  },
+  watch: {
+    url() {
+      this.$nextTick(() => {
+        this.$refs.PriceRequestListTable.getItems();
+      });
     },
   },
 };

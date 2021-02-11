@@ -185,6 +185,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import { getExtraSearchDefault } from '@/store';
 import datePicker from '@/components/common/DatePicker.vue';
+import clone from '@/utilities/clone';
 
 export default {
   name: 'ExternalSearch',
@@ -201,12 +202,12 @@ export default {
     ...mapGetters(['extraSearch']),
   },
   mounted() {
-    this.filters = this.extraSearch;
+    this.filters = clone(this.extraSearch);
   },
   methods: {
     ...mapActions(['setExtraSearch']),
     apply() {
-      this.setExtraSearch(this.filters);
+      this.setExtraSearch(clone(this.filters));
     },
     reset() {
       this.filters = getExtraSearchDefault();
