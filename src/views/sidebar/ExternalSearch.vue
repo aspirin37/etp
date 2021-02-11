@@ -16,7 +16,7 @@
             Сохранённые поиски
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <v-radio-group v-model="savedSearch">
+            <v-radio-group v-model="filters.savedSearch">
               <v-radio
                 v-for="(v,k) in savedSearches"
                 :key="k"
@@ -38,6 +38,7 @@
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             <v-text-field
+              v-model="filters.number"
               placeholder="Все"
             />
           </v-expansion-panel-content>
@@ -48,6 +49,7 @@
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             <v-text-field
+              v-model="filters.fio"
               placeholder="Все"
             />
           </v-expansion-panel-content>
@@ -58,6 +60,7 @@
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             <v-text-field
+              v-model="filters.customer"
               placeholder="Все"
             />
           </v-expansion-panel-content>
@@ -68,6 +71,7 @@
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             <v-text-field
+              v-model="filters.type"
               placeholder="Все"
             />
           </v-expansion-panel-content>
@@ -78,6 +82,7 @@
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             <v-select
+              v-model="filters.region"
               :items="['г. Москва']"
               placeholder="Город"
               value="г. Москва"
@@ -124,11 +129,13 @@
       <v-btn
         depressed
         color="primary"
+        @click="apply"
       >
         Применить
       </v-btn>
       <v-btn
         depressed
+        @click="reset"
       >
         Сбросить
       </v-btn>
@@ -137,24 +144,32 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+import { getExtraSearchDefault } from '@/store';
 import datePicker from '@/components/common/DatePicker.vue';
-
-const defaultFilters = () => ({
-  createDate: null,
-});
 
 export default {
   name: 'ExternalSearch',
   components: { datePicker },
   data: () => ({
-    filters: defaultFilters(),
+    filters: getExtraSearchDefault(),
     panelsOpened: [0, 1, 2, 3, 4, 5],
-    savedSearch: 0,
     savedSearches: ['Не выбрано', 'Новые позиции', 'Выгодное предложение от …', 'Актуальные позиции'],
   }),
+  computed: {
+    ...mapGetters(['extraSearch']),
+  },
+  mounted() {
+    this.filters = this.extraSearch;
+  },
   methods: {
+    ...mapActions(['setExtraSearch']),
+    apply() {
+      this.setExtraSearch(this.filters);
+    },
     reset() {
-      this.filters = this.defaultFilters();
+      this.filters = getExtraSearchDefault();
+      this.apply();
     },
   },
 };

@@ -23,13 +23,14 @@
     >
       <price-request-list-table
         :type="tabs[tab].value"
-        :url="tabs[tab].url"
+        :url="url"
       />
     </v-card>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import PriceRequestListTable from '@/components/PriceRequestListTable.vue';
 
 export default {
@@ -47,22 +48,23 @@ export default {
     tabs: [{
       text: 'Черновики',
       value: 'drafts',
-      url: 'quotes?status=draft',
+      // url: 'quotes?status=draft',
     }, {
       text: 'Исходящие ЦЗ',
       value: 'outbox',
-      url: 'quote-requests?status=!draft',
+      // url: 'quotes?status=!draft',
     }, {
       text: 'Входящие ЦЗ',
       value: 'inbox',
-      url: 'quotes',
+      // url: 'quotes',
     }, {
       text: 'Актуальные ЦЗ',
       value: 'actual',
-      url: 'quote-requests/actual',
+      // url: 'quote-requests/actual',
     }],
   }),
   computed: {
+    ...mapGetters(['extraSearch']),
     tab: {
       get() {
         return this.tabs.findIndex((it) => it.value === this.type);
@@ -70,6 +72,10 @@ export default {
       set(index) {
         this.$router.replace({ name: 'PriceRequests', params: { type: this.tabs[index].value } });
       },
+    },
+    url() {
+      // return this.extraSearch;
+      return 'quotes';
     },
   },
 };
