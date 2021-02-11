@@ -75,8 +75,9 @@ export default {
       },
     },
     url() {
-      // return this.extraSearch;
-      return 'quotes';
+      const apiUrl = 'quotes';
+      console.warn(this.extraSearch);
+      return `${apiUrl}`;
     },
   },
 };

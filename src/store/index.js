@@ -7,13 +7,17 @@ Vue.use(Vuex);
 export const getExtraSearchDefault = () => ({
   savedSearch: 0,
   number: null,
+  orderNumber: null,
+  status: null,
   fio: null,
   customer: null,
   type: null,
   region: null,
   createDate: null,
+  responseDate: null,
   reportDate: null,
   deliveryDate: null,
+  showHidden: false,
 });
 
 export default new Vuex.Store({

@@ -43,7 +43,29 @@
             />
           </v-expansion-panel-content>
         </v-expansion-panel>
+        <v-expansion-panel v-if="type !== 'drafts'">
+          <v-expansion-panel-header>
+            Номер Заказа
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <v-text-field
+              v-model="filters.orderNumber"
+              placeholder="Все"
+            />
+          </v-expansion-panel-content>
+        </v-expansion-panel>
         <v-expansion-panel>
+          <v-expansion-panel-header>
+            Статус
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <v-text-field
+              v-model="filters.status"
+              placeholder="Все"
+            />
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+        <v-expansion-panel v-if="type === 'drafts' || type === 'outbox'">
           <v-expansion-panel-header>
             ФИО создавшего пользователя
           </v-expansion-panel-header>
@@ -89,13 +111,24 @@
             />
           </v-expansion-panel-content>
         </v-expansion-panel>
-        <v-expansion-panel>
+        <v-expansion-panel v-if="type === 'drafts' || type === 'outbox'">
           <v-expansion-panel-header>
             Дата создания ЦЗ
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             <date-picker
               v-model="filters.createDate"
+              label="Период"
+            />
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+        <v-expansion-panel v-if="type === 'outbox'">
+          <v-expansion-panel-header>
+            Дата отправки ЦЗ
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <date-picker
+              v-model="filters.responseDate"
               label="Период"
             />
           </v-expansion-panel-content>
@@ -124,6 +157,11 @@
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
+      <v-checkbox
+        v-model="filters.showHidden"
+        class="mx-5"
+        label="Показать скрытые ЦЗ">
+      </v-checkbox>
     </div>
     <div class="wizard__actions external-search--actions justify-md-space-around">
       <v-btn
@@ -156,6 +194,9 @@ export default {
     panelsOpened: [0, 1, 2, 3, 4, 5],
     savedSearches: ['Не выбрано', 'Новые позиции', 'Выгодное предложение от …', 'Актуальные позиции'],
   }),
+  props: {
+    type: String,
+  },
   computed: {
     ...mapGetters(['extraSearch']),
   },
