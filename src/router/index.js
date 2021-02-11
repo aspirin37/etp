@@ -32,7 +32,10 @@ const routes = [
       default: () => import('@/views/PriceRequests.vue'),
       ExternalSearch: () => import('@/views/sidebar/ExternalSearch.vue'),
     },
-    props: true,
+    props: {
+      default: true,
+      ExternalSearch: true,
+    },
   },
   {
     path: '/price-request/:id?',
