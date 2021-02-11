@@ -91,6 +91,7 @@ export default ({
       items: [],
       total: 0,
       options: {
+        _firstInit: true,
         page: 1,
         itemsPerPage: 20,
       },
@@ -146,7 +147,11 @@ export default ({
   },
   watch: {
     options: {
-      handler() {
+      handler(v, _v) {
+        if (_v._firstInit) {
+          delete this.options._firstInit;
+          return;
+        }
         this.getItems();
       },
       deep: true,
