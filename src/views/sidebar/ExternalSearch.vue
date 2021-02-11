@@ -15,27 +15,17 @@
           <v-expansion-panel-header>
             Сохранённые поиски
           </v-expansion-panel-header>
-          <v-expansion-panel-content class="app-sidebar-navigation__sub">
-            <v-radio-group v-model="radioGroup">
+          <v-expansion-panel-content>
+            <v-radio-group v-model="savedSearch">
               <v-radio
-                label="Не выбрано"
-                :value="null"
-              />
-              <v-radio
-                label="Новые позиции"
-                :value="1"
-              />
-              <v-radio
-                label="Выгодное предложение от …"
-                :value="2"
-              />
-              <v-radio
-                label="Актуальные позиции"
-                :value="3"
+                v-for="(v,k) in savedSearches"
+                :key="k"
+                :label="v"
+                :value="k"
               />
             </v-radio-group>
             <v-btn
-              class="ml-auto"
+              class="ml-auto mb-3"
               depressed
             >
               Сохранить активный поиск
@@ -99,47 +89,10 @@
             Дата создания ЦЗ
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <v-menu
-              ref="menu"
-              v-model="menu"
-              :close-on-content-click="false"
-              :return-value.sync="filters.createDate"
-              offset-y
-              max-width="290px"
-              min-width="auto"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="filters.createDate"
-                  label="Период"
-                  prepend-icon="mdi-calendar"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                />
-              </template>
-              <v-date-picker
-                v-model="filters.createDate"
-                no-title
-                range
-              >
-                <v-spacer />
-                <v-btn
-                  text
-                  color="primary"
-                  @click="filters.createDate = null"
-                >
-                  Отмена
-                </v-btn>
-                <v-btn
-                  text
-                  color="primary"
-                  @click="$refs.menu.save(date)"
-                >
-                  OK
-                </v-btn>
-              </v-date-picker>
-            </v-menu>
+            <date-picker
+              v-model="filters.createDate"
+              label="Период"
+            />
           </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel>
@@ -147,7 +100,10 @@
             Дата предоставления ответа
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            15.08.2020 – 15.09.2020
+            <date-picker
+              v-model="filters.reportDate"
+              label="Период"
+            />
           </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel>
@@ -155,21 +111,23 @@
             Предполагаемая дата поставки
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            15.08.2020 – 15.09.2020
+            <date-picker
+              v-model="filters.deliveryDate"
+              label="Период"
+            />
+            <!-- 15.08.2020 – 15.09.2020 -->
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
     </div>
-    <div class="wizard__actions">
+    <div class="wizard__actions external-search--actions justify-md-space-around">
       <v-btn
-        class="ml-auto"
         depressed
         color="primary"
       >
         Применить
       </v-btn>
       <v-btn
-        class="ml-auto"
         depressed
       >
         Сбросить
@@ -179,21 +137,49 @@
 </template>
 
 <script>
+import datePicker from '@/components/common/DatePicker.vue';
+
+const defaultFilters = () => ({
+  createDate: null,
+});
+
 export default {
   name: 'ExternalSearch',
+  components: { datePicker },
   data: () => ({
-    filters: {
-      createDate: null,
-    },
-    panelsOpened: [0],
+    filters: defaultFilters(),
+    panelsOpened: [0, 1, 2, 3, 4, 5],
+    savedSearch: 0,
+    savedSearches: ['Не выбрано', 'Новые позиции', 'Выгодное предложение от …', 'Актуальные позиции'],
   }),
+  methods: {
+    reset() {
+      this.filters = this.defaultFilters();
+    },
+  },
 };
 </script>
 
 <style lang="scss">
   .external-search {
+    .title {
+      padding: 16px 24px;
+    }
     .v-date-picker-table {
       height: 200px;
+    }
+    .v-expansion-panel {
+      .v-expansion-panel-header {
+        min-height: 36px;
+        padding-bottom: 8px;
+        padding-top: 8px;
+      }
+      .v-expansion-panel-content__wrap {
+        padding-bottom: 0;
+      }
+    }
+    .external-search--actions {
+      padding: 16px 24px;
     }
   }
 </style>
