@@ -107,6 +107,7 @@ export default {
   },
   props: {
     id: String,
+    type: String,
   },
   data() {
     return {
@@ -185,7 +186,11 @@ export default {
   },
   methods: {
     async getOrder() {
-      const { data } = await this.$http.get(`purchase-orders/${this.id}`);
+      let url = `purchase-orders/${this.id}`;
+      if (this.type) {
+        url = `purchase-orders/${this.type}/${this.id}`;
+      }
+      const { data } = await this.$http.get(url);
       this.order = data;
     },
     toCurrency(value) {
