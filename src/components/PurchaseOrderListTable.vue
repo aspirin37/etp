@@ -15,7 +15,7 @@
       class="elevation-0"
     >
       <template v-slot:[`item.quoteRequest.name`]="{ item }">
-        <router-link :to="`/purchase-order/${item.id}`">
+        <router-link :to="`/purchase-order/${item.id}${inbox}`">
           {{ item.quoteRequest.name }}
         </router-link>
       </template>
@@ -88,6 +88,9 @@ export default ({
   },
   computed: {
     ...mapState(['user']),
+    inbox() {
+      return this.url.includes('inbox') ? '/inbox' : '';
+    },
   },
   watch: {
     options: {
