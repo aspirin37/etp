@@ -22,6 +22,26 @@
       flat="flat"
       height="100%"
     >
+      <v-row class="extra-search-bar">
+        <v-col class="extra-search-input">
+          <v-text-field
+            :value="searchNameValue"
+            label="Поиск по наименованию номеру, наименованию ЦЗ"
+            disabled
+            outlined="outlined"
+          >
+          </v-text-field>
+        </v-col>
+        <v-col class="extra-search-button">
+          <v-btn
+            color="primary"
+            depressed
+            @click="openExtraSearch"
+          >
+            Расширенный поиск
+          </v-btn>
+        </v-col>
+      </v-row>
       <price-request-list-table
         ref="PriceRequestListTable"
         :type="tabs[tab].value"
@@ -32,7 +52,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import PriceRequestListTable from '@/components/PriceRequestListTable.vue';
 
 export default {
@@ -47,6 +67,7 @@ export default {
     },
   },
   data: () => ({
+    searchNameValue: '',
     tabs: [{
       text: 'Черновики',
       value: 'drafts',
@@ -107,6 +128,9 @@ export default {
       return `${apiUrl}?${restFilters}`;
     },
   },
+  methods: {
+    ...mapActions(['openExtraSearch']),
+  },
   watch: {
     url() {
       this.$nextTick(() => {
@@ -116,3 +140,24 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+  .row.extra-search-bar {
+    margin-top: 30px;
+    margin-left: 30px;
+    margin-right: 30px;
+    .extra-search-input {
+      min-width: calc(100% - 195px);
+      max-width: 785px;
+      fieldset {
+        height: 56px;
+      }
+    }
+    .extra-search-button {
+      width: 195px;
+      button {
+        height: 50px;
+      }
+    }
+  }
+</style>
