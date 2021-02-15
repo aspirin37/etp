@@ -1,5 +1,8 @@
 <template>
-  <div class="page wizard with_sidebar">
+  <div
+    class="page wizard"
+    :class="{ 'with_sidebar': showExtraSearchSidebar }"
+  >
     <div class="page__header">
       <h1 class="page__title">
         Реестры ЦЗ
@@ -36,9 +39,9 @@
           <v-btn
             color="primary"
             depressed
-            @click="openExtraSearch"
+            @click="toggleExtraSearchSidebar"
           >
-            Расширенный поиск
+            {{ showExtraSearchSidebar ? 'Скрыть поиск' : 'Расширенный поиск' }}
           </v-btn>
         </v-col>
       </v-row>
@@ -52,7 +55,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 import PriceRequestListTable from '@/components/PriceRequestListTable.vue';
 
 export default {
@@ -87,6 +90,7 @@ export default {
     }],
   }),
   computed: {
+    ...mapState(['showExtraSearchSidebar']),
     ...mapGetters(['extraSearch']),
     tab: {
       get() {
@@ -129,7 +133,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['openExtraSearch']),
+    ...mapActions(['toggleExtraSearchSidebar']),
   },
   watch: {
     url() {

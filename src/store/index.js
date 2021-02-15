@@ -26,6 +26,7 @@ export default new Vuex.Store({
     extraSearch: JSON.parse(localStorage.getItem('extraSearch')) || getExtraSearchDefault(),
     navigatorLock: JSON.parse(localStorage.getItem('navigatorLock')) || null,
     user: JSON.parse(localStorage.getItem('user')),
+    showExtraSearchSidebar: false,
   },
   mutations: {
     setExtraSearch: (state, payload) => {
@@ -56,6 +57,9 @@ export default new Vuex.Store({
       delete API.defaults.headers.jwtacc;
       return Promise.resolve();
     },
+    toggleExtraSearchSidebar: (state) => {
+      state.showExtraSearchSidebar = !state.showExtraSearchSidebar;
+    },
   },
   actions: {
     setDataView: ({ commit }, payload) => {
@@ -66,6 +70,9 @@ export default new Vuex.Store({
     },
     setNavigatorLock: ({ commit }, payload) => {
       commit('setNavigatorLock', payload);
+    },
+    toggleExtraSearchSidebar: ({ commit }) => {
+      commit('toggleExtraSearchSidebar');
     },
   },
   getters: {

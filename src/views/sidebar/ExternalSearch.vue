@@ -1,5 +1,12 @@
 <template>
   <div class="external-search">
+    <v-btn
+      class="external-search__closer"
+      icon
+      @click="close"
+    >
+      <v-icon>mdi-close</v-icon>
+    </v-btn>
     <div class="title">
       Расширенный поиск
     </div>
@@ -161,8 +168,8 @@
         v-if="type !== 'drafts'"
         v-model="filters.showHidden"
         class="mx-5"
-        label="Показать скрытые ЦЗ">
-      </v-checkbox>
+        label="Показать скрытые ЦЗ"
+      />
     </div>
     <div class="wizard__actions external-search--actions justify-md-space-around">
       <v-btn
@@ -191,14 +198,14 @@ import clone from '@/utilities/clone';
 export default {
   name: 'ExternalSearch',
   components: { datePicker },
+  props: {
+    type: String,
+  },
   data: () => ({
     filters: getExtraSearchDefault(),
     panelsOpened: [0, 1, 2, 3, 4, 5],
     savedSearches: ['Не выбрано', 'Новые позиции', 'Выгодное предложение от …', 'Актуальные позиции'],
   }),
-  props: {
-    type: String,
-  },
   computed: {
     ...mapGetters(['extraSearch']),
   },
@@ -206,9 +213,12 @@ export default {
     this.filters = clone(this.extraSearch);
   },
   methods: {
-    ...mapActions(['setExtraSearch']),
+    ...mapActions(['setExtraSearch', 'toggleExtraSearchSidebar']),
     apply() {
       this.setExtraSearch(clone(this.filters));
+    },
+    close() {
+      this.toggleExtraSearchSidebar();
     },
     reset() {
       this.filters = getExtraSearchDefault();
@@ -220,6 +230,11 @@ export default {
 
 <style lang="scss">
   .external-search {
+    .external-search__closer {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+    }
     .title {
       padding: 16px 24px;
     }

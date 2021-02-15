@@ -5,6 +5,7 @@
     <v-main>
       <router-view />
       <router-view
+        v-if="showExtraSearchSidebar"
         class="right-sidebar"
         name="ExternalSearch"
       />
@@ -24,7 +25,7 @@ export default {
     AppSidebar,
   },
   computed: {
-    ...mapState(['user']),
+    ...mapState(['showExtraSearchSidebar', 'user']),
   },
 };
 </script>
