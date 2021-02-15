@@ -158,6 +158,7 @@
         </v-expansion-panel>
       </v-expansion-panels>
       <v-checkbox
+        v-if="type !== 'drafts'"
         v-model="filters.showHidden"
         class="mx-5"
         label="Показать скрытые ЦЗ">
