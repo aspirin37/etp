@@ -32,8 +32,7 @@
             label="Поиск по наименованию номеру, наименованию ЦЗ"
             disabled
             outlined="outlined"
-          >
-          </v-text-field>
+          />
         </v-col>
         <v-col class="extra-search-button">
           <v-btn
@@ -57,6 +56,7 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex';
 import PriceRequestListTable from '@/components/PriceRequestListTable.vue';
+import clone from '@/utilities/clone';
 
 export default {
   name: 'PriceRequests',
@@ -101,8 +101,38 @@ export default {
       },
     },
     url() {
-      const s = this.extraSearch;
-      const apiUrl = 'quotes';
+      const s = clone(this.extraSearch);
+      const opData = {};
+      let apiUrl = 'quotes';
+      function getOp(fieldName) {
+        if (opData[fieldName]) {
+          return opData[fieldName];
+        }
+        if (fieldName === 'name') {
+          return 'contains';
+        }
+        return 'eq';
+      }
+
+      // eslint-disable-next-line default-case
+      switch (this.type) {
+        case 'drafts':
+          apiUrl = 'quote-requests';
+          s.status = 'draft';
+          break;
+        case 'outbox':
+          apiUrl = 'quote-requests';
+          s.status = 'draft';
+          opData.status = 'neq';
+          break;
+        case 'inbox':
+          apiUrl = 'quotes';
+          break;
+        case 'actual':
+          apiUrl = 'quote-requests/actual';
+          break;
+      }
+      console.log(s);
       const notNullFilters = Object.keys(s)
         .filter((k) => s[k] !== null && s[k] !== false && k !== 'savedSearch')
         .reduce((acc, cur) => Object.assign(acc, { [cur]: s[cur] }), {});
@@ -110,12 +140,17 @@ export default {
         return apiUrl;
       }
 
+      console.log(notNullFilters);
       const restFiltersObj = Object.keys(notNullFilters)
-        .reduce((acc, cur) => acc.concat({
-          field: cur,
-          op: 'eq',
-          value: notNullFilters[cur],
-        }), []);
+        .reduce((acc, cur) => {
+          const value = notNullFilters[cur];
+          return acc.concat({
+            field: cur,
+            op: getOp(cur, value),
+            value,
+          });
+        }, []);
+      console.log(restFiltersObj);
       const restFilters = restFiltersObj.reduce((acc, cur, key) => {
         let filter = '';
         Object.keys(cur).forEach((v) => {
@@ -130,10 +165,8 @@ export default {
         return acc + filter;
       }, '');
       return `${apiUrl}?${restFilters}`;
+      // return `${apiUrl}?status=draft`; // not works, why?!
     },
-  },
-  methods: {
-    ...mapActions(['toggleExtraSearchSidebar']),
   },
   watch: {
     url() {
@@ -141,6 +174,9 @@ export default {
         this.$refs.PriceRequestListTable.getItems();
       });
     },
+  },
+  methods: {
+    ...mapActions(['toggleExtraSearchSidebar']),
   },
 };
 </script>
