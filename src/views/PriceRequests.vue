@@ -102,15 +102,20 @@ export default {
     },
     url() {
       const s = clone(this.extraSearch);
+      const StringFields = ['name', 'customer', 'fio'];
+      const DateFields = ['createDate', 'responseDate', 'reportDate', 'deliveryDate'];
       const opData = {};
       let apiUrl = 'quotes';
       function getOp(fieldName) {
         if (opData[fieldName]) {
           return opData[fieldName];
         }
-        if (fieldName === 'name') {
+        if (StringFields.includes(fieldName)) {
           return 'contains';
+        // } else if (DateFields.includes(fieldName)) {
+        //   return 'eq' // ?
         }
+
         return 'eq';
       }
 
@@ -132,7 +137,7 @@ export default {
           apiUrl = 'quote-requests/actual';
           break;
       }
-      console.log(s);
+      // console.log(s);
       const notNullFilters = Object.keys(s)
         .filter((k) => s[k] !== null && s[k] !== false && k !== 'savedSearch')
         .reduce((acc, cur) => Object.assign(acc, { [cur]: s[cur] }), {});
@@ -140,17 +145,21 @@ export default {
         return apiUrl;
       }
 
-      console.log(notNullFilters);
+      // console.log(notNullFilters);
       const restFiltersObj = Object.keys(notNullFilters)
         .reduce((acc, cur) => {
-          const value = notNullFilters[cur];
+          let value = notNullFilters[cur];
+          if (DateFields.includes(cur) && value) {
+            value = `${value}T00:00:00%2B00:00`;
+          }
+
           return acc.concat({
             field: cur,
             op: getOp(cur, value),
             value,
           });
         }, []);
-      console.log(restFiltersObj);
+      // console.log(restFiltersObj);
       const restFilters = restFiltersObj.reduce((acc, cur, key) => {
         let filter = '';
         Object.keys(cur).forEach((v) => {

@@ -46,6 +46,7 @@
           <v-expansion-panel-content>
             <v-text-field
               v-model="filters.number"
+              clearable
               placeholder="Все"
             />
           </v-expansion-panel-content>
@@ -57,6 +58,7 @@
           <v-expansion-panel-content>
             <v-text-field
               v-model="filters.orderNumber"
+              clearable
               placeholder="Все"
             />
           </v-expansion-panel-content>
@@ -66,8 +68,13 @@
             Статус
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <v-text-field
+            <v-select
               v-model="filters.status"
+              class="mb-4"
+              clearable
+              dense
+              :items="priceRequestStatuses"
+              hide-details
               placeholder="Все"
             />
           </v-expansion-panel-content>
@@ -99,8 +106,13 @@
             Тип ЦЗ
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <v-text-field
+            <v-select
               v-model="filters.type"
+              class="mb-4"
+              clearable
+              dense
+              :items="priceRequestTypes"
+              hide-details
               placeholder="Все"
             />
           </v-expansion-panel-content>
@@ -194,6 +206,7 @@ import { mapActions, mapGetters } from 'vuex';
 import { getExtraSearchDefault } from '@/store';
 import datePicker from '@/components/common/DatePicker.vue';
 import clone from '@/utilities/clone';
+import { priceRequestTypes, priceRequestStatuses } from '@/utilities/enums';
 
 export default {
   name: 'ExternalSearch',
@@ -204,6 +217,8 @@ export default {
   data: () => ({
     filters: getExtraSearchDefault(),
     panelsOpened: [0, 1, 2, 3, 4, 5],
+    priceRequestTypes: Object.keys(priceRequestTypes).map((status) => ({ text: priceRequestTypes[status], value: status })),
+    priceRequestStatuses: Object.keys(priceRequestStatuses).map((status) => ({ text: priceRequestStatuses[status], value: status })),
     savedSearches: ['Не выбрано', 'Новые позиции', 'Выгодное предложение от …', 'Актуальные позиции'],
   }),
   computed: {
