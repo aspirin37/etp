@@ -15,6 +15,15 @@ const routes = [
     component: () => import('@/views/Registration.vue'),
   },
   {
+    path: '/organization',
+    name: 'Organization',
+    component: () => import('@/views/Organization.vue'),
+    children: [{
+      path: '/organization/edit',
+      name: 'Organization-edit',
+    }],
+  },
+  {
     path: '/create-price-request/:id?',
     name: 'CreatePriceRequest',
     component: () => import('@/views/CreatePriceRequest.vue'),
@@ -50,7 +59,7 @@ const routes = [
     props: true,
   },
   {
-    path: '/purchase-order/:id',
+    path: '/purchase-order/:id/:type?',
     name: 'PurchaseOrder',
     component: () => import('@/views/PurchaseOrder.vue'),
     props: true,

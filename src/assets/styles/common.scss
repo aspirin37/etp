@@ -4,6 +4,13 @@
   min-height: 100vh;
 }
 
+a[href] {
+  text-decoration: none;
+  &:not(.no-underline):not(.app-sidebar__link):hover {
+    text-decoration: underline;
+  }
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
