@@ -73,7 +73,7 @@
               class="mb-4"
               clearable
               dense
-              :items="priceRequestStatuses"
+              :items="type === 'actual' ? priceRequestStatusesActual : priceRequestStatusesInOut"
               hide-details
               placeholder="Все"
             />
@@ -208,6 +208,10 @@ import datePicker from '@/components/common/DatePicker.vue';
 import clone from '@/utilities/clone';
 import { priceRequestTypes, priceRequestStatuses } from '@/utilities/enums';
 
+const priceRequestStatusesInOut = Object.keys(priceRequestStatuses).map((status) => ({ text: priceRequestStatuses[status], value: status }));
+priceRequestStatusesInOut.splice(priceRequestStatusesInOut.findIndex((s) => s.value === 'draft'), 1);
+const priceRequestStatusesActual = [priceRequestStatusesInOut.find((s) => s.value === 'pending')];
+
 export default {
   name: 'ExternalSearch',
   components: { datePicker },
@@ -218,7 +222,8 @@ export default {
     filters: getExtraSearchDefault(),
     panelsOpened: [0, 1, 2, 3, 4, 5],
     priceRequestTypes: Object.keys(priceRequestTypes).map((status) => ({ text: priceRequestTypes[status], value: status })),
-    priceRequestStatuses: Object.keys(priceRequestStatuses).map((status) => ({ text: priceRequestStatuses[status], value: status })),
+    priceRequestStatusesInOut,
+    priceRequestStatusesActual,
     savedSearches: ['Не выбрано', 'Новые позиции', 'Выгодное предложение от …', 'Актуальные позиции'],
   }),
   computed: {
