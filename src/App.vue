@@ -2,9 +2,13 @@
   <v-app id="app">
     <!-- <auth-panel /> -->
     <app-sidebar v-if="$route.name !== 'Auth' && user" />
-
     <v-main>
       <router-view />
+      <router-view
+        v-if="showExtraSearchSidebar"
+        class="right-sidebar"
+        name="ExternalSearch"
+      />
     </v-main>
   </v-app>
 </template>
@@ -21,7 +25,7 @@ export default {
     AppSidebar,
   },
   computed: {
-    ...mapState(['user']),
+    ...mapState(['showExtraSearchSidebar', 'user']),
   },
 };
 </script>
