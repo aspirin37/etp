@@ -181,10 +181,13 @@ export default {
     },
   },
   watch: {
-    url() {
-      this.$nextTick(() => {
-        this.$refs.PriceRequestListTable.getItems();
-      });
+    extraSearch: {
+      deep: true,
+      handler() {
+        this.$nextTick(() => {
+          this.$refs.PriceRequestListTable.getItems();
+        });
+      },
     },
   },
   created() {

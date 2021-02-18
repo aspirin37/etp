@@ -26,8 +26,8 @@
             <v-radio-group v-model="filters.savedSearch">
               <v-radio
                 v-for="(v,k) in savedSearches"
-                disabled
                 :key="k"
+                disabled
                 :label="v"
                 :value="k"
               />

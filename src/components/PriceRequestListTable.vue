@@ -172,27 +172,32 @@ export default ({
   methods: {
     async getItems() {
       this.loading = true;
-      // eslint-disable-next-line
-      let { data, headers } = await this.$http.get(this.url, {
-        params: { page: this.options.page },
-      });
+      try {
+        // eslint-disable-next-line
+        let { data, headers } = await this.$http.get(this.url, {
+          params: { page: this.options.page },
+        });
 
-      if (this.type === 'inbox') {
-        data = data.map((it) => ({ ...it.quoteRequest, id: it.id }));
+        if (this.type === 'inbox') {
+          data = data.map((it) => ({ ...it.quoteRequest, id: it.id }));
+        }
+
+        this.items = data.map((it) => ({
+          ...it,
+          created: it.created ? this.$moment(it.created).format('DD.MM.YYYY, hh:mm') : '',
+          responseDate: it.responseDate ? this.$moment(it.responseDate).format('DD.MM.YYYY, hh:mm') : '',
+          delivery: {
+            ...it.delivery,
+            date: it.delivery.date ? this.$moment(it.delivery.date).format('DD.MM.YYYY, hh:mm') : '',
+          },
+        }));
+
+        this.total = +headers['x-pagination-total-count'];
+      } catch (e) {
+        this.$toast.danger(e.response.data.message);
+      } finally {
+        this.loading = false;
       }
-
-      this.items = data.map((it) => ({
-        ...it,
-        created: it.created ? this.$moment(it.created).format('DD.MM.YYYY, hh:mm') : '',
-        responseDate: it.responseDate ? this.$moment(it.responseDate).format('DD.MM.YYYY, hh:mm') : '',
-        delivery: {
-          ...it.delivery,
-          date: it.delivery.date ? this.$moment(it.delivery.date).format('DD.MM.YYYY, hh:mm') : '',
-        },
-      }));
-
-      this.total = +headers['x-pagination-total-count'];
-      this.loading = false;
     },
     async cloneItem() {
       try {
