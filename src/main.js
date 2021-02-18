@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueMoment from 'vue-moment';
+import VueCroppie from 'vue-croppie';
 import Vuelidate from 'vuelidate';
 import VueCurrencyInput from 'vue-currency-input';
 import Http from '@/api';
@@ -16,6 +17,7 @@ import currencyOptions from './utilities/currency-options';
 import '@/assets/styles/index.scss';
 
 Vue.use(VueMoment);
+Vue.use(VueCroppie);
 Vue.use(Vuelidate);
 Vue.use(VueCurrencyInput, currencyOptions);
 
