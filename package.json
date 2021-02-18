@@ -8,11 +8,12 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "byte-size": "^7.0.0",
     "core-js": "^3.6.5",
     "file-type": "^16.1.0",
     "lodash-es": "^4.17.15",
+    "lodash.throttle": "^4.1.1",
     "voca": "^1.4.0",
     "vue": "^2.6.11",
     "vue-croppie": "^2.0.2",
@@ -36,6 +37,7 @@
     "eslint": "^6.7.2",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-vue": "^6.2.2",
+    "raw-loader": "^4.0.2",
     "sass": "^1.19.0",
     "sass-loader": "^8.0.0",
     "svgo": "^1.1.0",

@@ -2,14 +2,14 @@
   <v-dialog
     :key="key"
     v-model="visible"
+    :width="width"
   >
     <v-form
-      ref="form"
       class="modal-primary modal-primary--full-height"
       @submit.prevent="onSubmit"
     >
       <div class="modal-primary__header">
-        <span>Добавление позиции</span>
+        <i />
         <v-btn
           icon
           dark
@@ -20,51 +20,24 @@
       </div>
       <div class="modal-primary__wrapper">
         <div class="modal-primary__content">
-          <v-tabs
-            v-model="tab"
-            class="mb-2"
-          >
-            <v-tab
-              v-for="(it, i) in tabs"
-              :key="i"
-              :ripple="false"
-            >
-              {{ it }}
-            </v-tab>
-          </v-tabs>
-          <v-tabs-items
-            v-model="tab"
-            class="wizard__content modal-tabs mb-0"
-          >
-            <v-tab-item>
-              <user-position-table
-                :selected="selected"
-                :editable="false"
-                @selection-changed="selected = $event"
-              />
-            </v-tab-item>
-            <v-tab-item>
-              <nsi-position-table
-                :selected="selected"
-                @selection-changed="selected = $event"
-              />
-            </v-tab-item>
-          </v-tabs-items>
+          <div class="text-h5 text-center py-4">
+            {{ text }}
+          </div>
           <div class="modal-primary__actions">
             <v-btn
-              class="ml-auto"
+              class="mr-auto"
               depressed="depressed"
               @click="close"
             >
               Отмена
             </v-btn>
             <v-btn
-              class="ml-2"
+              class="ml-auto"
               depressed="depressed"
               color="primary"
               type="submit"
             >
-              Выбрать
+              Продолжить
             </v-btn>
           </div>
         </div>
@@ -74,22 +47,14 @@
 </template>
 
 <script>
-import UserPositionTable from '@/components/UserPositionTable.vue';
-import NsiPositionTable from '@/components/NSIPositionTable.vue';
 
 export default {
   name: 'UserPositionModal',
-  components: {
-    UserPositionTable,
-    NsiPositionTable,
-  },
   props: {
-    items: {
-      type: Array,
-    },
-    value: {
-      type: Boolean,
-    },
+    items: Array,
+    value: Boolean,
+    text: String,
+    width: [String, Number],
   },
   data: () => ({
     tab: 0,

@@ -4,6 +4,7 @@
       :headers="headers"
       :items="positionsComputed"
       :item-class="validatePosition"
+      :hide-default-footer="!positionsComputed.length"
       disable-sort
       fixed-header
       class="elevation-0"

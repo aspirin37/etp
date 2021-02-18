@@ -31,7 +31,7 @@
         >
           <analysis
             :id="requestId"
-            @winner-selected="selectWinner"
+            @winners-selected="selectWinners"
           />
         </v-card>
       </v-tab-item>
@@ -110,21 +110,14 @@
         >
           <v-row v-if="quoteRequest">
             <v-col cols="5">
-              <v-row>
-                <v-col
-                  class="py-0"
-                  cols="8"
-                >
-                  <date-picker
-                    v-model="quoteRequest.delivery.date"
-                    label="Дата поставки"
-                    :min="responseMinDate"
-                    :error-messages="deliveryDateErrors"
-                    :disabled="!editable"
-                    required
-                  />
-                </v-col>
-              </v-row>
+              <date-picker
+                v-model="quoteRequest.delivery.date"
+                label="Дата поставки"
+                :min="responseMinDate"
+                :error-messages="deliveryDateErrors"
+                :disabled="!editable"
+                required
+              />
               <v-text-field
                 v-model="quoteRequest.delivery.price"
                 v-currency
@@ -132,20 +125,13 @@
                 label="Стоимость доставки без НДС"
                 outlined
               />
-              <v-row>
-                <v-col
-                  class="py-0"
-                  cols="8"
-                >
-                  <v-select
-                    v-model="quoteRequest.delivery.vat"
-                    :items="[20, 10, 0]"
-                    :disabled="!editable"
-                    label="Ставка НДС, %"
-                    outlined
-                  />
-                </v-col>
-              </v-row>
+              <v-select
+                v-model="quoteRequest.delivery.vat"
+                :items="[20, 10, 0]"
+                :disabled="!editable"
+                label="Ставка НДС, %"
+                outlined
+              />
               <v-textarea
                 v-model="quoteRequest.comment"
                 :disabled="!editable"
@@ -248,7 +234,7 @@
         depressed
         color="accent"
         :loading="loading"
-        :disabled="!winner"
+        :disabled="createOrderDisabled"
         @click="createOrder"
       >
         Создать заказ
@@ -288,7 +274,7 @@ export default {
     formSubmitted: false,
     isQuote: false,
     loading: false,
-    winner: null,
+    winners: null,
   }),
   validations() {
     return {
@@ -402,6 +388,9 @@ export default {
         }],
       }];
     },
+    createOrderDisabled() {
+      return !this.winners || Array.from(Object.values(this.winners)).every((it) => it === null);
+    },
   },
   created() {
     if (this.$route.query.isQuote) {
@@ -488,8 +477,8 @@ export default {
         this.loading = false;
       }
     },
-    selectWinner(supplierId) {
-      this.winner = supplierId;
+    selectWinners(winners) {
+      this.winners = winners;
     },
     async createOrder() {
       const { headers } = await this.$http.patch(`quote-requests/${this.requestId}/create-order`);

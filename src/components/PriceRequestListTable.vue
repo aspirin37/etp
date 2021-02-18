@@ -1,58 +1,75 @@
 <template>
-  <div class="main-table price-request-table">
-    <v-data-table
-      :headers="headers"
-      :items="items"
-      :options.sync="options"
-      :footer-props="{
-        itemsPerPageOptions: [20],
-      }"
-      :server-items-length="total"
-      :loading="loading"
-      show-select
-      disable-sort
-      fixed-header
-      class="elevation-0"
-    >
-      <template v-slot:[`header.actions`]="{}">
-        <v-icon size="20">
-          mdi-cog
-        </v-icon>
-      </template>
-      <template v-slot:[`item.name`]="{ item }">
-        <router-link
-          :to="getPriceRequestRoute(item)"
-        >
-          {{ item.name }}
-        </router-link>
-      </template>
-      <template v-slot:[`item.type`]="{ item }">
-        {{ priceRequestTypes[item.type] }}
-      </template>
-      <template v-slot:[`item.status`]="{ item }">
-        {{ priceRequestStatuses[item.status] }}
-      </template>
-      <template v-slot:[`item.actions`]="{ item }">
-        <v-icon
-          size="16"
-          class="mr-2"
-          @click="cloneItem(item.id)"
-        >
-          mdi-content-copy
-        </v-icon>
-        <v-icon
-          v-if="type === 'drafts'"
-          size="20"
-          @click="removeItem(item.id)"
-        >
-          mdi-delete
-        </v-icon>
-      </template>
-    </v-data-table>
+  <div>
+    <confirmation-modal
+      v-model="cloneConfirmModal"
+      text="Ценовой запрос будет скопирован"
+      width="400"
+      @submit="cloneItem"
+    />
+    <confirmation-modal
+      v-model="deletionConfirmModal"
+      text="Ценовой запрос будет удален"
+      width="500"
+      @submit="removeItem"
+    />
+    <div class="main-table price-request-table">
+      <v-data-table
+        :headers="headers"
+        :items="items"
+        :options.sync="options"
+        :footer-props="{
+          itemsPerPageOptions: [20],
+        }"
+        :server-items-length="total"
+        :hide-default-footer="!items.length"
+        :loading="loading"
+        disable-sort
+        fixed-header
+        class="elevation-0"
+      >
+        <template v-slot:[`header.actions`]="{}">
+          <v-icon size="20">
+            mdi-cog
+          </v-icon>
+        </template>
+        <template v-slot:[`item.name`]="{ item }">
+          <router-link
+            :to="getPriceRequestRoute(item)"
+          >
+            {{ item.name }}
+          </router-link>
+        </template>
+        <template v-slot:[`item.type`]="{ item }">
+          {{ priceRequestTypes[item.type] }}
+        </template>
+        <template v-slot:[`item.status`]="{ item }">
+          {{ priceRequestStatuses[item.status] }}
+        </template>
+        <template v-slot:[`item.actions`]="{ item }">
+          <v-icon
+            size="16"
+            class="mr-2"
+            @click="selectedItem = item.id; cloneConfirmModal = true"
+          >
+            mdi-content-copy
+          </v-icon>
+          <v-icon
+            v-if="type === 'drafts'"
+            size="20"
+            @click="
+              selectedItem = item.id; deletionConfirmModal = true"
+          >
+            mdi-delete
+          </v-icon>
+        </template>
+      </v-data-table>
+    </div>
   </div>
 </template>
 
 <script>
+import confirmationModal from '@/components/modals/ConfirmationModal.vue';
+
 import {
   priceRequestTypes,
   priceRequestStatuses,
@@ -62,6 +79,9 @@ import { mapState } from 'vuex';
 
 export default ({
   name: 'PriceRequestListTable',
+  components: {
+    confirmationModal,
+  },
   props: {
     type: String,
     url: String,
@@ -77,6 +97,9 @@ export default ({
       loading: false,
       priceRequestTypes,
       priceRequestStatuses,
+      cloneConfirmModal: false,
+      deletionConfirmModal: false,
+      selectedItem: null,
     };
   },
   computed: {
@@ -166,18 +189,18 @@ export default ({
       this.total = +headers['x-pagination-total-count'];
       this.loading = false;
     },
-    async cloneItem(id) {
+    async cloneItem() {
       try {
-        await this.$http.patch(`quote-requests/${id}/clone`);
+        await this.$http.patch(`quote-requests/${this.selectedItem}/clone`);
         this.getItems();
         this.$toast.success('Ценовой запрос успешно скопирован');
       } catch (e) {
         this.$toast.danger(e.response.data.message);
       }
     },
-    async removeItem(id) {
+    async removeItem() {
       try {
-        await this.$http.delete(`quote-requests/${id}`);
+        await this.$http.delete(`quote-requests/${this.selectedItem}`);
         this.getItems();
         this.$toast.success('Ценовой запрос успешно удален');
       } catch (e) {

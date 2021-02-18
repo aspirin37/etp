@@ -9,7 +9,7 @@
       @submit.prevent="onSubmit"
     >
       <div class="modal-primary__header">
-        <span>Добавление позиции</span>
+        <span>Добавление позиции из справочника</span>
         <v-btn
           icon
           dark
@@ -18,38 +18,14 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </div>
-      <div class="modal-primary__wrapper">
-        <div class="modal-primary__content">
-          <v-tabs
-            v-model="tab"
-            class="mb-2"
-          >
-            <v-tab
-              v-for="(it, i) in tabs"
-              :key="i"
-              :ripple="false"
-            >
-              {{ it }}
-            </v-tab>
-          </v-tabs>
-          <v-tabs-items
-            v-model="tab"
-            class="wizard__content modal-tabs mb-0"
-          >
-            <v-tab-item>
-              <user-position-table
-                :selected="selected"
-                :editable="false"
-                @selection-changed="selected = $event"
-              />
-            </v-tab-item>
-            <v-tab-item>
-              <nsi-position-table
-                :selected="selected"
-                @selection-changed="selected = $event"
-              />
-            </v-tab-item>
-          </v-tabs-items>
+      <div class="modal-primary__wrapper pt-8">
+        <div class="modal-primary__content pt-16">
+          <div style="min-height: 400px">
+            <nsi-position-table
+              :selected="selected"
+              @selection-changed="selected = $event"
+            />
+          </div>
           <div class="modal-primary__actions">
             <v-btn
               class="ml-auto"
@@ -74,13 +50,11 @@
 </template>
 
 <script>
-import UserPositionTable from '@/components/UserPositionTable.vue';
 import NsiPositionTable from '@/components/NSIPositionTable.vue';
 
 export default {
-  name: 'UserPositionModal',
+  name: 'MyPositionsModal',
   components: {
-    UserPositionTable,
     NsiPositionTable,
   },
   props: {
@@ -92,11 +66,6 @@ export default {
     },
   },
   data: () => ({
-    tab: 0,
-    tabs: [
-      'Мои позиции',
-      'Позиции из справочника',
-    ],
     selected: [],
     key: 0,
   }),

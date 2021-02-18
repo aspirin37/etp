@@ -53,7 +53,7 @@ const routes = [
     props: true,
   },
   {
-    path: '/purchase-order/:id',
+    path: '/purchase-order/:id/:type?',
     name: 'PurchaseOrder',
     component: () => import('@/views/PurchaseOrder.vue'),
     props: true,
