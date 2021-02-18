@@ -5,25 +5,27 @@ import API from '@/api';
 Vue.use(Vuex);
 
 export const getExtraSearchDefault = () => ({
-  savedSearch: 0,
+  createDate: null,
+  customer: null,
+  deliveryDate: null,
+  fio: null,
+  name: null,
   number: null,
   orderNumber: null,
-  status: null,
-  fio: null,
-  customer: null,
-  type: null,
   region: null,
-  createDate: null,
-  responseDate: null,
   reportDate: null,
-  deliveryDate: null,
+  responseDate: null,
+  savedSearch: 0,
   showHidden: false,
+  status: null,
+  type: null,
 });
 
 export default new Vuex.Store({
   state: {
     dataView: JSON.parse(localStorage.getItem('dataView')) || 'list-small',
-    extraSearch: JSON.parse(localStorage.getItem('extraSearch')) || getExtraSearchDefault(),
+    // extraSearch: JSON.parse(localStorage.getItem('extraSearch')) || getExtraSearchDefault(),
+    extraSearch: getExtraSearchDefault(),
     navigatorLock: JSON.parse(localStorage.getItem('navigatorLock')) || null,
     user: JSON.parse(localStorage.getItem('user')),
     showExtraSearchSidebar: false,

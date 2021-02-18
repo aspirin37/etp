@@ -32,14 +32,9 @@
             clearable
             label="Поиск по наименованию номеру, наименованию ЦЗ"
             outlined
+            @input="appendSearchNameThrottled"
             @keypress.enter="appendSearchName"
           />
-            <!-- <span slot="append-inner">
-              хуй!
-            </span>
-            <span slot="prepend">
-              хуй!
-            </span> -->
         </v-col>
         <v-col class="extra-search-button">
           <v-btn
@@ -61,6 +56,7 @@
 </template>
 
 <script>
+import throttle from 'lodash.throttle';
 import { mapState, mapGetters, mapActions } from 'vuex';
 import PriceRequestListTable from '@/components/PriceRequestListTable.vue';
 import clone from '@/utilities/clone';
@@ -191,10 +187,15 @@ export default {
       });
     },
   },
+  created() {
+    this.appendSearchNameThrottled = throttle(this.appendSearchName, 777);
+  },
   methods: {
-    ...mapActions(['toggleExtraSearchSidebar']),
+    ...mapActions(['setExtraSearch', 'toggleExtraSearchSidebar']),
     appendSearchName() {
-      console.warn('u sooqa!');
+      this.setExtraSearch(Object.assign(this.extraSearch, {
+        name: this.searchNameValue || null,
+      }));
     },
   },
 };
