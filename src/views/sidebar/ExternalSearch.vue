@@ -26,6 +26,7 @@
             <v-radio-group v-model="filters.savedSearch">
               <v-radio
                 v-for="(v,k) in savedSearches"
+                disabled
                 :key="k"
                 :label="v"
                 :value="k"
@@ -34,6 +35,7 @@
             <v-btn
               class="ml-auto mb-3"
               depressed
+              disabled
             >
               Сохранить активный поиск
             </v-btn>
@@ -220,7 +222,7 @@ export default {
   },
   data: () => ({
     filters: getExtraSearchDefault(),
-    panelsOpened: [0, 1, 2, 3, 4, 5],
+    panelsOpened: [1, 2, 3, 4, 5, 6],
     priceRequestTypes: Object.keys(priceRequestTypes).map((status) => ({ text: priceRequestTypes[status], value: status })),
     priceRequestStatusesInOut,
     priceRequestStatusesActual,
