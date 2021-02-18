@@ -63,7 +63,7 @@
             />
           </v-expansion-panel-content>
         </v-expansion-panel>
-        <v-expansion-panel>
+        <v-expansion-panel v-if="type !== 'drafts'">
           <v-expansion-panel-header>
             Статус
           </v-expansion-panel-header>

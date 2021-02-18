@@ -28,11 +28,18 @@
       <v-row class="extra-search-bar">
         <v-col class="extra-search-input">
           <v-text-field
-            :value="searchNameValue"
+            v-model="searchNameValue"
+            clearable
             label="Поиск по наименованию номеру, наименованию ЦЗ"
-            disabled
-            outlined="outlined"
+            outlined
+            @keypress.enter="appendSearchName"
           />
+            <!-- <span slot="append-inner">
+              хуй!
+            </span>
+            <span slot="prepend">
+              хуй!
+            </span> -->
         </v-col>
         <v-col class="extra-search-button">
           <v-btn
@@ -70,7 +77,7 @@ export default {
     },
   },
   data: () => ({
-    searchNameValue: '',
+    searchNameValue: null,
     tabs: [{
       text: 'Черновики',
       value: 'drafts',
@@ -166,7 +173,7 @@ export default {
           if (filter) {
             filter += '&';
           }
-          filter += `filter[${key}][${v}]=${cur[v]}`;
+          filter += `filters[${key}][${v}]=${cur[v]}`;
         });
         if (acc) {
           filter = `&${filter}`;
@@ -186,6 +193,9 @@ export default {
   },
   methods: {
     ...mapActions(['toggleExtraSearchSidebar']),
+    appendSearchName() {
+      console.warn('u sooqa!');
+    },
   },
 };
 </script>
